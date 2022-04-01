@@ -8,6 +8,7 @@ case $- in
       *) return;;
 esac
 
+HISTFILE="$HOME/documents/cashe/.bash_history"
 HISTSIZE= HISTFILESIZE= # infinite history
 export HISTIGNORE="clear"
 export HISTTIMEFORMAT='%F %T'
@@ -116,3 +117,6 @@ starship_precmd_user_func="set_win_title"
 
 eval "$(starship init bash)"
 neofetch
+
+export NVM_DIR="/home/chief/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
