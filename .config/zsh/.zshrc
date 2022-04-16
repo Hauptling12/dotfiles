@@ -21,53 +21,27 @@ case ${TERM} in
     ;;
 esac
 
-
 ### ARCHIVE EXTRACTION
 # usage: ex <file>
 ex ()
 {
   if [ -f "$1" ] ; then
     case $1 in
-      *.tar.bz2)   tar xjf $1   ;;
-      *.cbt) tar xvf $1 ;;
-      *.lzma) unlzma $1 ;;
-      *.cbr) unrar x $1 ;;
-      *.cbz) unzip $1 ;;
-      *.arj) 7z x $1 ;;
-      *.cab) 7z x $1 ;;
-      *.cb7) 7z x $1 ;;
-      *.chm) 7z x $1 ;;
-      *.deb) 7z x $1 ;;
-      *.dmg) 7z x $1 ;;
-      *.iso) 7z x $1 ;;
-      *.msi) 7z x $1 ;;
-      *.pkg) 7z x $1 ;;
-      *.lzh) 7z x $1 ;;
-      *.rpm) 7z x $1 ;;
-      *.udf) 7z x $1 ;;
-      *.wim) 7z x $1 ;;
-      *.xar) 7z x $1 ;;
-      *.xz) unzx $1 ;;
-#      *.cba) ;;
-      *.ace) unace x $1 ;;
-      *.cpio) cpio -id < $1 ;;
-      *.tar.gz)    tar xzf $1   ;;
-      *.bz2)       bunzip2 $1   ;;
-      *.rar)       unrar x $1   ;;
-      *.gz)        gunzip $1    ;;
-      *.tar)       tar xf $1    ;;
-      *.tbz2)      tar xjf $1   ;;
-      *.tgz)       tar xzf $1   ;;
-      *.zip)       unzip $1     ;;
-      *.Z)         uncompress $1;;
-      *.7z)        7z x $1      ;;
-      *.deb)       ar x $1      ;;
-      *.tar.xz)    tar xf $1    ;;
-      *.tar.zst)   unzstd $1    ;;
-      *.exe)   7zr -e $1    ;;
-      *.jar)   unzip $1    ;;
-      *.jpl)   file-roller -h $1    ;;
-      *.apk)   file-roller -h $1    ;;
+            *.cbt|*.tar.bz2|*.tar.gz|*.tar.xz|*.tbz2|*.tgz|*.txz|*.tar)
+                         tar xvf "$1"       ;;
+            *.lzma)      unlzma "$1"      ;;
+            *.bz2)       bunzip2 "$1"     ;;
+            *.cbr|*.rar)       unrar x -ad "$1" ;;
+            *.gz)        gunzip "$1"      ;;
+            *.jar|*.cbz|*.epub|*.zip)       unzip "$1"       ;;
+            *.z)         uncompress "$1"  ;;
+            *.AppImage|*.apk|*.jpl|*.7z|*.arj|*.cab|*.cb7|*.chm|*.deb|*.dmg|*.iso|*.lzh|*.msi|*.pkg|*.rpm|*.udf|*.wim|*.xar)
+                         7z x "$1"        ;;
+            *.xz)        unxz "$1"        ;;
+            *.exe)       7z -e "$1"  ;;
+            *.cpio)      cpio -id < "$1"  ;;
+            *.cba|*.ace)      unace x "$1"      ;;
+	    *.tar.bz2)   tar xjf $1   ;;
       *)           echo "'$1' cannot be extracted via ex()" ;;
     esac
   else
@@ -176,9 +150,13 @@ if [ -f /etc/bash.command-not-found ]; then
     . /etc/bash.command-not-found
 fi
 
+alias -s {avi,flv,mkv,mp4,mpeg,mpg,ogv,wmv,flac,mp3,ogg,wav,m4a}=$MPLAYER
+#alias -s {gif,GIF,jpeg,JPEG,jpg,JPG,png,PNG}="background $IMAGEVIEWER"
 # Load zsh-syntax-highlighting; should be last.
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 
 #clear
 eval "$(starship init zsh)"
 unix
+
+[ -f ~/.local/share/.fzf.zsh ] && source ~/.local/share/.fzf.zsh

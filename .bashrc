@@ -8,14 +8,14 @@ case $- in
       *) return;;
 esac
 
-HISTFILE="$HOME/documents/cashe/.bash_history"
+HISTFILE="$HOME/documents/cashe/.zsh_history"
 HISTSIZE= HISTFILESIZE= # infinite history
 export HISTIGNORE="clear"
 export HISTTIMEFORMAT='%F %T'
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
-shopt -s expand_aliases # expand aliases 
+shopt -s expand_aliases # expand aliases
 #shopt -s autocd # change to named directory
 shopt -s histappend # append to the history file, don't overwrite it
 
@@ -83,8 +83,8 @@ export MANPAGER='/bin/bash -c "vim -MRn -c \"set buftype=nofile showtabline=0 ft
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
-if [ -f ~/.config/bash_aliases ]; then
-    . ~/.config/bash_aliases
+if [ -f ~/.config/aliases ]; then
+    . ~/.config/aliases
 fi
 
 # enable programmable completion features (you don't need to enable
@@ -97,15 +97,10 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:~/.local/bin
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:~/.local/bin:~/.local/bin/script/
 
 if [ -f /etc/bash.command-not-found ]; then
     . /etc/bash.command-not-found
-fi
-
-# imports vairables
-if [ -f $HOME/.config/.bash_functions ]; then
-    . $HOME/.config/.bash_functions
 fi
 
 # promt starship
@@ -114,9 +109,6 @@ function set_win_title(){
 }
 starship_precmd_user_func="set_win_title"
 
-
 eval "$(starship init bash)"
-neofetch
 
-export NVM_DIR="/home/chief/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -f ~/local/share/.fzf.bash ] && source ~/.local/share/.fzf.bash

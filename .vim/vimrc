@@ -1,288 +1,81 @@
-let mapleader =","
+"""""""""""""""""""""""
+" some basics
+"""""""""""""""""""""""
+set noswapfile
+set number relativenumber       " Display line numbers
+syntax on
+set encoding=utf-8
+set hlsearch
+set incsearch
+" makes clipboard save to system
+set clipboard+=unamedplus
+vnoremap <C-c> "+y
+set autoindent
+set hidden               
+set splitbelow splitright
+" highlight operaters
+set showmatch
+""""""""""""""""""
+"" plugins
+""""""""""""""""""
+set nocompatible              " be iMproved, required
+filetype plugin on                  " required
 
-if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim"'))
-	echo "Downloading junegunn/vim-plug to manage plugins..."
-	silent !mkdir -p ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/
-	silent !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim
-	autocmd VimEnter * PlugInstall
-endif
 
-call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
+call plug#begin()
+" The default plugin directory will be as follows:
+"   - Vim (Linux/macOS): '~/.vim/plugged'
+"   - Vim (Windows): '~/vimfiles/plugged'
+"   - Neovim (Linux/macOS/Windows): stdpath('data') . '/plugged'
+" You can specify a custom plugin directory by passing it as the a\
 Plug 'itchyny/lightline.vim'
-" Markdown
-Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle', 'for': ['text', 'markdown', 'vim-plug'] }
-Plug 'mzlogin/vim-markdown-toc', { 'for': ['gitignore', 'markdown', 'vim-plug'] }
-Plug 'https://github.com/pangloss/vim-javascript'
-Plug 'dkarter/bullets.vim'
-Plug 'preservim/nerdtree'                        " Nerdtree
-Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
-" Go
-Plug 'fatih/vim-go' , { 'for': ['go', 'vim-plug'], 'tag': '*' }
-Plug '~/.config/nvim/deadkeys.vim'
-Plug '~/.config/nvim/ipa.vim'
-Plug 'OmniSharp/omnisharp-vim'
-Plug 'chentau/marks.nvim'
-Plug 'ctrlpvim/ctrlp.vim' , { 'for': ['cs', 'vim-plug'] } " omnisharp-vim dependency
+"Plugin 'preservim/nerdtree'                        " Nerdtree
+"Plugin 'ryanoasis/vim-devicons'
 Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'     " Highlighting Nerdtree
 Plug 'ryanoasis/vim-devicons'                      " Icons for Nerdtree
 Plug 'bfrg/vim-cpp-modern'
-Plug 'pantharshit00/vim-prisma'
-Plug 'MattesGroeger/vim-bookmarks'
-Plug 'arzg/vim-swift'
 Plug 'neoclide/coc-sources'
 Plug 'xolox/vim-notes'
 Plug 'xolox/vim-misc'
 Plug 'preservim/nerdcommenter'
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'majutsushi/tagbar'
-"Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
-"Plug 'vifm/vifm.vim'
+Plug 'vifm/vifm.vim'
+Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
+Plug 'vifm/vifm.vim'
 Plug 'alvan/vim-closetag'
 Plug 'godlygeek/tabular'
 Plug 'preservim/vim-markdown'
-"Plug 'iamcco/markdown-preview.nvim'
+Plug 'iamcco/markdown-preview.nvim' 
 Plug 'vimwiki/vimwiki'
 Plug 'Xuyuanp/nerdtree-git-plugin'
-"Plug 'PotatoesMaster/i3-vim-syntax'                " i3 config highlighting
-Plug 'kovetskiy/sxhkd-vim'                         " sxhkd highlighting
-Plug 'vim-python/python-syntax'                    " Python highlighting
+Plug 'PotatoesMaster/i3-vim-syntax'                " i3 config highlighting
+    Plug 'kovetskiy/sxhkd-vim'                         " sxhkd highlighting
+    Plug 'vim-python/python-syntax'                    " Python highlighting
 Plug 'mbbill/undotree'
 Plug 'mattn/emmet-vim'
-"Plug 'ap/vim-css-color'
-Plug 'rust-lang/rust.vim'
-
+"Plugin 'ap/vim-css-color'
 call plug#end()
-"""""""""""""""""""""""
-" some basics
-"""""""""""""""""""""""
-silent !mkdir -p $HOME/.config/nvim/tmp/backup
-silent !mkdir -p $HOME/.config/nvim/tmp/undo
-if has('persistent_undo')
-	set undofile
-	set undodir=$HOME/.config/nvim/tmp/undo,.
-endif
-set backupdir=$HOME/.config/nvim/tmp/backup,.
-set directory=$HOME/.config/nvim/tmp/backup,.
-set clipboard+=unnamedplus
-set title
-set noruler
-filetype plugin on
-"set number relativenumber       " Display line numbers
-set relativenumber       " Display line numbers
-syntax on
-set encoding=utf-8
-set hlsearch
-set incsearch
-" makes clipboard save to system
-" set clipboard+=unamedplus
-vnoremap <C-c> "+y
-set autoindent
-set hidden
-set splitbelow splitright
-" highlight operaters
-set showmatch
+" tab indents 3 spaces
+set expandtab
 " Enable autocompletion:
-        set wildmode=longest,list,full
+	set wildmode=longest,list,full
 " Disables automatic commenting on newline:
-        autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+        " Spell-check set to <leader>o, 'o' for 'orthography':
+	map <leader>o :setlocal spell! spelllang=en_us<CR>
 
-" utils
-" Check file in shellcheck:
-        map <leader>s :!clear && shellcheck -x %<CR>
-" Spell-check set to <leader>o, 'o' for 'orthography':
-"        map <leader>o :setlocal spell! spelllang=en_us<CR>
-" Save file as sudo on files that require root permission
-        cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
-" Automatically deletes all trailing whitespace and newlines at end of file on save. & reset cursor position
-        autocmd BufWritePre * let currPos = getpos(".")
-        autocmd BufWritePre * %s/\s\+$//e
-        autocmd BufWritePre * %s/\n\+\%$//e
-        autocmd BufWritePre *.[ch] %s/\%$/\r/e
-        autocmd BufWritePre * cal cursor(currPos[1], currPos[2])
-" Function for toggling the bottom statusbar:
-let s:hidden_all = 0
-function! ToggleHiddenAll()
-    if s:hidden_all  == 0
-        let s:hidden_all = 1
-        set noshowmode
-        set noruler
-        set laststatus=0
-        set noshowcmd
-    else
-        let s:hidden_all = 0
-        set showmode
-        set ruler
-        set laststatus=2
-        set showcmd
-    endif
-endfunction
-nnoremap <leader>h :call ToggleHiddenAll()<CR>
-
-"
-" vim bookmarks
-"
-let g:bookmark_auto_save_file = '/home/chief/.cache/vim-bookmarks'
 
 """
 let g:NERDCreateDefaultMappinfa = 1
 """
-" marks.nvim
-" hexokinase
-let g:Hexokinase_highlighters = [ 'virtual' ]
-
-" Vim default
-"let g:Hexokinase_highlighters = [ 'sign_column' ]
-
-" All possible highlighters
-let g:Hexokinase_highlighters = [
-\   'virtual',
-"\   'sign_column',
-"\   'background',
-"\   'backgroundfull',
-"\   'foreground',
-"\   'foregroundfull'
-\ ]
-let g:Hexokinase_optInPatterns = 'full_hex,rgb,rgba,hsl,hsla,colour_names'
-
-" All possible values
-let g:Hexokinase_optInPatterns = [
-\     'full_hex',
-\     'triple_hex',
-\     'rgb',
-\     'rgba',
-\     'hsl',
-\     'hsla',
-\     'colour_names'
-\ ]
-
-" Filetype specific patterns to match
-" entry value must be comma seperated list
-let g:Hexokinase_ftOptInPatterns = {
-\     'css': 'full_hex,rgb,rgba,hsl,hsla,colour_names',
-\     'html': 'full_hex,rgb,rgba,hsl,hsla,colour_names'
-\ }
-"set signcolumn=yes:9
-
-" rust syntax
-"let g:rust_clip_command = 'xclip -selection clipboard'
-
-" vimling:
-      nm <leader><leader>d :call ToggleDeadKeys()<CR>
-      imap <leader><leader>d <esc>:call ToggleDeadKeys()<CR>a
-      nm <leader><leader>i :call ToggleIPA()<CR>
-      imap <leader><leader>i <esc>:call ToggleIPA()<CR>a
-
-" ===
-" === Leaderf
-" ===
-"let g:Lf_PreviewInPopup = 1
-"let g:Lf_PreviewCode = 1
-"let g:Lf_ShowHidden = 1
-"let g:Lf_ShowDevIcons = 1
-"let g:Lf_CommandMap = {
-"\   '<C-k>': ['<C-u>'],
-"\   '<C-j>': ['<C-e>'],
-"\   '<C-]>': ['<C-v>'],
-"\   '<C-p>': ['<C-n>'],
-"\}
-"let g:Lf_IgnoreCurrentBufferName = 1
-"let g:Lf_WildIgnore = {
-"        \ 'dir': ['.git', 'vendor', 'node_modules'],
-"        \ 'file': ['__vim_project_root', 'class']
-"        \}
-"let g:Lf_UseMemoryCache = 0
-"let g:Lf_UseCache = 0
-"""""""""
-"" markdown table
-"""""
-" let g:table_mode_corner='|'
-" function! s:isAtStartOfLine(mapping)
-"   let text_before_cursor = getline('.')[0 : col('.')-1]
-"   let mapping_pattern = '\V' . escape(a:mapping, '\')
-" let comment_pattern = '\V' . escape(substitute(&l:commentstring, '%s.*$', '', ''), '\')
-"   return (text_before_cursor =~? '^' . ('\v(' . comment_pattern . '\v)?') . '\s*\v' . mapping_pattern . '\v$')
-" endfunction
-
-" inoreabbrev <expr> <bar><bar>
- "          \ <SID>isAtStartOfLine('\|\|') ?
-  "         \ '<c-o>:TableModeEnable<cr><bar><space><bar><left><left>' : '<bar><bar>'
-" inoreabbrev <expr> __
-   "        \ <SID>isAtStartOfLine('__') ?
-    "       \ '<c-o>:silent! TableModeDisable<cr>' : '__'
-noremap <LEADER>tm :TableModeToggle<CR>
-"let g:table_mode_disable_mappings = 1
-let g:table_mode_cell_text_object_i_map = 'k<Bar>'
-" ===
-" === CTRLP (Dependency for omnisharp)
-" ===
-let g:ctrlp_map = ''
-let g:ctrlp_cmd = 'CtrlP'
-" ===
-" === Bullets.vim
-" ===
-" Bullets.vim
-let g:bullets_enabled_file_types = [
-    \ 'markdown',
-    \ 'text',
-    \]
-
-" ===
-" === Undotree
-" ===
-noremap L :UndotreeToggle<CR>
-let g:undotree_SetFocusWhenToggle = 1
-let g:undotree_ShortIndicators = 1
-let g:undotree_WindowLayout = 2
-let g:undotree_DiffpanelHeight = 8
-let g:undotree_SplitWidth = 24
-
-" ===
-" === vim-markdown-toc
-" ===
-let g:vmt_fence_text = 'TOC'
-let g:vmt_fence_closing_text = '/TOC'
-" ===
-" === OmniSharp
-" ===
-let g:OmniSharp_typeLookupInPreview = 1
-let g:omnicomplete_fetch_full_documentation = 1
-let g:OmniSharp_selector_ui = 'ctrlp'
-sign define OmniSharpCodeActions text=💡
-let g:OmniSharp_server_stdio = 1
-let g:OmniSharp_highlight_types = 2
-autocmd Filetype cs nnoremap <buffer> gd :OmniSharpPreviewDefinition<CR>
-autocmd Filetype cs nnoremap <buffer> gr :OmniSharpFindUsages<CR>
-autocmd Filetype cs nnoremap <buffer> gy :OmniSharpTypeLookup<CR>
-autocmd Filetype cs nnoremap <buffer> ga :OmniSharpGetCodeActions<CR>
-autocmd Filetype cs nnoremap <buffer> <LEADER>rn :OmniSharpRename<CR><C-N>:res +5<CR>
-
-" ===
-" === tcomment_vim
-" ===
-"nnoremap ci cl
-"let g:tcomment_textobject_inlinecomment = ''
-"nmap <LEADER>cn g>c
-"vmap <LEADER>cn g>
-"nmap <LEADER>cu g<c
-"vmap <LEADER>cu g<
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Vifm
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <Leader>vv :Vifm<CR>
-map <Leader>vs :VsplitVifm<CR>
-map <Leader>sp :SplitVifm<CR>
-map <Leader>dv :DiffVifm<CR>
-map <Leader>tv :TabVifm<CR>
 """
 " instant markdown previewer
 """
-"let g:instant_markdown_autostart = 0
-"let g:instant_markdown_mermaid = 1
-"let g:instant_markdown_slow = 0
-"let g:instant_markdown_browser = "qutebrowser"      " Uses surf for preview
-"map <Leader>md :InstantMarkdownPreview<CR>   " Previews .md file
-"map <Leader>ms :InstantMarkdownStop<CR>      " Kills the preview
+let g:instant_markdown_autostart = 0
+let g:instant_markdown_mermaid = 1
+let g:instant_markdown_slow = 0
 """"""""""""""
 " vimwiki
 "''''
@@ -290,12 +83,12 @@ let g:vimwiki_global_ext = 0
 let g:vimwiki_list = [{'path': '~/my-work/notes/ob/obsidian/', 'path_html': '~/my-work/notes/ob/obsidian/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
 """""""""""
-" coc
+" coc 
 """"
 ""
 " snippets
 ""
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() :
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : 
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? coc#_select_confirm() :
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
@@ -451,7 +244,6 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings for CoCList
 " Show all diagnostics.
-
 nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions.
 nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
@@ -467,12 +259,18 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+""""""""""""""""
+" vimwiki
+""""""""""""""
+let g:vimwiki_list = [{'path': '~/vimwiki/',
+                      \ 'syntax': 'markdown', 'ext': '.md'}]
+
 """"""""""""""""""""""""""
 " emmet
 """::::::::::::::::::::
 let g:user_emmet_mode='a'    "enable all function in all mode.
 let g:user_emmet_install_global = 0
-autocmd FileType xhtml,html,css EmmetInstall
+autocmd FileType html,css EmmetInstall
 
 """""""
 " markdown previewer
@@ -573,23 +371,31 @@ let g:mkdp_filetypes = ['markdown']
 """
 " filenames like *.xml, *.html, *.xhtml, ...
 " These are the file extensions where this plugin is enabled.
-let g:closetag_filenames = '*.md,*.html,*.xhtml,*.jsx,*.js,*.tsx'
+"
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml'
 
 " filenames like *.xml, *.xhtml, ...
 " This will make the list of non-closing tags self-closing in the specified files.
-let g:closetag_xhtml_filenames = '*.xml,*.xhtml,*.jsx,*.js,*.tsx'
+"
+let g:closetag_xhtml_filenames = '*.xhtml,*.jsx'
 
 " filetypes like xml, html, xhtml, ...
 " These are the file types where this plugin is enabled.
-let g:closetag_filetypes = 'html,xhtml,jsx,js,tsx'
+"
+let g:closetag_filetypes = 'html,xhtml,phtml'
 
 " filetypes like xml, xhtml, ...
 " This will make the list of non-closing tags self-closing in the specified files.
-let g:closetag_xhtml_filetypes = 'xml,xhtml,jsx,js,tsx'
+"
+let g:closetag_xhtml_filetypes = 'xhtml,jsx'
 
 " integer value [0|1]
 " This will make the list of non-closing tags case-sensitive (e.g. `<Link>` will be closed while `<link>` won't.)
+"
 let g:closetag_emptyTags_caseSensitive = 1
+
+" dict
+" Disables auto-close if not in a "valid" region (based on filetype)
 "
 let g:closetag_regions = {
     \ 'typescript.tsx': 'jsxRegion,tsxRegion',
@@ -605,127 +411,9 @@ let g:closetag_shortcut = '>'
 " Add > at current position without closing the current tag, default is ''
 "
 let g:closetag_close_shortcut = '<leader>>'
-"==
-"=== netrw
-"==
-let g:netrw_banner = 0
-let g:netrw_liststyle = 3
-let g:netrw_browse_split = 4
-let g:netrw_winsize = 20
-" Allow for netrw to be toggled
-function! OpenToRight()
-	:normal v
-	let g:path=expand('%:p')
-	execute 'q!'
-	execute 'belowright vnew' g:path
-	:normal <C-w>l
-endfunction
-
-function! OpenBelow()
-	:normal v
-	let g:path=expand('%:p')
-	execute 'q!'
-	execute 'belowright new' g:path
-	:normal <C-w>l
-endfunction
-
-function! OpenTab()
-	:normal v
-	let g:path=expand('%:p')
-	execute 'q!'
-	execute 'tabedit' g:path
-	:normal <C-w>l
-endfunction
-
-function! NetrwMappings()
-		" Hack fix to make ctrl-l work properly
-		noremap <buffer> <A-l> <C-w>l
-		noremap <buffer> <C-l> <C-w>l
-		noremap <Leader>tl :call ToggleNetrw()<CR>
-		noremap <Leader>tr :call OpenToRight()<cr>
-		noremap <Leader>tb :call OpenBelow()<cr>
-		noremap <Leader>tt :call OpenTab()<cr>
-endfunction
-
-augroup netrw_mappings
-		autocmd!
-		autocmd filetype netrw call NetrwMappings()
-augroup END
-function! ToggleNetrw()
-		if g:NetrwIsOpen
-				let i = bufnr("$")
-				while (i >= 1)
-						if (getbufvar(i, "&filetype") == "netrw")
-								silent exe "bwipeout " . i
-						endif
-						let i-=1
-				endwhile
-				let g:NetrwIsOpen=0
-		else
-				let g:NetrwIsOpen=1
-				silent Lexplore
-		endif
-endfunction
-
-" Check before opening buffer on any file
-function! NetrwOnBufferOpen()
-	if exists('b:noNetrw')
-			return
-	endif
-	call ToggleNetrw()
-endfun
-" Close Netrw if it's the only buffer open
-autocmd WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw" || &buftype == 'quickfix' |q|endif
-" Check before opening buffer on any file
-function! NetrwOnBufferOpen()
-	if exists('b:noNetrw')
-			return
-	endif
-	call ToggleNetrw()
-endfun
-let g:NetrwIsOpen=0
-"noremap <Leader>t :call ToggleNetrw()<CR>
-"==
-"=== files
-"==
-" ===
-" === Markdown Settings
-" ===
-" Snippets
-let mapleader = "," " map leader to comma
-" Runs a script that cleans out tex build files whenever I close out of a .tex file.
-      autocmd VimLeave *.tex !texclear %
-
-
-" Ensure files are read as what I want:
-      let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-      autocmd BufRead,BufNewFile /tmp/calcurse*,~/.calcurse/notes/* set filetype=markdown
-      autocmd BufRead,BufNewFile *.ms,*.me,*.mom,*.man set filetype=groff
-      autocmd BufRead,BufNewFile *.tex set filetype=tex
-
-""
-" modules
-""
-augroup highlight_yank
-  autocmd!
-  au TextYankPost * silent! lua vim.highlight.on_yank{higroup="YankColor", timeout=300, on_visual=false}
-augroup END
-augroup numbertoggle
-  autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
-  autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
-augroup END
-
-" cursor preview
-set cursorline
-set cursorcolumn
 """""""""""""""""
 " keybindings remaped
 """""""""""""""""
-" Faster in-line navigation
-noremap W 5w
-noremap B 5b
-
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
@@ -748,34 +436,7 @@ map <Leader>tk <C-w>t<C-w>K
 set fillchars+=vert::
 " emmet shortcuts
 "" files
-" make Y to copy till the end of the line
-"nnoremap Y y$
-
-" Copy to system clipboard
-vnoremap Y "+y
-" noremap <C-q> :qa<CR>
-"noremap S :w<CR>
-noremap q :wq
-
-" Open the vimrc file anytime
-noremap <LEADER>rc :e $HOME/.config/nvim/init.vim<CR>
-" ===
-" === Tab management
-" ===
-" Create a new tab with tu
-noremap tu :tabe<CR>
-noremap tU :tab split<CR>
-" Move around tabs with tn and ti
-noremap tn :-tabnext<CR>
-noremap ti :+tabnext<CR>
-" Move the tabs with tmn and tmi
-noremap tmn :-tabmove<CR>
-noremap tmi :+tabmove<CR>
-" Spelling Check with <space>sc
-noremap <LEADER>sc :set spell!<CR>
-
-inoremap ;g <Esc>/<++><Enter>"_c4l
-"inoremap ;g <++>
+""autocmd FileType html inoremap <Space><Space> <Esc>/<++><Enter>"_c4l
 """ html
 autocmd FileType html inoremap ;e <em></em><Esc>FeT>i
 autocmd FileType html inoremap ;1 <h1></h2><Esc>FeT>i
@@ -812,48 +473,82 @@ autocmd FileType html inoremap ;sm <small></small><Esc>FeT>i
 autocmd FileType html inoremap ;scr <script></script><Esc>FeT>i
 autocmd FileType html inoremap ;sol <source lang=""></source><Esc>>i
 autocmd FileType html inoremap ;sa <samp></samp><Esc>FeT>i
+autocmd FileType html inoremap á &aacute;
+autocmd FileType html inoremap é &eacute;
+autocmd FileType html inoremap í &iacute;
+autocmd FileType html inoremap ó &oacute;
+autocmd FileType html inoremap ú &uacute;
+autocmd FileType html inoremap ä &auml;
+autocmd FileType html inoremap ë &euml;
+autocmd FileType html inoremap ï &iuml;
+autocmd FileType html inoremap ö &ouml;
+autocmd FileType html inoremap ü &uuml;
+autocmd FileType html inoremap ã &atilde;
+autocmd FileType html inoremap ẽ &etilde;
+autocmd FileType html inoremap ĩ &itilde;
+autocmd FileType html inoremap õ &otilde;
+autocmd FileType html inoremap ũ &utilde;
+autocmd FileType html inoremap ñ &ntilde;
+autocmd FileType html inoremap à &agrave;
+autocmd FileType html inoremap è &egrave;
+autocmd FileType html inoremap ì &igrave;
+autocmd FileType html inoremap ò &ograve;
+autocmd FileType html inoremap ù &ugrave;
+autocmd FileType html inoremap á &aacute;
+autocmd FileType html inoremap é &eacute;
+autocmd FileType html inoremap í &iacute;
+autocmd FileType html inoremap ó &oacute;
+autocmd FileType html inoremap ú &uacute;
+autocmd FileType html inoremap ;'ä
+autocmd FileType html inoremap ;'ë 
+autocmd FileType html inoremap ;'ï 
+autocmd FileType html inoremap ;'ö
+autocmd FileType html inoremap ;.u ü 
+autocmd FileType html inoremap ;.a ã 
+autocmd FileType html inoremap ;.e ẽ 
+autocmd FileType html inoremap ;.i ĩ 
+autocmd FileType html inoremap ;.o õ 
+autocmd FileType html inoremap ;.u ũ 
+autocmd FileType html inoremap ;,n ñ 
+autocmd FileType html inoremap ;,a à 
+autocmd FileType html inoremap ;,e è 
+autocmd FileType html inoremap ;,i ì 
+autocmd FileType html inoremap ;,o ò
+autocmd FileType html inoremap ;,u ù 
 """ markdown
-autocmd FileType markdown inoremap ;e <em></em><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;1 <h1></h2><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;2 <h2></h2><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;3 <h3></h3><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;4 <h4></h4><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;5 <h5></h5><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;6 <h6></h6><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;d <div></div><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;l <li></li><Space><Space><Enter><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;p <p></p><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;o <ol></ol><Enter><Enter><++>
-autocmd FileType markdown inoremap ;b <b></b><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;u <ul></ul><Enter><Enter><++>
-autocmd FileType markdown inoremap ;co <code></code><Space><Space><Esc>FeT>i
-autocmd FileType markdown inoremap ;q <q></q><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;h <a href=""></a><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;a <article><Enter></article><Enter><++>FeT>i
-autocmd FileType markdown inoremap ;tr <tr></tr><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;im <img src="" alt=""><Enter><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;in <i></i><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;sb <strong></strong><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;sub <sub></sub><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;sup <sup></sup><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;str <s></s><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;sp <span></span><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;sm <small></small><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;scr <script></script><Space><Space><++><Esc>FeT>i
-autocmd FileType markdown inoremap ;sol <source lang=""></source><Enter><Esc>>i
-autocmd FileType markdown inoremap ;sa <samp></samp><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;e <em></em><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;1 <h1></h2><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;2 <h2></h2><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;3 <h3></h3><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;4 <h4></h4><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;5 <h5></h5><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;6 <h6></h6><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;d <div></div><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;l <li></li><Space><Space><Enter><++><Esc>FeT>i
+autocmd FileType md inoremap ;p <p></p><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;o <ol></ol><Enter><Enter><++>
+autocmd FileType md inoremap ;b <b></b><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;u <ul></ul><Enter><Enter><++>
+autocmd FileType md inoremap ;co <code></code><Space><Space><Esc>FeT>i
+autocmd FileType md inoremap ;q <q></q><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;h <a href=""></a><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;a <article><Enter></article><Enter><++>FeT>i
+autocmd FileType md inoremap ;tr <tr></tr><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;im <img src="" alt=""><Enter><++><Esc>FeT>i
+autocmd FileType md inoremap ;in <i></i><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;sb <strong></strong><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;sub <sub></sub><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;sup <sup></sup><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;str <s></s><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;sp <span></span><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;sm <small></small><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;scr <script></script><Space><Space><++><Esc>FeT>i
+autocmd FileType md inoremap ;sol <source lang=""></source><Enter><Esc>>i
+autocmd FileType md inoremap ;sa <samp></samp><Space><Space><++><Esc>FeT>i
 """" uny
-autocmd FileType markdown inoremap ;wf <Enter>#//22<Enter>Wilf:<Enter><Enter>Walt:<Enter>
-autocmd FileType markdown inoremap ,1 #<Space><CR><CR><++><Esc>
-autocmd FileType markdown inoremap ,2 ##<Space><CR><CR><++><Esc>
-autocmd FileType markdown inoremap ,3 ###<Space><CR><CR><++><Esc>
-autocmd FileType markdown inoremap ,4 ####<Space><CR><CR><++><Esc>
-autocmd FileType markdown inoremap ,5 #####<Space><CR><CR><++><Esc>
-autocmd FileType markdown inoremap ,ht ```html<Enter><Enter>```<CR><++><Esc>kki
-autocmd FileType vim inoremap ,a autocmd FileType
+autocmd FileType md inoremap ;wilf <Enter>//22<Enter>Wilf:<Enter><Enter>Walt:<Enter>
+
 """ bash
-map <leader>bs ggO#!/bin/sh<CR><CR>
-map <leader>bb ggO#!/bin/bash<CR><CR>
 
 """"""
 "" autoclose
@@ -883,14 +578,8 @@ map <leader>bb ggO#!/bin/bash<CR><CR>
 " The lightline.vim theme
 let g:lightline = {
       \ 'colorscheme': 'darcula',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'FugitiveHead'
-      \ },
       \ }
+
 " Always show statusline
 set laststatus=2
 
@@ -911,13 +600,6 @@ let NERDTreeMinimalUI = 1
 let g:NERDTreeWinSize=38
 " Exit Vim if NERDTree is the only window remaining in the only tab.
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-if has('nvim')
-        let NERDTreeBookmarksFile = stdpath('data') . '/NERDTreeBookmarks'
-    else
-        let NERDTreeBookmarksFile = '~/.vim' . '/NERDTreeBookmarks'
-    endif
-" mutt
-autocmd BufRead,BufNewFile /tmp/neomutt* :call ToggleHiddenAll()
 """"""""""""""""""""""""""""""
 " => Other Stuff
 """"""""""""""""""""""""""""""
@@ -927,11 +609,3 @@ set guioptions-=m  "remove menu bar
 set guioptions-=T  "remove toolbar
 set guioptions-=r  "remove right-hand scroll bar
 set guioptions-=L  "remove left-hand scroll bar
-" markdown previewer
-au BufWriteCmd,BufRead *.md :w | !cat % > /tmp/vim-mdpre.md
-" Enable and disable auto comment
-map <leader>c :setlocal formatoptions-=cro<CR>
-map <leader>C :setlocal formatoptions=cro<CR>
-nnoremap <leader>w :w<CR>
-" Replace all is aliased to S.
-      nnoremap S :%s//g<Left><Left>
