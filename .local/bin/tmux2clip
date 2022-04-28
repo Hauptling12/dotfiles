@@ -1,0 +1,40 @@
+#!/bin/bash
+###################################################################### 
+#Copyright (C) 2020  Kris Occhipinti
+#https://filmsbykris.com
+
+#makes screen text in tmux searchable and copeis selection to clipboard
+
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+###################################################################### 
+
+fzf_cmd() {
+  #fzf-tmux -d 35% --multi --exit-0 --cycle --reverse --bind='ctrl-r:toggle-all' --bind='ctrl-s:toggle-sort' --no-preview
+  #fzf-tmux --multi --exit-0 --no-preview
+  fzf-tmux -m
+}
+
+function buffer(){
+  #tmux capture-pane -eJ
+  tmux capture-pane
+  buffer="$(tmux show-buffer)"
+
+  echo -e "$buffer"
+  echo -e "$buffer"|tr " " "\n"
+}
+
+b=$(buffer)
+selection="$(buffer|fzf_cmd)"
+echo -n "$selection"|xclip
+echo -n "$selection"|xclip -selection clipboard

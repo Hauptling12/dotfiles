@@ -1,0 +1,10 @@
+#!/bin/bash
+
+case $1 in
+	"-u")
+sort -u -n $2
+	;;
+	*)
+	sort -n $2
+	;;
+esac

@@ -1,0 +1,5 @@
+#!/bin/sh
+# shows what have chmod +x perms
+
+
+echo -e "there is $(exa |sed 1d | wc -l) files and folders \nexecutable\n$(find . -type f -perm -o+rx) \n\nnon executable \n $(/bin/exa -al --no-time --no-filesize --no-user | sed 's/^......//' |grep -v '\xr-x' | awk '!($1="")')"

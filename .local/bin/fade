@@ -1,0 +1,39 @@
+#!/bin/bash
+#Script by Kris Occhipinti
+#http://filmsbykris.com
+#GPLv3 - http://www.gnu.org/licenses/gpl-3.0.txt
+#Source code https://github.com/metalx1000/Video-and-Film-Scripts
+#This Script is designed to fade all video clips in a folder
+
+if [ $# -lt 3 ]
+then
+    echo "Useage: $0 <file type> <fade length in frames> <output dir>"
+    echo "Example: $0 MOV 30 /tmp/output"
+    exit 0
+fi
+
+ext=$1
+len=$2 #fade length in frames
+outputdir="$3"
+outputfile="${outputdir}/fade_$(date +%s).$ext"
+
+echo "creating \"$outputdir\""
+mkdir -p "$outputdir" || e="error"
+
+if [ "$e" = "error" ]
+then
+    echo "Can't create $outputdir"
+    exit 1
+fi
+
+x=""
+for i in *.$ext
+do 
+    x="$x $i -mix $len -mixer luma -mixer mix:-1"
+done
+
+x="melt$x -consumer avformat:$outputfile acodec=mp2 ab=128k"
+
+eval $x
+
+mplayer $outputfile

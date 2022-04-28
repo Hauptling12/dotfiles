@@ -220,12 +220,14 @@ myKeys =
     -- KB_G Xmonad
         [ ("M-S-r", spawn "xmonad --recompile ")       -- Recompiles xmonad ands Restarts xmonad
         , ("M-C-r", spawn "xmonad --restart")       -- Recompiles xmonad ands Restarts xmonad
+	, ("M-Q", spawn "st")
 
     -- KB_G Run Prompt
         , ("M-r", spawn "dmenu_run")
         , ("M-w", spawn "rofi.sh")
 -- KB_G dmenu scripts
         , ("M-C-S-l", spawn "dm-logout.sh")
+	, ("M-S-d g", spawn "gui-dm")
         , ("M-S-d m", spawn "dmenumount")
         --, ("M-S-d s", spawn "~/./scripts/bash/dmenu/scripts/webhttp")
         --, ("M-S-d m", spawn "~/./scripts/bash/dmenu/dm-man")
@@ -246,22 +248,23 @@ myKeys =
          , ("M-C-p", spawn (myTerminal ++ " -e pwsh"))
          , ("M-i b", spawn (myTerminal ++ " -e bash"))
          , ("M-c", spawn myEditor)
-        , ("M-S-v", spawn (myTerminal ++ " -e pacmixer"))
-         , ("M-S-n", spawn (myTerminal ++ " -e nvim -c VimwikiIndex"))
+         , ("M-S-v", spawn (myTerminal ++ " -e pacmixer"))
+        -- , ("M-S-n", spawn (myTerminal ++ " -e nvim -c VimwikiIndex"))
          , ("M-i n", spawn (myTerminal ++ " -e /bin/newsboat -r"))
+	 , ("M-i c", spawn (myTerminal ++ " -e /bin/nmtui"))
          , ("M-S-x", spawn (myTerminal ++ " -e tmux"))
-	 , ("M-n", spawn (myTerminal ++ " -e vifm"))
-         , ("M-z", spawn "zeal")
+         , ("M-n", spawn (myTerminal ++ " -e vifm"))
+        -- , ("M-z", spawn "zeal")
          , ("M-S-h", spawn "xmonad_keys.sh") -- shows list of keybindings
          , ("M-C-S-l", spawn "libreoffice")
 	 , ("M-i l", spawn (myTerminal ++ " -e lynx"))
 	 , ("M-p", spawn "qutebrowser")
          --, ("M-k", spawn "krita")
          , ("M-<Esc>", spawn "kill-ne-app")
-         , ("M-C-b", spawn "timeshift-gtk")
+         --, ("M-C-b", spawn "timeshift-gtk")
          --, ("M-C-g", spawn "gimp")
-         , ("M-i t", spawn (myTerminal ++ " -e rtorrent"))
-	 , ("M-o k", spawn "keepassxc")
+        -- , ("M-i t", spawn (myTerminal ++ " -e rtorrent"))
+	-- , ("M-o k", spawn "keepassxc")
          , ("M-i a", spawn (myTerminal ++ "abook"))
          , ("M-C-d", spawn "drawio")
          , ("M-C-M1-a", spawn "android-studio")
@@ -270,7 +273,7 @@ myKeys =
          , ("M-S-M1-g", spawn "signal-desktop-no-yes")
         -- , ("M-C-M1-p", spawn "~/./scripts/bash/xmona/window-scre.sh")
          , ("M-S-b", spawn "librewolf --private-window")
-         , ("M-a", spawn "audacium")
+         --, ("M-a", spawn "audacium")
          , ("M-S-c", spawn "~/./my-work/appimages/uno-calculator-1.2.4-uno.725-x86_64.AppImage")
          , ("M-v", spawn "virt-manager")
          , ("M-S-l", spawn "slock")
@@ -319,8 +322,8 @@ myKeys =
         , ("M-C-k", decreaseLimit)                 -- Decrease # of windows
 
     -- KB_G Window resizing
-        , ("M-l", sendMessage Shrink)                   -- Shrink horiz window width
-        , ("M-h", sendMessage Expand)                   -- Expand horiz window width
+        , ("M-h", sendMessage Shrink)                   -- Shrink horiz window width
+        , ("M-l", sendMessage Expand)                   -- Expand horiz window width
         , ("M-j", sendMessage MirrorShrink)          -- Shrink vert window width
         , ("M-k", sendMessage MirrorExpand)          -- Expand vert window width
 

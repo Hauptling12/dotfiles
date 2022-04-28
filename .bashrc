@@ -1,4 +1,5 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
+PS1="\[\033[31m\][\[\033[0m\]\[\033[36m\]\w\[\033[0m\]\[\033[31m\]]\[\033[0m\]$ "
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
@@ -27,19 +28,19 @@ shopt -s histappend # append to the history file, don't overwrite it
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 
-up(){
-  local d=""
-  limit=$1
-  for ((i=1 ; i <= limit ; i++))
-    do
-      d=$d/..
-    done
-  d=$(echo $d | sed 's/^\///')
-  if [ -z "$d" ]; then
-    d=..
-  fi
-  cd $d
-}
+#up(){
+#  local d=""
+#  limit=$1
+#  for ((i=1 ; i <= limit ; i++))
+#    do
+#      d=$d/..
+#    done
+#  d=$(echo $d | sed 's/^\///')
+#  if [ -z "$d" ]; then
+#    d=..
+#  fi
+#  cd $d
+#}
 
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
@@ -102,13 +103,5 @@ export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/ga
 if [ -f /etc/bash.command-not-found ]; then
     . /etc/bash.command-not-found
 fi
-
-# promt starship
-function set_win_title(){
-    echo -ne "\033]0; $(basename "$PWD") \007"
-}
-starship_precmd_user_func="set_win_title"
-
-eval "$(starship init bash)"
 
 [ -f ~/local/share/.fzf.bash ] && source ~/.local/share/.fzf.bash

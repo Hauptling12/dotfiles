@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# works
+INT1=$(/usr/bin/exa -alhD --group-directories-first --sort=extension --icons --color=always | wc -l)
+INT2=40
+if [ $INT1 -lt $INT2 ] 
+then 
+/usr/bin/exa -alhD --group-directories-first --sort=extension --icons --color=always
+else 
+/usr/bin/exa -ahD --group-directories-first --sort=extension --icons --color=always
+fi

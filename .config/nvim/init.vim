@@ -15,14 +15,14 @@ Plug 'mzlogin/vim-markdown-toc', { 'for': ['gitignore', 'markdown', 'vim-plug'] 
 Plug 'https://github.com/pangloss/vim-javascript'
 Plug 'dkarter/bullets.vim'
 Plug 'preservim/nerdtree'                        " Nerdtree
-Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+"Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 " Go
 Plug 'fatih/vim-go' , { 'for': ['go', 'vim-plug'], 'tag': '*' }
 Plug '~/.config/nvim/deadkeys.vim'
 Plug '~/.config/nvim/ipa.vim'
-Plug 'OmniSharp/omnisharp-vim'
+"Plug 'OmniSharp/omnisharp-vim'
 Plug 'chentau/marks.nvim'
-Plug 'ctrlpvim/ctrlp.vim' , { 'for': ['cs', 'vim-plug'] } " omnisharp-vim dependency
+"Plug 'ctrlpvim/ctrlp.vim' , { 'for': ['cs', 'vim-plug'] } " omnisharp-vim dependency
 Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'     " Highlighting Nerdtree
 Plug 'ryanoasis/vim-devicons'                      " Icons for Nerdtree
@@ -49,7 +49,7 @@ Plug 'kovetskiy/sxhkd-vim'                         " sxhkd highlighting
 Plug 'vim-python/python-syntax'                    " Python highlighting
 Plug 'mbbill/undotree'
 Plug 'mattn/emmet-vim'
-"Plug 'ap/vim-css-color'
+Plug 'ap/vim-css-color'
 Plug 'rust-lang/rust.vim'
 
 call plug#end()
@@ -128,42 +128,6 @@ let g:bookmark_auto_save_file = '/home/chief/.cache/vim-bookmarks'
 let g:NERDCreateDefaultMappinfa = 1
 """
 " marks.nvim
-" hexokinase
-let g:Hexokinase_highlighters = [ 'virtual' ]
-
-" Vim default
-"let g:Hexokinase_highlighters = [ 'sign_column' ]
-
-" All possible highlighters
-let g:Hexokinase_highlighters = [
-\   'virtual',
-"\   'sign_column',
-"\   'background',
-"\   'backgroundfull',
-"\   'foreground',
-"\   'foregroundfull'
-\ ]
-let g:Hexokinase_optInPatterns = 'full_hex,rgb,rgba,hsl,hsla,colour_names'
-
-" All possible values
-let g:Hexokinase_optInPatterns = [
-\     'full_hex',
-\     'triple_hex',
-\     'rgb',
-\     'rgba',
-\     'hsl',
-\     'hsla',
-\     'colour_names'
-\ ]
-
-" Filetype specific patterns to match
-" entry value must be comma seperated list
-let g:Hexokinase_ftOptInPatterns = {
-\     'css': 'full_hex,rgb,rgba,hsl,hsla,colour_names',
-\     'html': 'full_hex,rgb,rgba,hsl,hsla,colour_names'
-\ }
-"set signcolumn=yes:9
-
 " rust syntax
 "let g:rust_clip_command = 'xclip -selection clipboard'
 
@@ -173,26 +137,6 @@ let g:Hexokinase_ftOptInPatterns = {
       nm <leader><leader>i :call ToggleIPA()<CR>
       imap <leader><leader>i <esc>:call ToggleIPA()<CR>a
 
-" ===
-" === Leaderf
-" ===
-"let g:Lf_PreviewInPopup = 1
-"let g:Lf_PreviewCode = 1
-"let g:Lf_ShowHidden = 1
-"let g:Lf_ShowDevIcons = 1
-"let g:Lf_CommandMap = {
-"\   '<C-k>': ['<C-u>'],
-"\   '<C-j>': ['<C-e>'],
-"\   '<C-]>': ['<C-v>'],
-"\   '<C-p>': ['<C-n>'],
-"\}
-"let g:Lf_IgnoreCurrentBufferName = 1
-"let g:Lf_WildIgnore = {
-"        \ 'dir': ['.git', 'vendor', 'node_modules'],
-"        \ 'file': ['__vim_project_root', 'class']
-"        \}
-"let g:Lf_UseMemoryCache = 0
-"let g:Lf_UseCache = 0
 """""""""
 "" markdown table
 """""
@@ -216,8 +160,8 @@ let g:table_mode_cell_text_object_i_map = 'k<Bar>'
 " ===
 " === CTRLP (Dependency for omnisharp)
 " ===
-let g:ctrlp_map = ''
-let g:ctrlp_cmd = 'CtrlP'
+"let g:ctrlp_map = ''
+"let g:ctrlp_cmd = 'CtrlP'
 " ===
 " === Bullets.vim
 " ===
@@ -230,7 +174,7 @@ let g:bullets_enabled_file_types = [
 " ===
 " === Undotree
 " ===
-noremap L :UndotreeToggle<CR>
+"noremap L :UndotreeToggle<CR>
 let g:undotree_SetFocusWhenToggle = 1
 let g:undotree_ShortIndicators = 1
 let g:undotree_WindowLayout = 2
@@ -245,17 +189,17 @@ let g:vmt_fence_closing_text = '/TOC'
 " ===
 " === OmniSharp
 " ===
-let g:OmniSharp_typeLookupInPreview = 1
-let g:omnicomplete_fetch_full_documentation = 1
-let g:OmniSharp_selector_ui = 'ctrlp'
-sign define OmniSharpCodeActions text=💡
-let g:OmniSharp_server_stdio = 1
-let g:OmniSharp_highlight_types = 2
-autocmd Filetype cs nnoremap <buffer> gd :OmniSharpPreviewDefinition<CR>
-autocmd Filetype cs nnoremap <buffer> gr :OmniSharpFindUsages<CR>
-autocmd Filetype cs nnoremap <buffer> gy :OmniSharpTypeLookup<CR>
-autocmd Filetype cs nnoremap <buffer> ga :OmniSharpGetCodeActions<CR>
-autocmd Filetype cs nnoremap <buffer> <LEADER>rn :OmniSharpRename<CR><C-N>:res +5<CR>
+"let g:OmniSharp_typeLookupInPreview = 1
+"let g:omnicomplete_fetch_full_documentation = 1
+"let g:OmniSharp_selector_ui = 'ctrlp'
+"sign define OmniSharpCodeActions text=💡
+"let g:OmniSharp_server_stdio = 1
+"let g:OmniSharp_highlight_types = 2
+"autocmd Filetype cs nnoremap <buffer> gd :OmniSharpPreviewDefinition<CR>
+"autocmd Filetype cs nnoremap <buffer> gr :OmniSharpFindUsages<CR>
+"autocmd Filetype cs nnoremap <buffer> gy :OmniSharpTypeLookup<CR>
+"autocmd Filetype cs nnoremap <buffer> ga :OmniSharpGetCodeActions<CR>
+"autocmd Filetype cs nnoremap <buffer> <LEADER>rn :OmniSharpRename<CR><C-N>:res +5<CR>
 
 " ===
 " === tcomment_vim
@@ -269,11 +213,6 @@ autocmd Filetype cs nnoremap <buffer> <LEADER>rn :OmniSharpRename<CR><C-N>:res +
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vifm
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <Leader>vv :Vifm<CR>
-map <Leader>vs :VsplitVifm<CR>
-map <Leader>sp :SplitVifm<CR>
-map <Leader>dv :DiffVifm<CR>
-map <Leader>tv :TabVifm<CR>
 """
 " instant markdown previewer
 """
@@ -854,6 +793,7 @@ autocmd FileType vim inoremap ,a autocmd FileType
 """ bash
 map <leader>bs ggO#!/bin/sh<CR><CR>
 map <leader>bb ggO#!/bin/bash<CR><CR>
+"""
 
 """"""
 "" autoclose

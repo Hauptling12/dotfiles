@@ -11,7 +11,7 @@
 " If you would like to use another vi clone such as Elvis or Vile
 " you will need to change this setting.
 
-set vicmd=vim
+set vicmd=nvim
 " set vicmd=elvis\ -G\ termcap
 " set vicmd=vile
 
@@ -123,6 +123,7 @@ nnoremap gws :cd ~/my-work/work-software/<cr>
 nnoremap gmy :cd ~/my-work/<cr>
 nnoremap gmu :cd ~/my-work/entertment/music<cr>
 nnoremap gen :cd /mnt/network/mnt/disk2/entertainment/<cr>
+nnoremap gdr :cd ~/my-work/dev/lang/<cr>
 nnoremap gng :cd ~/documents/normal/desktop/git-repos/<cr>
 nnoremap gnd :cd ~/documents/normal/desktop/<cr>
 mark t ~/my-work/torrents/
@@ -237,7 +238,7 @@ filetype *.tar,*.tar.bz2,*.tbz2,*.tgz,*.tar.gz,*.tar.xz,*.txz
 filetype *.o nm %f | less
 
 fileviewer *.gif
-\ gif-for-cli %c
+\ chafa %c
 " Man page
 filetype *.[1-8] man ./%c
 fileviewer *.[1-8] man ./%c | col -b

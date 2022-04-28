@@ -1,0 +1,12 @@
+#!/bin/bash
+
+function scramble(){
+  local s=$* i
+  while((${#s})); do
+    ((i=RANDOM%${#s}))
+    echo -n "${s:i:1}"
+    s=${s::i}${s:i+1}
+  done
+}
+
+scramble This is a test

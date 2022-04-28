@@ -1,0 +1,2 @@
+#!/bin/sh
+grep -Ri "$#" * --color=auto

@@ -6,6 +6,7 @@ alias v="$EDITOR"
 alias sv="$EDITOR"
 alias vwiki="$EDITOR -c VimwikiIndex"
 # other
+alias fzf="fzf-tmux"
 alias newsboat="newsboat -r"
 alias mutt="mw -Y && neomutt"
 alias mpvl="mpv -loop"
@@ -13,6 +14,8 @@ alias m="mpv"
 alias abook="abook --config "$XDG_CONFIG_HOME"/abook/abookrc --datafile "$XDG_CONFIG_HOME"/abook/addressbook"
 alias feh='setsid -f feh '
 alias libreoffice='setsid -f libreoffice '
+alias mpvn="mpv"
+alias linux="cd ~/my-work/os/linux/"
 alias planmaker21free='setsid -f planmaker21free '
 alias presentations21free='setsid -f presentations21free '
 alias wget="wget --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hsts""
@@ -20,6 +23,10 @@ alias wget="wget --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hs
 alias mute='amixer set Master mute'
 alias umute='amixer set Master unmute'
 
+alias rdrview="rdrview -B $CLI_BROWSER "
+alias tsukae='tsukae zsh -s=/home/chief/documents/cashe/.zsh_history'
+alias gen="cd /mnt/network/mnt/disk2/entertainment/"
+alias geny="cd /mnt/network/mnt/disk2/entertainment/youtube/"
 # folders
 alias lt='exa -T'
 alias lt1='exa -T -L 1'
@@ -46,6 +53,8 @@ bpwc () {(cd $OLDPWD && pwd |  xclip -selection clipboard) ;}
 alias pwdc="pwd | xclip -selection clipboard"
 alias mkdir="mkdir -pv"
 alias trashl='trash-list'
+alias trashr="trash-restore"
+alias trashe="trash-empty"
 alias rrm="rm -rfv"
 alias srrm="doas -- rm -rfv"
 alias trashr='restore'
@@ -90,7 +99,7 @@ alias xine="xinput enable"
 alias xind="xinput disable"
 
 # system
-alias sysd="doas -- systemctl"
+alias sysd="doas systemctl"
 alias sudo='doas'
 # get error messages from journalctl
 alias jctl="journalctl -p 3 -xb"
@@ -209,7 +218,6 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 
-alias brow="librewolf"
 alias torinfo="dumptorrent -v"
 alias dd="echo"
 alias yt-dlp="yt-dlp --restrict-filenames --retries infinite "
@@ -224,6 +232,7 @@ dev=$HOME/my-work/dev
 scripts=$HOME/.local/bin/script/
 gitrep=$HOME/documents/normal/desktop/git-repos/new-repo/
 gen=/mnt/network/mnt/disk2/entertainment/
+ss="$HOME/.local/bin/script/"
 worksoft=$HOME/my-work/work-software/
 gsc=$HOME/documents/school/
 gscr=$gsc/english
@@ -242,3 +251,5 @@ alias ss="cd ~/.local/bin/script/ && ls"
 alias sss="/bin/ss"
 alias a="alias"
 alias box="boxes -d scroll"
+alias tokei="/bin/tokei"
+alias bashtop="/bin/bashtop"

@@ -3,7 +3,8 @@
 export EDITOR="nvim"
 export TERMANIL="st"
 export BROWSER="librewolf"
-export MPLAY="mpv"
+export PLAYER="mpv"
+export CLI_BROWSER="w3m"
 
 # Adds `~/.local/bin` to $PATH
 export PATH="$PATH:${$(find ~/.local/bin -type d -printf %p:)%%:}:${$(find ~/.local/bin/script -type d -printf %p:)%%:}"

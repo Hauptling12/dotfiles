@@ -1,0 +1,43 @@
+#!/bin/bash
+###################################################################### 
+#Copyright (C) 2020  Kris Occhipinti
+#https://filmsbykris.com
+
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+###################################################################### 
+
+function getip(){
+  echo -en "External\t"
+  dig -4 @resolver1.opendns.com ANY myip.opendns.com +short
+
+  ip add|grep BROADCAST|cut -d\  -f2|cut -d\: -f1|while read d
+do 
+  echo -en "$d \t";
+  ip addr show $d|\
+    grep "inet "|\
+    awk '{print $2}'|\
+    cut -d\/ -f1;
+  done
+}
+
+function getESSID(){
+  let count="$(iwconfig 2>/dev/null|grep ESSID|wc -l)"
+  if [ "$count" -gt 0 ];then
+    echo -e "\n\nCurrently connected to:"
+    echo -e "\t$(iwconfig 2>/dev/null|grep ESSID)"
+  fi
+}
+
+getip|column -t
+getESSID

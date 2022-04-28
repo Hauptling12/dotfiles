@@ -1,0 +1,38 @@
+#!/bin/bash
+###################################################################### 
+#Copyright (C) 2018  Kris Occhipinti
+#https://filmsbykris.com
+
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+###################################################################### 
+
+#playlist="$HOME/.hackermusic.m3u"
+playlist="https://www.youtube.com/playlist?list=PLcUid3OP_4OWTsEIqSOuuULVn3L8lSGD-"
+id="PLcUid3OP"
+icon="/usr/share/icons/breeze/actions/64/media-default-track.svg"
+
+#kill any running instance
+let p="$(ps aux|grep "$id"|awk '{print $2}'|wc -l)"
+
+if [ $p -gt 1 ]
+then
+  echo "Killing..."
+  notify-send -t 3000 --icon=$icon "Hacker's Playlist" "Killing"
+  ps aux|grep "$id"|awk '{print $2}'|tr "\n" " "|xargs kill 
+else
+  notify-send -t 3000 --icon=$icon "Hacker's Playlist" "Playing"
+  #play music with sockets for controls
+  #mpv --volume 50 --input-ipc-server=/tmp/mpvsocket --no-video --shuffle "$playlist"
+  mpv --input-ipc-server=/tmp/mpvsocket --no-video --shuffle "$playlist"
+fi

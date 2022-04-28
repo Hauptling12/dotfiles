@@ -1,0 +1,10 @@
+#!/bin/bash
+
+case $1 in
+"-n")
+strings /dev/urandom | grep -o '[[:alnum:]]' |head -n $2 | tr -d '\n'
+;;
+*)
+strings /dev/urandom | grep -o '[[:alnum:]]' |head -n 10 | tr -d '\n'
+;;
+esac

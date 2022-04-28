@@ -1,0 +1,20 @@
+#!/bin/sh
+
+os='Arch Linux'
+kernel="$(uname -sr)"
+uptime="$(uptime -p | sed 's/up //')"
+packages="$(pacman -Q | wc -l)"
+shell="$(basename "${SHELL}")"
+wm="$(printf 'Desktop: %s\nSession: %s\n' "$XDG_CURRENT_DESKTOP" "$GDMSESSION" | awk '{print $2}' | tr -d " \t\n\r")"
+
+cat <<EOF
+
+${c0}        /\\         
+${c0}       /  \\        ${lc}OS:        ${ic}${os}${reset}
+${c0}      /\\   \\       ${lc}KERNEL:    ${ic}${kernel}${reset}
+${c0}     /  __  \\      ${lc}UPTIME:    ${ic}${uptime}${reset}
+${c0}    /  (  )  \\     ${lc}PACKAGES:  ${ic}${packages}${reset}
+${c0}   / __|  |__\\\\    ${lc}SHELL:     ${ic}${shell}${reset}
+${c0}  /.\` f socailmedia \`.\\  ${lc}wm: ${ic}${wm}${reset}
+
+EOF

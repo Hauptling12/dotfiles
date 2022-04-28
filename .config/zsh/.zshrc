@@ -1,6 +1,6 @@
 export HISTORY_IGNORE="(clear)"
-HISTSIZE=100000000000000000
-SAVEHIST=100000000000000000 # infinite history
+HISTSIZE=1000000000000000000
+SAVEHIST=1000000000000000000 # infinite history
 HISTFILE=~/documents/cashe/.zsh_history
 export HISTTIMEFORMAT='%F %T'
 
@@ -53,21 +53,21 @@ bindkey -v
 
 
 # promt starship
-function set_win_title(){
-            echo -ne "\033]0; $(basename "$PWD") \007"
-    }
-    starship_precmd_user_func="set_win_title"
+#function set_win_title(){
+#            echo -ne "\033]0; $(basename "$PWD") \007"
+#    }
+#    starship_precmd_user_func="set_win_title"
 
 
 export PATH=/home/chief/.local/bin/script:/home/chief/.local/share/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:~/.local/bin
 
-if [ -d "$HOME/Applications" ] ;
-  then PATH="$HOME/Applications:$PATH"
-fi
+#if [ -d "$HOME/Applications" ] ;
+#  then PATH="$HOME/Applications:$PATH"
+#fi
 
-if [ -d "$HOME/Applications" ] ;
-  then PATH="$HOME/.emac.d/bin:$PATH"
-fi
+#if [ -d "$HOME/Applications" ] ;
+#  then PATH="$HOME/.emac.d/bin:$PATH"
+#fi
 # Change cursor shape for different vi modes.
 function zle-keymap-select {
   if [[ ${KEYMAP} == vicmd ]] ||
@@ -156,7 +156,11 @@ alias -s {avi,flv,mkv,mp4,mpeg,mpg,ogv,wmv,flac,mp3,ogg,wav,m4a}=$MPLAYER
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 
 #clear
-eval "$(starship init zsh)"
+#eval "$(starship init zsh)"
 unix
 
 [ -f ~/.local/share/.fzf.zsh ] && source ~/.local/share/.fzf.zsh
+PROMPT='%F{green}%f %F{red}[%f%F{blue}%B%~%b%F{red}]%f%f$ '
+# keybingings
+#bindkey -s '^1' 'light -U 2'
+#bindkey -s '^2' 'light -A 2'

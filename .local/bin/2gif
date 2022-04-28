@@ -1,0 +1,25 @@
+#!/bin/bash
+
+rez="720";
+
+if [ $# -lt 1 ]
+then
+  echo "Input file needed"
+  echo "Example: $0 'video.mp4'"
+  exit 1
+fi
+
+pal=/tmp/palette.png
+rm "$pal"
+
+###########FFMPEG OPTION###############
+#Generate a palette:
+ffmpeg -y -i "$1" -vf fps=10,scale=$rez:-1:flags=lanczos,palettegen "$pal"
+
+
+#Output the GIF using the palette:
+ffmpeg -i "$1" -i $pal -filter_complex "fps=10,scale=$rez:-1:flags=lanczos[x];[x][1:v]paletteuse" "${1%.*}.gif"
+
+rm "$pal"
+
+xdg-open ${1%.*}.gif

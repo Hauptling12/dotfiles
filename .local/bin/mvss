@@ -1,0 +1,3 @@
+#!/bin/sh
+
+mv $@ ~/.local/bin/script/ && cd ~/.local/bin/script/ && chmod +x *
