@@ -1,9 +1,0 @@
-#!/bin/bash
-
-fdroidcl update
-
-adb shell pm list packages|dos2unix |cut -d\: -f2|\
-  while read apk;do 
-    fdroidcl install "${apk}";
-  done 
-

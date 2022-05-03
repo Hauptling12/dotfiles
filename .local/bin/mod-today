@@ -1,3 +1,0 @@
-#!/bin/sh
-
-find . -type f -newermt $(date +%F) -maxdepth 1

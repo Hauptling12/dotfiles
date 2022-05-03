@@ -1,3 +1,0 @@
-#!/bin/sh
-
-echo -n "Today's date is: "; date +"%I:%M:%S:%r %d %A, %B %-d, %d/%m/%Y " | cut -c10-; 

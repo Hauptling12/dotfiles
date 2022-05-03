@@ -1,2 +1,0 @@
-#!/bin/sh
-psa | grep xautolock | grep slock | awk '{print $2}' | xargs -I {} kill {}

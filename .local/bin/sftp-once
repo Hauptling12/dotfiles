@@ -1,2 +1,0 @@
-#!/bin/sh
-sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$@"

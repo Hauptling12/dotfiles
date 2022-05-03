@@ -1,4 +1,0 @@
-#!/bin/sh
-
-echo -e "nm-applet\npnmixer"  |dmenu | awk '{print "ps auxf \| grep " $0}' | parallel |sed '/grep/d' | awk '{print $2}' | awk '{print "kill " $0}' | parallel
-#ps auxf | grep nm-applet | sed '/grep/d' | awk '{print $2}' | awk '{print "kill " $0}' | parallel

@@ -1,3 +1,0 @@
-#!/bin/sh
-
-$BROWSER $(/usr/bin/exa -al --no-time --no-filesize --no-user --no-permissions /usr/share/doc/arch-wiki/html/en/ | dmenu | sed 's/^/\/usr\/share\/doc\/arch-wiki\/html\/en\//g')
