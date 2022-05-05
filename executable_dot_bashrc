@@ -1,4 +1,3 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
 PS1="\[\033[31m\][\[\033[0m\]\[\033[36m\]\w\[\033[0m\]\[\033[31m\]]\[\033[0m\]$ "
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
