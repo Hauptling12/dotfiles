@@ -1,48 +1,31 @@
-# programs
-alias svn='svn --config-dir "$XDG_CONFIG_HOME"/subversion'
-alias t="transmission-remote"
-alias tl="transmission-remote --list"
-alias ta="transmission-remote --add"
-alias d="transmission-daemon"
-alias cat="bat"
-alias ccat="/bin/cat"
-## vim
-alias vim="$EDITOR"
-alias vi="$EDITOR"
-alias v="$EDITOR"
-alias sv="$EDITOR"
-alias vwiki="$EDITOR -c VimwikiIndex"
-# programs with args
-alias fzf="fzf-tmux"
-alias newsboat="newsboat -r"
-alias rdrview="rdrview -B $CLI_BROWSER "
-alias ls='ls-ll.sh'
-# other
-alias powershell='pwsh'
-thermanil ()
-{
-paste <(cat /sys/class/thermal/thermal_zone*/type) <(cat /sys/class/thermal/thermal_zone*/temp) | column -s $'\t' -t | sed 's/\(.\)..$/.\1°C/'
-}
-alias C='wc -l'
-alias L="less"
-alias mutt="mw -Y && neomutt"
-alias mpvl="mpv -loop"
-alias m="mpv"
-#alias abook="abook --config "$XDG_CONFIG_HOME"/abook/abookrc --datafile "$XDG_CONFIG_HOME"/abook/addressbook"
-alias feh='setsid -f feh '
-alias libreoffice='setsid -f libreoffice '
-alias mpvn="mpv"
-alias linux="cd ~/my-work/os/linux/"
-#alias planmaker21free='setsid -f planmaker21free '
-#alias presentations21free='setsid -f presentations21free '
-alias wget="wget --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hsts""
-# hardware
-alias mute='amixer set Master mute'
-alias umute='amixer set Master unmute'
-alias tsukae='tsukae zsh -s=/home/chief/documents/cashe/.zsh_history'
-alias gen="cd /mnt/network/mnt/disk2/entertainment/"
+# dirs
+alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME/yarn/config"'
 alias geny="cd /mnt/network/mnt/disk2/entertainment/youtube/"
-# folders
+alias lang="cd ~/my-work/dev/lang"
+alias linux="cd ~/my-work/os/linux/"
+alias gen="cd /mnt/network/mnt/disk2/entertainment/"
+# buku
+alias buq="buku -s quick-link"
+alias bul="buku -s look-at"
+alias bu='buku --suggest'
+# programing
+alias py='python'
+alias py2='python2'
+alias py3='python3'
+alias cza="chezmoi apply -v"
+alias czadd="chezmoi add -v"
+alias czd="chezmoi diff"
+alias czl="chezmoi git log"
+# files
+# if (( ${+commands[exa]} )); then
+
+# else
+
+# fi
+
+alias ls='ls-ll.sh'
+alias ln="ln -i"
+alias cx='chmod +x'
 alias lt='exa -T'
 alias lt1='exa -T -L 1'
 alias lt2='exa -T -L 2'
@@ -69,11 +52,52 @@ alias mkdir="mkdir -pv"
 alias trashl='trash-list'
 alias trashr="trash-restore"
 alias trashe="trash-empty"
-alias rrm="rm -rfv"
-alias srrm="doas -- rm -rfv"
+alias rrm="/bin/rm -rfvi"
+alias srrm="doas -- /bin/rm -rfvi"
 alias trashr='restore'
 alias rm="trash -iv"
 alias trash="trash -iv"
+# programs
+alias svn='svn --config-dir "$XDG_CONFIG_HOME"/subversion'
+alias t="transmission-remote"
+alias tl="transmission-remote --list"
+alias ta="transmission-remote --add"
+alias td="transmission-daemon"
+alias cat="bat"
+alias ccat="/bin/cat"
+alias fzf="fzf-tmux"
+alias newsboat="newsboat -r"
+alias rdrview="rdrview -B $CLI_BROWSER "
+## vim
+alias vim="$EDITOR"
+alias vi="$EDITOR"
+alias v="$EDITOR"
+alias sv="sudo $EDITOR"
+alias vwiki="$EDITOR -c VimwikiIndex"
+# programs with args
+# other
+alias powershell='pwsh'
+thermanil ()
+{
+paste <(cat /sys/class/thermal/thermal_zone*/type) <(cat /sys/class/thermal/thermal_zone*/temp) | column -s $'\t' -t | sed 's/\(.\)..$/.\1°C/'
+}
+alias C='wc -l'
+alias L="less"
+alias mutt="mw -Y && neomutt"
+alias mpvl="mpv -loop"
+alias m="mpv"
+#alias abook="abook --config "$XDG_CONFIG_HOME"/abook/abookrc --datafile "$XDG_CONFIG_HOME"/abook/addressbook"
+alias feh='setsid -f feh '
+alias libreoffice='setsid -f libreoffice '
+alias mpvn="mpv"
+#alias planmaker21free='setsid -f planmaker21free '
+#alias presentations21free='setsid -f presentations21free '
+alias wget="wget --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hsts""
+# hardware
+alias mute='amixer set Master mute'
+alias umute='amixer set Master unmute'
+alias tsukae='tsukae zsh -s=/home/chief/documents/cashe/.zsh_history'
+# folders
 # directorys
 alias ..="cd .."
 alias ...="cd ../../"
@@ -224,8 +248,6 @@ lacd()
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
-
-
 alias dd="echo"
 alias yt-dlp="yt-dlp --restrict-filenames --retries infinite "
 alias yt="yt-dlp --restrict-filenames --retries infinite"
@@ -233,6 +255,7 @@ alias yt="yt-dlp --restrict-filenames --retries infinite"
 alias notes="cd ~/my-work/notes/ob/obsidian/"
 alias dev="cd ~/my-work/dev/"
 alias scz="source ~/.config/zsh/.zshrc"
+alias scb="source ~/.bashrc"
 alias invr="inv rt"
 notes=$HOME/my-work/notes/ob/obsidian/
 dev=$HOME/my-work/dev
@@ -260,3 +283,4 @@ alias a="alias"
 alias box="boxes -d scroll"
 alias tokei="/bin/tokei"
 alias bashtop="/bin/bashtop"
+alias markdown-toc="~/./node_modules/markdown-toc/cli.js"

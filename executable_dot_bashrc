@@ -49,25 +49,21 @@ ex ()
 {
   if [ -f "$1" ] ; then
     case $1 in
-      *.tar.bz2)   tar xjf $1   ;;
-      *.tar.gz)    tar xzf $1   ;;
-      *.bz2)       bunzip2 $1   ;;
-      *.rar)       unrar x $1   ;;
-      *.gz)        gunzip $1    ;;
-      *.tar)       tar xf $1    ;;
-      *.tbz2)      tar xjf $1   ;;
-      *.tgz)       tar xzf $1   ;;
-      *.zip)       unzip $1     ;;
-      *.Z)         uncompress $1;;
-      *.7z)        7z x $1      ;;
-      *.deb)       ar x $1      ;;
-      *.tar.xz)    tar xf $1    ;;
-      *.tar.zst)   unzstd $1    ;;
-      *.exe)   7zr -e $1    ;;
-      *.iso)   7z x $1    ;;
-      *.jar)   file-roller -h $1    ;;
-      *.jpl)   file-roller -h $1    ;;
-      *.apk)   file-roller -h $1    ;;
+            *.cbt|*.tar.bz2|*.tar.gz|*.tar.xz|*.tbz2|*.tgz|*.txz|*.tar)
+                         tar xvf "$1"       ;;
+            *.lzma)      unlzma "$1"      ;;
+            *.bz2)       bunzip2 "$1"     ;;
+            *.cbr|*.rar)       unrar x -ad "$1" ;;
+            *.gz)        gunzip "$1"      ;;
+            *.jar|*.cbz|*.epub|*.zip)       unzip "$1"       ;;
+            *.z)         uncompress "$1"  ;;
+            *.AppImage|*.apk|*.jpl|*.7z|*.arj|*.cab|*.cb7|*.chm|*.deb|*.dmg|*.iso|*.lzh|*.msi|*.pkg|*.rpm|*.udf|*.wim|*.xar)
+                         7z x "$1"        ;;
+            *.xz)        unxz "$1"        ;;
+            *.exe)       7z -e "$1"  ;;
+            *.cpio)      cpio -id < "$1"  ;;
+            *.cba|*.ace)      unace x "$1"      ;;
+	    *.tar.bz2)   tar xjf $1   ;;
       *)           echo "'$1' cannot be extracted via ex()" ;;
     esac
   else
@@ -75,7 +71,54 @@ ex ()
   fi
 }
 
-export MANPAGER='/bin/bash -c "vim -MRn -c \"set buftype=nofile showtabline=0 ft=man ts=8 nomod nolist norelativenumber nonu noma\" -c \"normal L\" -c \"nmap q :qa<CR>\"</dev/tty <(col -b)"'
+# functions
+#function today { echo -n "Today's date is: "; date +"%I:%M:%S:%r %d %A, %B %-d, %d/%m/%Y " | cut -c10-; }
+function fawk {
+    first="awk '{print "
+    last="}'"
+    cmd="${first}\$${1}${last}"
+    eval $cmd
+}
+
+# expac -S -H M '%k\t%n'
+#copy and go to dir  FIX FIX BROKEN
+cpd (){
+  if [ -d "$2" ];then
+    cp $1 $2 && cd $2 && ls
+  else
+    cp $1 $2
+  fi
+}
+
+
+#move and go to dir
+mvd (){
+  if [ -d "$2" ];then
+    mv $1 $2 && cd $2
+  else
+    mv $1 $2
+  fi
+}
+
+
+# make directory and cd there
+mkcd() {
+        if [ $# != 1 ]; then
+                echo "Usage: mkcd <dir>"
+        else
+                mkdir -p $1 && cd $1 && ls
+        fi
+}
+# make file and opens vim
+tovi() {
+        if [ $# != 1 ]; then
+                echo "Usage: tovi <file>"
+        else
+                touch $1 && vim $1
+        fi
+}
+
+export MANPAGER='/bin/bash -c "nvim -MRn -c \"set buftype=nofile showtabline=0 ft=man ts=8 nomod nolist norelativenumber nonu noma\" -c \"normal L\" -c \"nmap q :qa<CR>\"</dev/tty <(col -b)"'
 #rempap keys https://serverfault.com/a/12445
 
 # Alias definitions.
@@ -97,7 +140,7 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:~/.local/bin:~/.local/bin/script/
+export PATH=/usr/local/sbin:/home/chief/.local/share/gem/ruby/3.0.0/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:~/.local/bin:~/.local/bin/script/
 
 if [ -f /etc/bash.command-not-found ]; then
     . /etc/bash.command-not-found
