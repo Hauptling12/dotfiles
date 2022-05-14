@@ -12,6 +12,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'https://github.com/pangloss/vim-javascript'
 Plug 'dkarter/bullets.vim'
 Plug 'junegunn/fzf.vim'
+Plug 'https://github.com/axieax/urlview.nvim'
 Plug 'junegunn/fzf'
 "Plug 'preservim/nerdtree'
 "Plug 'ryanoasis/vim-devicons'
@@ -45,7 +46,12 @@ call plug#end()
 """""""""""""""""""""""
 "set viminfo+=n$HOME/.config/nvim/viminfo
 set title
-set shell=$SHELL        " use current shell for shell commands
+if exists('$SHELL')
+        set shell=$SHELL
+else
+        set shell=/bin/sh
+endif
+set shiftwidth=4
 set expandtab
 set backspace=indent,eol,start
 silent !mkdir -p $HOME/.config/nvim/tmp/backup
@@ -66,6 +72,8 @@ syntax on
 set encoding=utf-8
 set hlsearch
 set incsearch
+set smartcase
+set ignorecase
 " makes clipboard save to system
 " set clipboard+=unamedplus
 vnoremap <C-c> "+y
@@ -205,10 +213,42 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
+let g:coc_global_extensions = [
+  \ 'coc-cl',
+  \ 'coc-clangd',
+  \ 'coc-cmake',
+  \ 'coc-css',
+  \ 'coc-tsserver',
+  \ 'coc-html',
+  \ 'coc-java',
+  \ 'coc-go',
+  \ 'coc-json',
+  \ 'coc-kotlin',
+  \ 'coc-powershell',
+  \ 'coc-perl',
+  \ 'coc-yaml',
+  \ 'coc-xml',
+  \ 'coc-texlab',
+  \ 'coc-vimlsp',
+  \ 'coc-omnisharp',
+  \ 'coc-sh',
+  \ 'coc-hls',
+  \ 'coc-phpls',
+  \ 'coc-pyright',
+	\ ]
 let g:coc_snippet_next = '<tab>'
                                            \"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 " Give more space for displaying messages.
 set cmdheight=2
+function! Show_documentation()
+	call CocActionAsync('highlight')
+	if (index(['vim','help'], &filetype) >= 0)
+		execute 'h '.expand('<cword>')
+	else
+		call CocAction('doHover')
+	endif
+endfunction
+nnoremap <LEADER>H :call Show_documentation()<CR>
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
@@ -415,7 +455,7 @@ let g:closetag_close_shortcut = '<leader>>'
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
-let g:netrw_winsize = 25
+let g:netrw_winsize = 14
 " Allow for netrw to be toggled
 function! OpenToRight()
 	:normal v
@@ -553,7 +593,7 @@ set fillchars+=vert::
 "nnoremap Y y$
 
 " Copy to system clipboard
-vnoremap Y "+y
+"vnoremap Y "+y
 " noremap <C-q> :qa<CR>
 "noremap S :w<CR>
 noremap q :wq
@@ -647,12 +687,14 @@ autocmd FileType vim map <leader>lm imap <lt>leader>
 autocmd FileType vim map <leader>lch iautocmd FileType html map <lt>leader>
 autocmd FileType vim map <leader>lch iautocmd FileType python map <lt>leader>
 """ bash
-map <leader>bs ggO#!/bin/sh<CR><CR>
-map <leader>p3 ggO#!/bin/python3<CR><CR>
-map <leader>p1 ggO#!/bin/python<CR><CR>
-map <leader>bb ggO#!/bin/bash<CR><CR>
-map <leader>bz ggO#!/bin/zsh
-map <leader>bc icase $ in<Enter><enter>esac<Esc>ki
+map <leader>bs ggi#!/bin/sh<enter><esc>:set filetype=sh<CR><CR>
+map <leader>p3 ggi#!/bin/python3<enter><esc>:set filetype=python<CR><CR>
+map <leader>p1 ggi#!/bin/python<enter><esc>:set filetype=python<CR><CR>
+map <leader>bb ggi#!/bin/bash<enter><esc>:set filetype=bash<CR><CR>
+map <leader>bz ggi#!/bin/zsh<enter><esc>:set filetype=sh
+autocmd FileType bash,sh map <leader>lc icase $ in<Enter><enter>esac<Esc>ki
+" auto hotkey
+autocmd FileType autohotkey map <leader>la i::ActivateOrOpen("<++>","<++>")
 " c
 autocmd FileType c map <leader>lst i#include <stdio.h><Enter>int main() {<Enter><Enter>}<Esc>ki
 autocmd FileType c map <leader>lmm i#include <math.h><Enter><Esc>i
@@ -700,12 +742,22 @@ let g:lightline = {
       \ 'colorscheme': 'darcula',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [  'readonly', 'filename', 'modified' ] ]
+      \             [  'readonly', 'filename', 'modified' ] ],
+      \   'right': [ [ 'fileformat', 'fileencoding', 'filetype', 'percent', 'lineinfo', 'line' ],
+      \              [ 'bufnum' ] ],
       \ },
       \ 'component_function': {
-      \   'gitbranch': 'FugitiveHead'
+      \   'fileformat': 'LightlineFileformat',
+      \   'filetype': 'LightlineFiletype',
       \ },
       \ }
+function! LightlineFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! LightlineFiletype()
+  return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+endfunction
 " Always show statusline
 set laststatus=2
 
@@ -735,7 +787,7 @@ nnoremap <leader>w :w<CR>
 "automatically source the Vimrc file on save.
 augroup autosourcing
    autocmd!
-   autocmd BufWritePost .vimrc source %
+   autocmd BufWritePost init.vim source %
 augroup END
 " Fix indenting visual block
 vmap < <gv
@@ -748,3 +800,69 @@ let g:fzf_action = {
             \ 'ctrl-t': 'tab split',
             \ 'ctrl-h': 'split',
             \ 'ctrl-v': 'vsplit' }
+noremap <A-x> :r!date "+\%F"<CR>
+autocmd FileType html noremap <A-b> :!$BROWSER %
+autocmd FileType c,cpp setlocal tabstop=4 shiftwidth=4
+noremap DD1 "add
+noremap DD2 "sdd
+noremap DD3 "rdd
+noremap DD4 "fdd
+noremap DD5 "gdd
+noremap DD6 "hdd
+noremap DD7 "zdd
+noremap DD8 "xdd
+noremap DD9 "cdd
+noremap P1 "ap
+noremap P2 "sp
+noremap P3 "rp
+noremap P4 "fp
+noremap P5 "gp
+noremap P6 "hp
+noremap P7 "zp
+noremap P8 "xp
+noremap P9 "cp
+noremap Y1 "ay
+noremap Y2 "sy
+noremap Y3 "ry
+noremap Y4 "fy
+noremap Y5 "gy
+noremap Y6 "hy
+noremap Y7 "zy
+noremap Y8 "xy
+noremap Y9 "cy
+noremap <leader>o iAut dolorem dignissimos assumenda voluptatem tenetur recusandae. Ut et qui rerum eos optio rerum.<Enter>Aperiam architecto eos aut molestias. Non asperiores aliquam quo qui labore cum.<Enter>Mollitia beatae iste expedita explicabo aut. Perspiciatis facere aliquam iste sint. Sapiente aut itaque dolorum ut quis aut.<Enter>Iste adipisci in occaecati. Molestiae eligendi et ea nisi.<enter>Eum quibusdam nulla officiis. Corporis nostrum sint deserunt doloremque. Iusto asperiores omnis ducimus voluptatem consequuntur qui minus.<enter>Occaecati libero dicta ex voluptatem harum. Cumque aspernatur ut sapiente.<CR>
+" navbar
+autocmd FileType html noremap <leader>lnb i<nav class="navbar"><enter><div class="logo">MUO</div><enter><ul class="nav-links"><enter><input type="checkbox" id="checkbox_toggle" /><enter><label for="checkbox_toggle" class="hamburger">&#9776;</label><enter><div class="menu"><enter><li><a href="/"></a></li><enter><li class="services"><enter><a href="/"></a><enter><ul class="dropdown"><enter><li><a href="/"></a></li><enter></ul><enter></li><enter></div><enter></ul><enter></nav>
+" navbar css
+autocmd FileType html,c noremap <leader>lnc i* {<enter>margin: 0;<enter>padding: 0;<enter>box-sizing: border-box;<enter>}<enter>a {<enter>text-decoration: none;<enter>}<enter>li {<enter>list-style: none;<enter>}<enter>.navbar {<enter>display: flex;<enter>align-items: center;<enter>justify-content: space-between;<enter>padding: 20px;<enter>background-color: #676767;<enter>color: #fff;<enter>}<enter>.nav-links a {<enter>color: #fff;<enter>}<enter>.logo {<enter>font-size: 32px;<enter>}<enter>.menu {<enter>display: flex;<enter>gap: 1em;<enter>font-size: 18px;<enter>}<enter>.menu li:hover {<enter>background-color: #4c9e9e;<enter>border-radius: 5px;<enter>transition: 0.3s ease;<enter>}<enter>.menu li {<enter>padding: 5px 14px;<enter>}<enter>.services {<enter>position: relative;<enter>}<enter>.dropdown {<enter>background-color: #676767;<enter>padding: 1em 0;<enter>position: absolute;<enter>display: none;<enter>border-radius: 8px;<enter>top: 35px;<enter>}<enter>.dropdown li + li {<enter>margin-top: 10px;<enter>}<enter>.dropdown li {<enter>padding: 0.5em 1em;<enter>width: 8em;<enter>text-align: center;<enter>}<enter>.dropdown li:hover {<enter>background-color: #4c9e9e;<enter>}<enter>.services:hover .dropdown {<enter>display: block;<enter>}<enter>input[type=checkbox]{<enter>display: none;<enter>}<enter>.hamburger {<enter>display: none;<enter>font-size: 24px;<enter>user-select: none;<enter>}<enter>@media (max-width: 768px) {<enter>.menu {<enter>display:none;<enter>position: absolute;<enter>background-color:#676767;<enter>right: 0;<enter>left: 0;<enter>text-align: center;<enter>padding: 16px 0;<enter>}<enter>.menu li:hover {<enter>display: inline-block;<enter>background-color:#4c9e9e;<enter>transition: 0.3s ease;<enter>}<enter>.menu li + li {<enter>margin-top: 12px;<enter>}<enter>input[type=checkbox]:checked ~ .menu{<enter>display: block;<enter>}<enter>.hamburger {<enter>display: block;<enter>}<enter>.dropdown {<enter>left: 50%;<enter>top: 30px;<enter>transform: translateX(35%);<enter>}<enter>.dropdown li:hover {<enter>background-color: #4c9e9e;<enter>}<enter>}<enter>body {<enter>background-color:black;<Enter>}
+
+autocmd FileType css map <leader>lln ilist-style: none;
+autocmd FileType java setlocal shiftwidth=2 softtabstop=2
+autocmd FileType markdown setlocal shiftwidth=2 softtabstop=2
+autocmd FileType swift setlocal shiftwidth=4 softtabstop=4
+autocmd FileType javascript map <leader>lef iexport function () {<enter><enter>}<esc>kk$hhhhi<space>
+autocmd FileType javascript map <leader>lf ifunction (){<Enter><enter>}<esc>kk$hhhi<space>
+autocmd FileType javascript map <leader>lea iexport async function () {<enter><enter>}<esc>kk$hhhhi<space>
+autocmd FileType javascript map <leader>laf iasync function (){<Enter><enter>}<esc>kk$hhhi<space>
+autocmd FileType javascript map <leader>lcn iclassName=""<esc>i
+autocmd FileType javascript map <leader>lset ithis.setState({<Enter><enter>});<esc>ki
+autocmd FileType java map <leader>ls iSystem.out.println();<esc>hi
+autocmd FileType c map <leader>lin i#include <stdio.h><enter>#include <stdlib.h>
+autocmd FileType javascript map <leader>lir iisRequired,
+" Call figlet
+noremap tx :r !figlet
+noremap <A-t> :r !date "+\%R:\%S"
+autocmd FileType json setlocal tabstop=2 softtabstop=2 shiftwidth=2
+autocmd FileType typescript setlocal tabstop=2 softtabstop=2 shiftwidth=2
+autocmd FileType html map <leader>lme i<meta name="robots" content="noindex,nofollow">
+autocmd FileType vim map <leader>lf ifunction <enter><enter>endfunction<esc>kk$i<space>
+autocmd FileType vim map <leader>ln inoremap
+autocmd FileType vim map <leader>lbf ifunction! <enter><enter>endfunction<esc>kk$i<space>
+autocmd FileType vim map <leader>ll i<lt>leader>
+autocmd BufRead,BufNewFile .bashrc set filetype=bash
+autocmd BufRead,BufNewFile .zshrc set filetype=sh
+autocmd FileType autohotkey setlocal commentstring=;\ %s
+autocmd FileType autoit setlocal commentstring=;\ %s
+autocmd BufRead,BufNewFile vifmrc set filetype=vifm
+autocmd FileType vifm setlocal commentstring=\"\ %s
+autocmd FileType html noremap <leader>S i<!DOCTYPE html><enter><html lang="en"><enter><head><enter><meta charset="UTF-8"><enter><title></title><enter><link rel="stylesheet" href=""><enter></head><enter><body><enter><enter></body><enter></html><cr>

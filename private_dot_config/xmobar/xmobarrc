@@ -7,7 +7,7 @@ Config {
    , borderColor =  "#646464"
    , sepChar =  "%"
    , alignSep = "}{"
-   , template = " %UnsafeStdinReader% }{ %battery% | %multicpu% | %coretemp% | %memory% | %volume% | %date%"
+   , template = " %UnsafeStdinReader% }{ %battery% | %multicpu% | %coretemp% | %memory% | %date%"
    , lowerOnStart =     True
    , hideOnStart =      False
    , allDesktops =      True
@@ -47,7 +47,6 @@ Config {
 
 
         , Run Date           "<fc=#ABABAB>%B/%a  %H:%M:%S %Y/%m/%d</fc>" "date" 10
-	, Run Com "sb-volume" [] "volume" 10
 
            , Run UnsafeStdinReader
  ]

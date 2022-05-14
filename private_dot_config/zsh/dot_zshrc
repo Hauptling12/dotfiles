@@ -61,7 +61,7 @@ bindkey -v
 #    starship_precmd_user_func="set_win_title"
 
 
-export PATH=/home/chief/.local/bin/script:/home/chief/.local/share/gem/ruby/3.0.0/bin:/home/chief/.local/share/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:~/.local/bin
+export PATH=/home/chief/.local/share/npm/bin:/home/chief/.local/bin/script:/home/chief/.local/share/go/bin:/home/chief/.local/share/gem/ruby/3.0.0/bin:/home/chief/.local/share/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:~/.local/bin
 
 # Change cursor shape for different vi modes.
 function zle-keymap-select {
