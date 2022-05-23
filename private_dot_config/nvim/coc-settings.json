@@ -1,4 +1,8 @@
 {
+  	"snippets.ultisnips.directories": [
+		"$HOME/.config/nvim/Ultisnips/",
+		"$HOME/.config/nvim/plugged/vim-snippets/UltiSnips/"
+	],
     "pairs.enableCharacters": ["(", "[", "{", "'", "\"", "`"],
     "suggest.completionItemKindLabels": {
         "keyword": "\u0000",

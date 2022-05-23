@@ -7,9 +7,6 @@
 
 " ------------------------------------------------------------------------------
 
-" Command used to edit files in various contexts.  The default is vim.
-" If you would like to use another vi clone such as Elvis or Vile
-" you will need to change this setting.
 
 set vicmd=nvim
 " set vicmd=elvis\ -G\ termcap
@@ -126,12 +123,12 @@ nnoremap gen :cd /mnt/network/mnt/disk2/entertainment/<cr>
 nnoremap gdr :cd ~/my-work/dev/lang/<cr>
 nnoremap gng :cd ~/documents/normal/desktop/git-repos/<cr>
 nnoremap gnd :cd ~/documents/normal/desktop/<cr>
-mark t ~/my-work/torrents/
 nnoremap gno :cd ~/my-work/notes/ob/obsidian/<cr>
 nnoremap gE :cd /etc/<cr>
 nnoremap gU :cd /usr/<cr>
 " Open console in current directory
 nnoremap t :!st &<cr>
+nnoremap r :run %f<cr>
 
 " ------------------------------------------------------------------------------
 

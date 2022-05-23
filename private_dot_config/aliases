@@ -1,41 +1,55 @@
-# dirs
-alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME/yarn/config"'
+alias doas="doas --"
+#{{{dirs
+alias notes="cd ~/my-work/notes/ob/obsidian/"
+alias dev="cd ~/my-work/dev/"
+notes=$HOME/my-work/notes/ob/obsidian/
+dev=$HOME/my-work/dev
+scripts=$HOME/.local/bin/script/
+gitrep=$HOME/documents/normal/desktop/git-repos/new-repo/
+gen=/mnt/network/mnt/disk2/entertainment/
+ss="$HOME/.local/bin/script/"
+worksoft=$HOME/my-work/work-software/
+gsc=$HOME/documents/school/
+gscr=$gsc/english
 alias geny="cd /mnt/network/mnt/disk2/entertainment/youtube/"
 alias lang="cd ~/my-work/dev/lang"
 alias linux="cd ~/my-work/os/linux/"
 alias gen="cd /mnt/network/mnt/disk2/entertainment/"
-# buku
-alias buq="buku -s quick-link"
-alias bul="buku -s look-at"
-alias bu='buku --suggest'
-# programing
+#}}}
+#{{{yt-dlp
+alias yta-aac="yt-dlp --extract-audio --audio-format aac "
+alias yt-dlp="yt-dlp --restrict-filenames --retries infinite "
+alias yt="yt-dlp --restrict-filenames --retries infinite"
+alias yta-best="yt-dlp --extract-audio --audio-format best "
+alias yta-flac="yt-dlp --extract-audio --audio-format flac "
+alias yta-m4a="yt-dlp --extract-audio --audio-format m4a "
+alias yta-mp3="yt-dlp --extract-audio --audio-format mp3 "
+alias yta-opus="yt-dlp --extract-audio --audio-format opus "
+alias yta-vorbis="yt-dlp --extract-audio --audio-format vorbis "
+alias yta-wav="yt-dlp --extract-audio --audio-format wav "
+alias ytv-best="yt-dlp -f bestvideo+bestaudio "
+#}}}
+#{{{programing
 alias py='python'
+alias ca="cargo"
+alias smake="sudo make install"
 alias py2='python2'
 alias py3='python3'
-alias cza="chezmoi apply -v"
-alias czadd="chezmoi add -v"
+alias czapp="chezmoi apply -v"
+alias svn='svn --config-dir "$XDG_CONFIG_HOME"/subversion'
+alias cza="chezmoi add"
 alias czd="chezmoi diff"
+alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME/yarn/config"'
 alias czl="chezmoi git log"
-# files
-# if (( ${+commands[exa]} )); then
-
-# else
-
-# fi
-
-alias ls='ls-ll.sh'
-alias ln="ln -i"
-alias cx='chmod +x'
-alias lt='exa -T'
-alias lt1='exa -T -L 1'
-alias lt2='exa -T -L 2'
-alias sl='ls-ll.sh'
-alias ll='ls-ll.sh'
-alias lp="~/./scripts/bash/ll/lp-ll.sh"
-alias exa='/usr/bin/exa -alh --group-directories-first --sort=extension --icons --color=always'
+#}}}
+#{{{files
+#{{{ls/exa
+if (( ${+commands[exa]} )); then
+alias ls='exa-ll.sh'
 alias lsgit='exa -lhi --git'
 alias lsR='exa -R'
-alias el="/usr/bin/ls"
+alias ll='exa-ll.sh'
+alias sl='exa-ll.sh'
 alias ls.='exa ../'
 alias ls..='exa ../../'
 alias ls...='exa ../../../'
@@ -43,8 +57,31 @@ alias ls....='exa ../../../../'
 alias ls5='exa ../../../../../'
 alias ls6='exa ../../../../../../'
 alias ls7='exa ../../../../../../../'
+alias lt='exa -T'
+alias exa='/usr/bin/exa -alh --group-directories-first --sort=extension --icons --color=always'
 alias li="exa -li --no-filesize --no-permissions --no-time --no-user"
-alias catn='cat -n'
+alias lt1='exa -T -L 1'
+alias lt2='exa -T -L 2'
+else
+alias ls='ls-ll.sh'
+alias sl='ls-ll.sh'
+alias ll='ls-ll.sh'
+alias lsR='ls -R'
+alias ls.='ls ../'
+alias ls..='ls ../../'
+alias ls...='ls ../../../'
+alias ls....='ls ../../../../'
+alias ls5='ls ../../../../../'
+alias ls6='ls ../../../../../../'
+alias ls7='ls ../../../../../../../'
+alias lt='tree'
+alias lt1='tree -L 1'
+alias lt2='tree -L 2'
+fi
+#}}}
+alias ln="ln -i"
+alias cx='chmod +x'
+alias el="/bin/ls"
 bpw () {(cd $OLDPWD && pwd) ;}
 bpwc () {(cd $OLDPWD && pwd |  xclip -selection clipboard) ;}
 alias pwdc="pwd | xclip -selection clipboard"
@@ -53,52 +90,10 @@ alias trashl='trash-list'
 alias trashr="trash-restore"
 alias trashe="trash-empty"
 alias rrm="/bin/rm -rfvi"
-alias srrm="doas -- /bin/rm -rfvi"
+alias srrm="doas /bin/rm -rfvi"
 alias trashr='restore'
 alias rm="trash -iv"
 alias trash="trash -iv"
-# programs
-alias svn='svn --config-dir "$XDG_CONFIG_HOME"/subversion'
-alias t="transmission-remote"
-alias tl="transmission-remote --list"
-alias ta="transmission-remote --add"
-alias td="transmission-daemon"
-alias cat="bat"
-alias ccat="/bin/cat"
-alias fzf="fzf-tmux"
-alias newsboat="newsboat -r"
-alias rdrview="rdrview -B $CLI_BROWSER "
-## vim
-alias vim="$EDITOR"
-alias vi="$EDITOR"
-alias v="$EDITOR"
-alias sv="sudo $EDITOR"
-alias vwiki="$EDITOR -c VimwikiIndex"
-# programs with args
-# other
-alias powershell='pwsh'
-thermanil ()
-{
-paste <(cat /sys/class/thermal/thermal_zone*/type) <(cat /sys/class/thermal/thermal_zone*/temp) | column -s $'\t' -t | sed 's/\(.\)..$/.\1°C/'
-}
-alias C='wc -l'
-alias L="less"
-alias mutt="mw -Y && neomutt"
-alias mpvl="mpv -loop"
-alias m="mpv"
-#alias abook="abook --config "$XDG_CONFIG_HOME"/abook/abookrc --datafile "$XDG_CONFIG_HOME"/abook/addressbook"
-alias feh='setsid -f feh '
-alias libreoffice='setsid -f libreoffice '
-alias mpvn="mpv"
-#alias planmaker21free='setsid -f planmaker21free '
-#alias presentations21free='setsid -f presentations21free '
-alias wget="wget --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hsts""
-# hardware
-alias mute='amixer set Master mute'
-alias umute='amixer set Master unmute'
-alias tsukae='tsukae zsh -s=/home/chief/documents/cashe/.zsh_history'
-# folders
-# directorys
 alias ..="cd .."
 alias ...="cd ../../"
 alias ....="cd ../../../"
@@ -116,16 +111,60 @@ alias mk="mkdir -pv"
 alias space='doas -- btrfs fi show'
 alias bt-list='doas -- btrfs subv list /'
 alias bt-scrup="doas -- btrfs scrub start /"
-# greps
+#}}}
+#{{{programs
+# alias t="transmission-remote"
+# alias tl="transmission-remote --list"
+# alias ta="transmission-remote --add"
+# alias td="transmission-daemon"
+alias cat="bat"
+alias sss="/bin/ss"
+alias box="boxes -d scroll"
+alias markdown-toc="~/./node_modules/markdown-toc/cli.js"
+# buku
+alias buq="buku -s quick-link"
+alias bul="buku -s look-at"
+alias bu='buku --suggest'
+alias ccat="/bin/cat"
+alias fzf="fzf-tmux"
+alias catn='cat -n'
+alias newsboat="newsboat -r"
+alias rdrview="rdrview -B $CLI_BROWSER "
+alias tsukae='tsukae zsh -s=/home/chief/documents/cashe/.zsh_history'
+alias mpvl="mpv -loop"
+#alias abook="abook --config "$XDG_CONFIG_HOME"/abook/abookrc --datafile "$XDG_CONFIG_HOME"/abook/addressbook"
+alias feh='setsid -f feh '
+alias libreoffice='setsid -f libreoffice '
+alias mpvn="mpv"
+alias C='wc -l'
+alias L="less"
+alias wwget="wget --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hsts" --user-agent="Mozilla""
+alias wget='wget --page-requisites --adjust-extension --convert-links --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hsts" --user-agent="Mozilla"'
+alias free='free -hm'
+alias df='df -Th'
+#}}}
+#{{{vim
+alias vim="$EDITOR"
+alias vir='nvim -R'
+alias vi="$EDITOR"
+alias v="$EDITOR"
+alias sv="sudo $EDITOR"
+alias vwiki="$EDITOR -c VimwikiIndex"
+#}}}
+#{{{shell
+alias powershell='pwsh'
+alias scz="source ~/.config/zsh/.zshrc"
+alias scb="source ~/.bashrc"
+#}}}
+# hardware
+#{{{greps
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
-alias h='history'
 alias Grep='grep'
 #alias GREP='grep'
 #alias gr='grep'
-alias free='free -hm'
-alias df='df -Th'
+#}}}
 # xorg
 alias keys="xmodmap ~/.local/share/Xmodmap"
 alias clip='xclip -selection clipboard'
@@ -133,65 +172,82 @@ alias clip='xclip -selection clipboard'
 alias xin="xinput"
 alias xine="xinput enable"
 alias xind="xinput disable"
-# system
+#{{{system
 alias sysd="doas systemctl"
+alias mute='amixer set Master mute'
+alias umute='amixer set Master unmute'
 alias sudo='doas'
 # get error messages from journalctl
 alias jctl="journalctl -p 3 -xb"
-# network
-# pings
-alias pingg='ping www.google.com'
+alias pingg='ping gnu.org'
 alias ping='ping -v'
 alias servs="cat /etc/services"
 alias op-port='netstat -lntu'
-#alias ssl="ss -l"
 #ssl5 () { ss -l | awk '{print $5}' ;}
-alias release="lsb_release -a"
-alias bip='bind -p'
 alias bitb="getconf LONG_BIT"
 alias crjobs="crontab -l"
+#}}}
 # programing
-alias ca="cargo"
-alias smake="sudo make install"
-# git
+#{{{git
 alias gcl="git clone"
-alias gadd="git add ."
+alias g="git"
+alias ga="git add ."
 alias gcom='git commit -am'
 alias gbranch='git branch'
 alias gpush="git push"
 alias gpull="git pull"
 alias gstat="git status"
-# These common commands are just too long! Abbreviate them.
+#}}}
+#{{{These common commands are just too long! Abbreviate them.
 alias f="feh"
 alias b="$BROWSER"
+alias r=rfkill
 alias o="libreoffice"
 alias m="mpv"
 alias ka="killall"
 alias z="zathura"
-alias p="sudo pacman"
+if (( ${+commands[pacman]} ));then
+alias p='sudo pacman'
+alias pq="pacman -Q | wc -l "
 alias np="pacman"
-alias g="git"
+elif (( ${+commands[dnf]} ));then
+alias p='sudo dnf'
+alias np="dnf"
+alias pi="sudo dnf install"
+alias pq="dnf list installed | sed 1d | wc -l"
+alias pup="sudo dnf update"
+alias pun="sudo dnf remove"
+else
+alias p='sudo apt'
+alias np="apt"
+alias pi="sudo apt install"
+alias pup="sudo apt update && sudo apt upgrage"
+alias pq="apt list --installed | wc -l "
+alias pun="sudo apt remove"
+fi
 alias cle="clear"
 alias wh="whereis"
-#alias l="exa"
-alias pq="pacman -Q | wc -l "
-alias doas="doas --"
+#}}}
 # package mangers
-alias pqen='pacman -Qent'
-alias pqe='pacman -Qe'
-alias pqqe='pacman -Qqe '
-alias psi='pacman -Si'
-pack-size () { LC_ALL=C pacman -Qi | awk '/^Name/{name=$3} /^Installed Size/{print $4$5, name}' | sort -h ;}
-alias paur='pacman -Qqm' # list only aur pkgs
-# curls
+# alias pqen='pacman -Qent'
+# alias pqe='pacman -Qe'
+# alias pqqe='pacman -Qqe '
+# alias psi='pacman -Si'
+# pack-size () { LC_ALL=C pacman -Qi | awk '/^Name/{name=$3} /^Installed Size/{print $4$5, name}' | sort -h ;}
+# alias paur='pacman -Qqm' # list only aur pkgs
+#{{{curls
 alias rr='curl -s -L https://raw.githubusercontent.com/keroserene/rickrollrc/master/roll.sh | bash'
 alias wheather='curl wttr.in'
 alias ipcu='curl ifconfig.co'
 alias bt-cheat='curl cheat.sh/btrfs'
 alias parrot='curl parrot.live'
-#alias dictar='curl 'dict://dict.org/d:'
+#}}}
+#{{{functions
+fd() {
+  find ${2-.} -type f -iname "*$1*"
+}
+
 psac () { ps auxf | awk '{print $1 "\t" $2 "\t" $3 "\t" $4 "\t" $9 "\t" $11}' ;}
-alias sr='doas -- !!'
 function fawk {
     first="awk '{print "
     last="}'"
@@ -231,7 +287,7 @@ tovi() {
         if [ $# != 1 ]; then
                 echo "Usage: tovi <file>"
         else
-                touch $1 && vim $1
+                touch $1 && $EDITOR $1
         fi
 }
 
@@ -242,45 +298,12 @@ lacd()
                 cd "$last_dir"
         fi
 }
-
+thermanil ()
+{
+paste <(cat /sys/class/thermal/thermal_zone*/type) <(cat /sys/class/thermal/thermal_zone*/temp) | column -s $'\t' -t | sed 's/\(.\)..$/.\1°C/'
+}
 #bu () { cp $1 ~/documents/config-cp/auto/$(date +%Y-y_%m-m_%d-d_%H-h_%M-min_%S-se)-$(basename $1) ; }
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-fi
+#}}}
 alias dd="echo"
-alias yt-dlp="yt-dlp --restrict-filenames --retries infinite "
-alias yt="yt-dlp --restrict-filenames --retries infinite"
-# folders
-alias notes="cd ~/my-work/notes/ob/obsidian/"
-alias dev="cd ~/my-work/dev/"
-alias scz="source ~/.config/zsh/.zshrc"
-alias scb="source ~/.bashrc"
-alias invr="inv rt"
-notes=$HOME/my-work/notes/ob/obsidian/
-dev=$HOME/my-work/dev
-scripts=$HOME/.local/bin/script/
-gitrep=$HOME/documents/normal/desktop/git-repos/new-repo/
-gen=/mnt/network/mnt/disk2/entertainment/
-ss="$HOME/.local/bin/script/"
-worksoft=$HOME/my-work/work-software/
-gsc=$HOME/documents/school/
-gscr=$gsc/english
-alias r=rfkill
 alias amount="aft-mtp-mount ~/mnt"
-alias yta-aac="yt-dlp --extract-audio --audio-format aac "
-alias yta-best="yt-dlp --extract-audio --audio-format best "
-alias yta-flac="yt-dlp --extract-audio --audio-format flac "
-alias yta-m4a="yt-dlp --extract-audio --audio-format m4a "
-alias yta-mp3="yt-dlp --extract-audio --audio-format mp3 "
-alias yta-opus="yt-dlp --extract-audio --audio-format opus "
-alias yta-vorbis="yt-dlp --extract-audio --audio-format vorbis "
-alias yta-wav="yt-dlp --extract-audio --audio-format wav "
-alias ytv-best="yt-dlp -f bestvideo+bestaudio "
 alias ss="cd ~/.local/bin/script/ && ls"
-alias sss="/bin/ss"
-alias a="alias"
-alias box="boxes -d scroll"
-alias tokei="/bin/tokei"
-alias bashtop="/bin/bashtop"
-alias markdown-toc="~/./node_modules/markdown-toc/cli.js"

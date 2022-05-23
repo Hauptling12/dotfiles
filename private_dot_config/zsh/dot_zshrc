@@ -4,6 +4,10 @@ SAVEHIST=1000000000000000000 # infinite history
 HISTFILE=~/documents/cashe/.zsh_history
 export HISTTIMEFORMAT='%F %T'
 
+# Enable comments when working in an interactive shell.
+setopt interactive_comments
+
+source $HOME/.local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 stty stop undef		# Disable ctrl-s to freeze terminal.
 
  #Basic auto/tab complete:
@@ -178,15 +182,13 @@ fi
 #alias -s {gif,GIF,jpeg,JPEG,jpg,JPG,png,PNG}="background $IMAGEVIEWER"
 # Load zsh-syntax-highlighting; should be last.
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
-
 #clear
-#eval "$(starship init zsh)"
 #unix
 
 [ -f ~/.local/share/.fzf.zsh ] && source ~/.local/share/.fzf.zsh
 #PROMPT='%F{green}%f %F{red}[%f%F{blue}%B%~%b%F{red}]%f%f$ '
 #export PS1=$'\n'"%F{green}%f %F{red}[%f%F{blue}%B%~%b%F{red}]%f%f"$'\n'"$ "
-PS1=$'\n%m'"%F{green}%f %F{red}[%f%F{blue}%B%~%b%F{red}]%f%f"$'\n'"$ "
+ PS1=$'\n┌───> %m'"%F{green}%f %F{red}[%f%F{blue}%B%~%b%F{red}]%f%f"%\?$'\n'"└─> "
 # keybingings
 #bindkey -s '^1' 'light -U 2'
 #bindkey -s '^2' 'light -A 2'
@@ -203,7 +205,7 @@ bindkey "^e" end-of-line
 
 # Edit line in vim with ctrl-e:
 #autoload edit-command-line; zle -N edit-command-line
-bindkey '^e' edit-command-line
+#bindkey '^e' edit-command-line
 #bindkey -M vicmd '^[[P' vi-delete-char
 #bindkey -M vicmd '^e' edit-command-line
 #bindkey -M visual '^[[P' vi-delete

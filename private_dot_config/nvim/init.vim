@@ -1,5 +1,4 @@
-let mapleader =","
-
+" {{{ plugins
 if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim"'))
 	echo "Downloading junegunn/vim-plug to manage plugins..."
 	silent !mkdir -p ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/
@@ -12,22 +11,20 @@ Plug 'itchyny/lightline.vim'
 Plug 'https://github.com/pangloss/vim-javascript'
 Plug 'dkarter/bullets.vim'
 Plug 'junegunn/fzf.vim'
-Plug 'https://github.com/axieax/urlview.nvim'
+"Plug 'https://github.com/axieax/urlview.nvim'
 Plug 'junegunn/fzf'
-"Plug 'preservim/nerdtree'
-"Plug 'ryanoasis/vim-devicons'
-"Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'fatih/vim-go' , { 'for': ['go', 'vim-plug'], 'tag': '*' }
 Plug '~/.config/nvim/deadkeys.vim'
 Plug '~/.config/nvim/ipa.vim'
 "Plug 'chentau/marks.nvim'
 Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
 Plug 'bfrg/vim-cpp-modern'
-Plug 'MattesGroeger/vim-bookmarks'
+Plug 'https://github.com/honza/vim-snippets'
+"Plug 'MattesGroeger/vim-bookmarks'
 Plug 'arzg/vim-swift'
 Plug 'neoclide/coc-sources'
-Plug 'xolox/vim-notes'
-Plug 'xolox/vim-misc'
+"Plug 'xolox/vim-notes'
+"Plug 'xolox/vim-misc'
 Plug 'tpope/vim-commentary'
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'majutsushi/tagbar'
@@ -35,72 +32,45 @@ Plug 'alvan/vim-closetag'
 "Plug 'godlygeek/tabular'
 Plug 'preservim/vim-markdown'
 Plug 'vimwiki/vimwiki'
-Plug 'vim-python/python-syntax'                    " Python highlighting
+Plug 'vim-python/python-syntax'
 Plug 'mbbill/undotree'
 Plug 'mattn/emmet-vim'
 Plug 'rust-lang/rust.vim'
-
 call plug#end()
-"""""""""""""""""""""""
-" some basics
-"""""""""""""""""""""""
-"set viminfo+=n$HOME/.config/nvim/viminfo
-set title
-if exists('$SHELL')
-        set shell=$SHELL
-else
-        set shell=/bin/sh
-endif
-set shiftwidth=4
-set expandtab
-set backspace=indent,eol,start
-silent !mkdir -p $HOME/.config/nvim/tmp/backup
-silent !mkdir -p $HOME/.config/nvim/tmp/undo
-if has('persistent_undo')
-	set undofile
-	set undodir=$HOME/.config/nvim/tmp/undo,.
-endif
-set backupdir=$HOME/.config/nvim/tmp/backup,.
-set directory=$HOME/.config/nvim/tmp/backup,.
-set clipboard+=unnamedplus
-set title
-set noruler
+"}}}
+" {{{General
+set history=700
 filetype plugin on
-"set number relativenumber       " Display line numbers
+filetype indent on
+let mapleader =","
+nmap <leader>w :w!<cr>
+"}}}
+" {{{vim userinterface
+set title
+set numberwidth=3
+set splitbelow splitright
+set noruler
+set noshowmode
 set relativenumber       " Display line numbers
-syntax on
-set encoding=utf-8
 set hlsearch
 set incsearch
 set smartcase
 set ignorecase
-" makes clipboard save to system
-" set clipboard+=unamedplus
-vnoremap <C-c> "+y
+" Enable autocompletion:
+set wildmode=longest,list,full
+" Disables automatic commenting on newline:
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+set encoding=utf-8
 set autoindent
 set hidden
-set splitbelow splitright
+"set cursorline
+set cursorcolumn
 " highlight operaters
 set showmatch
-" Enable autocompletion:
-        set wildmode=longest,list,full
-" Disables automatic commenting on newline:
-        autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-
-" utils
-" Check file in shellcheck:
-        map <leader>s :!clear && shellcheck -x %<CR>
-" Spell-check set to <leader>o, 'o' for 'orthography':
-"        map <leader>o :setlocal spell! spelllang=en_us<CR>
-" Save file as sudo on files that require root permission
-       " cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
-       cmap w!! w !doas tee > /dev/null %
-" Automatically deletes all trailing whitespace and newlines at end of file on save. & reset cursor position
-        autocmd BufWritePre * let currPos = getpos(".")
-        autocmd BufWritePre * %s/\s\+$//e
-        autocmd BufWritePre * %s/\n\+\%$//e
-        autocmd BufWritePre *.[ch] %s/\%$/\r/e
-        autocmd BufWritePre * cal cursor(currPos[1], currPos[2])
+" tab
+set shiftwidth=4
+set expandtab
+set backspace=indent,eol,start
 " Function for toggling the bottom statusbar:
 let s:hidden_all = 0
 map <leader>T :call ToggleHiddenAll()<CR>
@@ -119,100 +89,202 @@ function! ToggleHiddenAll()
         set showcmd
     endif
 endfunction
+augroup highlight_yank
+  autocmd!
+  au TextYankPost * silent! lua vim.highlight.on_yank{higroup="YankColor", timeout=300, on_visual=false}
+augroup END
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
+  autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
+augroup END
 nnoremap <leader>h :call ToggleHiddenAll()<CR>
+set guioptions-=m  "remove menu bar
+set guioptions-=T  "remove toolbar
+set guioptions-=r  "remove right-hand scroll bar
+set guioptions-=L  "remove left-hand scroll bar
+" Removes pipes | that act as seperators on splits
+set fillchars+=vert::
+set foldmethod=marker
+" Auto-resize splits when Vim gets resized.
+autocmd VimResized * wincmd =
+"}}}
+"{{{Colors and Fonts
+syntax on
+"}}}
+"{{{Files
+"set viminfo+=n$HOME/.config/nvim/viminfo
+" Edit Vim config file in a new tab.
+map <Leader>ev :tabnew $MYVIMRC<CR>
+" Source Vim config file.
+map <Leader>sv :source $MYVIMRC<CR>
+autocmd BufRead,BufNewFile gitconfig.local set filetype=gitconfig
 
-" nerdtree
-"let NERDTreeShowHidden=1
-"autocmd VimEnter * NERDTree | wincmd p
-"autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-" let g:NERDTreeDirArrowExpandable = '|'
-" let g:NERDTreeDirArrowCollapsible = '|'
-" let NERDTreeMapOpenInTab='T'
-" let NERDTreeMapOpenSplit='H'
-" let NERDTreeMapOpenVSplit='V'
-" let NERDTreeMinimalUI=1
-" minimap
-"g:minimap_block_filetypes = ['fugitive', 'nerdtree', 'tagbar', 'fzf' ]
-"g:minimap_close_filetypes = ['startify', 'netrw', 'vim-plug']
-"
-let g:bookmark_auto_save_file = '/home/chief/.cache/vim-bookmarks'
-
-"""
-"let g:NERDCreateDefaultMappinfa = 1
-"""
-" marks.nvim
+autocmd BufRead,BufNewFile vifmrc set filetype=vifm
+autocmd BufRead,BufNewFile *.ms,*.me,*.mom,*.man set filetype=groff
+autocmd BufRead,BufNewFile .bashrc set filetype=bash
+autocmd BufRead,BufNewFile .zshrc set filetype=sh
+autocmd BufRead,BufNewFile *.tex set filetype=tex
+silent !mkdir -p $HOME/.config/nvim/tmp/backup
+silent !mkdir -p $HOME/.config/nvim/tmp/undo
+if has('persistent_undo')
+	set undofile
+	set undodir=$HOME/.config/nvim/tmp/undo,.
+endif
+set backupdir=$HOME/.config/nvim/tmp/backup,.
+set directory=$HOME/.config/nvim/tmp/backup,.
+" Runs a script that cleans out tex build files whenever I close out of a .tex file.
+      autocmd VimLeave *.tex !texclear %
+"automatically source the Vimrc file on save.
+" augroup autosourcing
+   " autocmd!
+   " autocmd BufWritePost init.vim source %
+" augroup END
+" Automatically deletes all trailing whitespace and newlines at end of file on save. & reset cursor position
+        autocmd BufWritePre * let currPos = getpos(".")
+        autocmd BufWritePre * %s/\s\+$//e
+        autocmd BufWritePre * %s/\n\+\%$//e
+        autocmd BufWritePre *.[ch] %s/\%$/\r/e
+        autocmd BufWritePre * cal cursor(currPos[1], currPos[2])
+" }}}
+"{{{Moving around
+set matchpairs+=<:> " Use % to jump between pairs
+nnoremap <C-Up> :m .-2<CR>==
+nnoremap <C-Down> :m .+1<CR>==
+vnoremap <C-Up> :m '<-2<CR>gv=gv
+vnoremap <C-Down> :m '>+1<CR>gv=gv
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+"Make adjusing split sizes a bit more friendly
+noremap <silent> <C-Left> :vertical resize +3<CR>
+noremap <silent> <C-Right> :vertical resize -3<CR>
+noremap <silent> <C-Up> :resize +3<CR>
+noremap <silent> <C-Down> :resize -3<CR>
+" Change 2 split windows from vert to horiz or horiz to vert
+map <Leader>th <C-w>t<C-w>H
+map <Leader>tk <C-w>t<C-w>K
+"Tab management
+"new tab with tu
+noremap tu :tabe<CR>
+noremap tU :tab split<CR>
+" Move around tabs with tn and ti
+noremap tn :-tabnext<CR>
+noremap ti :+tabnext<CR>
+"Move tabs with tmn and tmi
+noremap tmn :-tabmove<CR>
+noremap tmi :+tabmove<CR>
+nnoremap <C-A-j> :m .+1<CR>==
+nnoremap <C-A-k> :m .-2<CR>==
+vnoremap <C-A-j> :m '>+1<CR>gv=gv
+vnoremap <C-A-k> :m '<-2<CR>gv=gv
+vmap < <gv
+vmap > >gv
+"noremap W 5w
+noremap B 5b
+map <leader>i :setlocal autoindent<CR>
+map <leader>I :setlocal noautoindent<CR>
+" Enable and disable auto comment
+map <leader>c :setlocal formatoptions-=cro<CR>
+map <leader>C :setlocal formatoptions=cro<CR>
+nnoremap <Left> :echoe "Use h"<CR>
+nnoremap <Right> :echoe "Use l"<CR>
+nnoremap <Up> :echoe "Use k"<CR>
+nnoremap <Down> :echoe "Use j"<CR>
+"}}}
+"{{{tabs
+autocmd FileType json setlocal tabstop=2 softtabstop=2 shiftwidth=2
+autocmd FileType c,cpp setlocal tabstop=4 shiftwidth=4
+autocmd FileType java setlocal shiftwidth=2 softtabstop=2
+autocmd FileType markdown setlocal shiftwidth=2 softtabstop=2
+autocmd FileType swift setlocal shiftwidth=4 softtabstop=4
+autocmd FileType typescript setlocal tabstop=2 softtabstop=2 shiftwidth=2
+"}}}
+if exists('$SHELL')
+        set shell=$SHELL
+else
+        set shell=/bin/sh
+endif
+" set clipboard+=unnamedplus
+" makes clipboard save to system
+vnoremap <C-c> "+y
+" Prevent x from overriding what's in the clipboard.
+noremap x "_x
+noremap X "_x
+" Check file in shellcheck:
+        map <leader>s :!clear && shellcheck -x %<CR>
+" Save file as sudo on files that require root permission
+       " cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
+       cmap w!! w !doas tee > /dev/null %
+"{{{ plugin conf
 " rust syntax
 "let g:rust_clip_command = 'xclip -selection clipboard'
 
-" vimling:
+"{{{vimling:
       nm <leader><leader>d :call ToggleDeadKeys()<CR>
       imap <leader><leader>d <esc>:call ToggleDeadKeys()<CR>a
      " nm <leader><leader>i :call ToggleIPA()<CR>
      " imap <leader><leader>i <esc>:call ToggleIPA()<CR>a
-
+"}}}
 """""""""
 "" markdown table
 """""
-" let g:table_mode_corner='|'
-" function! s:isAtStartOfLine(mapping)
-"   let text_before_cursor = getline('.')[0 : col('.')-1]
-"   let mapping_pattern = '\V' . escape(a:mapping, '\')
-" let comment_pattern = '\V' . escape(substitute(&l:commentstring, '%s.*$', '', ''), '\')
-"   return (text_before_cursor =~? '^' . ('\v(' . comment_pattern . '\v)?') . '\s*\v' . mapping_pattern . '\v$')
-" endfunction
-
-" inoreabbrev <expr> <bar><bar>
- "          \ <SID>isAtStartOfLine('\|\|') ?
-  "         \ '<c-o>:TableModeEnable<cr><bar><space><bar><left><left>' : '<bar><bar>'
-" inoreabbrev <expr> __
-   "        \ <SID>isAtStartOfLine('__') ?
-    "       \ '<c-o>:silent! TableModeDisable<cr>' : '__'
-"noremap <LEADER>tm :TableModeToggle<CR>
 "let g:table_mode_disable_mappings = 1
 "let g:table_mode_cell_text_object_i_map = 'k<Bar>'
-" ===
-" === Bullets.vim
-" ===
-" Bullets.vim
+"{{{Bullets.vim
 let g:bullets_enabled_file_types = [
     \ 'markdown',
     \ 'text',
     \]
+"}}}
+"{{{status line
+let g:lightline = {
+      \ 'colorscheme': 'darcula',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ],
+      \   'right': [ [ 'fileformat', 'fileencoding', 'filetype', 'percent', 'lineinfo', 'line' ],
+      \              [ 'bufnum' ] ],
+      \ },
+      \ 'component_function': {
+      \   'fileformat': 'LightlineFileformat',
+      \   'filetype': 'LightlineFiletype',
+\   'cocstatus': 'coc#status'
+      \ },
+      \ }
+function! LightlineFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
 
-" ===
-" === Undotree
-" ===
+function! LightlineFiletype()
+  return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+endfunction
+" Always show statusline
+set laststatus=2
+"}}}
+" {{{Undotree
 "noremap L :UndotreeToggle<CR>
 let g:undotree_SetFocusWhenToggle = 1
 let g:undotree_ShortIndicators = 1
 let g:undotree_WindowLayout = 2
 let g:undotree_DiffpanelHeight = 8
 let g:undotree_SplitWidth = 24
-
-""""""""""""""
-" vimwiki
+"}}}
+" {{{vimwiki
 "''''
 let g:vimwiki_global_ext = 0
 let g:vimwiki_list = [{'path': '~/my-work/notes/ob/obsidian/', 'path_html': '~/my-work/notes/ob/obsidian/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
-"""""""""""
-" coc
+let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+"}}}
+" {{{coc
 """"
-""
 " snippets
-""
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() :
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
+let g:coc_snippet_next = '<tab>'
+let g:coc_snippet_prev = '<s-tab>'
+" Use <C-j> for both expand and jump (make expand higher priority.)
+" imap <C-j> <Plug>(coc-snippets-expand-jump)
 let g:coc_global_extensions = [
   \ 'coc-cl',
   \ 'coc-clangd',
@@ -233,10 +305,10 @@ let g:coc_global_extensions = [
   \ 'coc-omnisharp',
   \ 'coc-sh',
   \ 'coc-hls',
+  \ 'coc-snippets',
   \ 'coc-phpls',
   \ 'coc-pyright',
 	\ ]
-let g:coc_snippet_next = '<tab>'
                                            \"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 " Give more space for displaying messages.
 set cmdheight=2
@@ -405,53 +477,45 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-""""""""""""""""""""""""""
-" emmet
-"""::::::::::::::::::::
+"}}}
+" {{{emmet
+"""""""
 let g:user_emmet_mode='a'    "enable all function in all mode.
 let g:user_emmet_install_global = 0
 autocmd FileType xhtml,html,css EmmetInstall
-
-"""
-" closetag auto
-"""
-" filenames like *.xml, *.html, *.xhtml, ...
-" These are the file extensions where this plugin is enabled.
+"}}}
+" {{{closetag auto
+"filenames like *.xml, *.html, *.xhtml,
+"These are the file extensions where this plugin is enabled
 let g:closetag_filenames = '*.php,*.md,*.html,*.xhtml,*.jsx,*.js,*.tsx'
 
-" filenames like *.xml, *.xhtml, ...
-" This will make the list of non-closing tags self-closing in the specified files.
+"filenames like *.xml, *.xhtml, ...
+"This will make the list of non-closing tags self-closing in the specified files
 let g:closetag_xhtml_filenames = '*.xml,*.xhtml,*.jsx,*.js,*.tsx'
 
-" filetypes like xml, html, xhtml, ...
-" These are the file types where this plugin is enabled.
+"filetypes like xml html xhtml
+"These are the file types where this plugin is enabled
 let g:closetag_filetypes = 'html,xhtml,jsx,js,tsx'
 
-" filetypes like xml, xhtml, ...
-" This will make the list of non-closing tags self-closing in the specified files.
+"filetypes like xml xhtml
+"This will make the list of non-closing tags self-closing in the specified files
 let g:closetag_xhtml_filetypes = 'xml,xhtml,jsx,js,tsx'
 
-" integer value [0|1]
-" This will make the list of non-closing tags case-sensitive (e.g. `<Link>` will be closed while `<link>` won't.)
+"integer value [0|1]
+"This will make the list of non-closing tags case-sensitive (eg `<Link>` will be closed while `<link>` wont)
 let g:closetag_emptyTags_caseSensitive = 1
-"
 let g:closetag_regions = {
     \ 'typescript.tsx': 'jsxRegion,tsxRegion',
     \ 'javascript.jsx': 'jsxRegion',
     \ 'typescriptreact': 'jsxRegion,tsxRegion',
     \ 'javascriptreact': 'jsxRegion',
     \ }
-
-" Shortcut for closing tags, default is '>'
-"
+"Shortcut for closing tags default is '>'
 let g:closetag_shortcut = '>'
-
-" Add > at current position without closing the current tag, default is ''
-"
+"Add > at current position without closing the current tag default is ''
 let g:closetag_close_shortcut = '<leader>>'
-"==
-"=== netrw
-"==
+"}}}
+" {{{netrw
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
@@ -529,98 +593,23 @@ function! NetrwOnBufferOpen()
 	call ToggleNetrw()
 endfun
 let g:NetrwIsOpen=0
-"==
-"=== files
-"==
-" ===
-" === Markdown Settings
-" ===
-" Snippets
-" Runs a script that cleans out tex build files whenever I close out of a .tex file.
-      autocmd VimLeave *.tex !texclear %
-" Ensure files are read as what I want:
-      let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-      autocmd BufRead,BufNewFile ~/.calcurse/notes/* set filetype=markdown
-      autocmd BufRead,BufNewFile *.ms,*.me,*.mom,*.man set filetype=groff
-      autocmd BufRead,BufNewFile *.tex set filetype=tex
-
-""
-" modules
-""
-augroup highlight_yank
-  autocmd!
-  au TextYankPost * silent! lua vim.highlight.on_yank{higroup="YankColor", timeout=300, on_visual=false}
-augroup END
-augroup numbertoggle
-  autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
-  autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
-augroup END
-
-" cursor preview
-"set cursorline
-set cursorcolumn
-"""""""""""""""""
-" keybindings remaped
-"""""""""""""""""
-" Faster in-line navigation
-"noremap W 5w
-noremap B 5b
-
-"nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :call ToggleNetrw()<CR>
-" nnoremap <C-t> :NERDTreeToggle<CR>
-"nnoremap <C-f> :NERDTreeFind<CR>
-" Shortcutting split navigation, saving a keypress:
-      map <C-h> <C-w>h
-      map <C-j> <C-w>j
-      map <C-k> <C-w>k
-      map <C-l> <C-w>l
-      " Make adjusing split sizes a bit more friendly
-noremap <silent> <C-Left> :vertical resize +3<CR>
-noremap <silent> <C-Right> :vertical resize -3<CR>
-noremap <silent> <C-Up> :resize +3<CR>
-noremap <silent> <C-Down> :resize -3<CR>
-
-" Change 2 split windows from vert to horiz or horiz to vert
-map <Leader>th <C-w>t<C-w>H
-map <Leader>tk <C-w>t<C-w>K
-" Removes pipes | that act as seperators on splits
-set fillchars+=vert::
-" emmet shortcuts
-"" files
-" make Y to copy till the end of the line
-"nnoremap Y y$
-
-" Copy to system clipboard
-"vnoremap Y "+y
-" noremap <C-q> :qa<CR>
-"noremap S :w<CR>
-noremap q :wq
-
-" Open the vimrc file anytime
-"noremap <LEADER>rc :e $HOME/.config/nvim/init.vim<CR>
-" ===
-" === Tab management
-" ===
-" Create a new tab with tu
-noremap tu :tabe<CR>
-noremap tU :tab split<CR>
-" Move around tabs with tn and ti
-noremap tn :-tabnext<CR>
-noremap ti :+tabnext<CR>
-" Move the tabs with tmn and tmi
-noremap tmn :-tabmove<CR>
-noremap tmi :+tabmove<CR>
-" Spelling Check with <space>sc
-noremap <LEADER>sc :setlocal spell spelllang=en_au!<CR>
-
+"}}}
+"{{{fzf
+nnoremap <A-g> :GFiles<CR>
+nnoremap <leader>L :Lines
+nnoremap <A-z> :Files<CR>
+let g:fzf_preview_window = 'right:60%'
+"" Default key bindings
+let g:fzf_action = {
+            \ 'ctrl-t': 'tab split',
+            \ 'ctrl-h': 'split',
+            \ 'ctrl-v': 'vsplit' }
+"}}}
+"}}}
+noremap <LEADER>sc ;setlocal spell!<CR>
 inoremap ;g <Esc>/<++><Enter>"_c4l
-"inoremap ;g <++>
-" css
-autocmd FileType css map <leader>lib i@import url('https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css');<Enter>
-autocmd FileType css map <leader>lif i@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css');<Enter>
-""" html
+"{{{html
 autocmd FileType html map <leader>ljq i<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script><Enter>
 autocmd FileType html,markdown map <leader>le i<em></em><CR>
 autocmd FileType markdown,html map <leader>l1 <h1></h2><Esc>FeT>i
@@ -653,7 +642,13 @@ autocmd FileType html map <leader>lsm <small></small><Esc>FeT>i
 autocmd FileType html map <leader>lscr <script></script><Esc>FeT>i
 autocmd FileType html map <leader>lsa <samp></samp><Esc>FeT>i
 autocmd FileType html map <leader>llc i<link rel="stylesheet" href=""><Esc>hhi
-""" markdown
+autocmd FileType html noremap <leader>S i<!DOCTYPE html><enter><html lang="en"><enter><head><enter><meta charset="UTF-8"><enter><title></title><enter><link rel="stylesheet" href=""><enter></head><enter><body><enter><enter></body><enter></html><cr>
+" navbar
+"autocmd FileType html noremap <leader>lnb i<nav class="navbar"><enter><div class="logo">MUO</div><enter><ul class="nav-links"><enter><input type="checkbox" id="checkbox_toggle" /><enter><label for="checkbox_toggle" class="hamburger">&#9776;</label><enter><div class="menu"><enter><li><a href="/"></a></li><enter><li class="services"><enter><a href="/"></a><enter><ul class="dropdown"><enter><li><a href="/"></a></li><enter></ul><enter></li><enter></div><enter></ul><enter></nav>
+" navbar css
+"autocmd FileType html,c noremap <leader>lnc i* {<enter>margin: 0;<enter>padding: 0;<enter>box-sizing: border-box;<enter>}<enter>a {<enter>text-decoration: none;<enter>}<enter>li {<enter>list-style: none;<enter>}<enter>.navbar {<enter>display: flex;<enter>align-items: center;<enter>justify-content: space-between;<enter>padding: 20px;<enter>background-color: #676767;<enter>color: #fff;<enter>}<enter>.nav-links a {<enter>color: #fff;<enter>}<enter>.logo {<enter>font-size: 32px;<enter>}<enter>.menu {<enter>display: flex;<enter>gap: 1em;<enter>font-size: 18px;<enter>}<enter>.menu li:hover {<enter>background-color: #4c9e9e;<enter>border-radius: 5px;<enter>transition: 0.3s ease;<enter>}<enter>.menu li {<enter>padding: 5px 14px;<enter>}<enter>.services {<enter>position: relative;<enter>}<enter>.dropdown {<enter>background-color: #676767;<enter>padding: 1em 0;<enter>position: absolute;<enter>display: none;<enter>border-radius: 8px;<enter>top: 35px;<enter>}<enter>.dropdown li + li {<enter>margin-top: 10px;<enter>}<enter>.dropdown li {<enter>padding: 0.5em 1em;<enter>width: 8em;<enter>text-align: center;<enter>}<enter>.dropdown li:hover {<enter>background-color: #4c9e9e;<enter>}<enter>.services:hover .dropdown {<enter>display: block;<enter>}<enter>input[type=checkbox]{<enter>display: none;<enter>}<enter>.hamburger {<enter>display: none;<enter>font-size: 24px;<enter>user-select: none;<enter>}<enter>@media (max-width: 768px) {<enter>.menu {<enter>display:none;<enter>position: absolute;<enter>background-color:#676767;<enter>right: 0;<enter>left: 0;<enter>text-align: center;<enter>padding: 16px 0;<enter>}<enter>.menu li:hover {<enter>display: inline-block;<enter>background-color:#4c9e9e;<enter>transition: 0.3s ease;<enter>}<enter>.menu li + li {<enter>margin-top: 12px;<enter>}<enter>input[type=checkbox]:checked ~ .menu{<enter>display: block;<enter>}<enter>.hamburger {<enter>display: block;<enter>}<enter>.dropdown {<enter>left: 50%;<enter>top: 30px;<enter>transform: translateX(35%);<enter>}<enter>.dropdown li:hover {<enter>background-color: #4c9e9e;<enter>}<enter>}<enter>body {<enter>background-color:black;<Enter>}
+"}}}
+"{{{markdown
 autocmd FileType markdown inoremap ;l <li></li><Space><Space><Enter><++><Esc>FeT>i
 autocmd FileType markdown inoremap ;p <p></p><Space><Space><++><Esc>FeT>i
 autocmd FileType markdown inoremap ;o <ol></ol><Enter><Enter><++>
@@ -681,36 +676,33 @@ autocmd FileType markdown inoremap ,3 ###<Space><CR><CR><++><Esc>
 autocmd FileType markdown inoremap ,4 ####<Space><CR><CR><++><Esc>
 autocmd FileType markdown inoremap ,5 #####<Space><CR><CR><++><Esc>
 autocmd FileType markdown inoremap ,ht ```html<Enter><Enter>```<CR><++><Esc>kki
-" vim
+"}}}
+"{{{vim
 autocmd FileType vim map <leader>la iautocmd FileType
 autocmd FileType vim map <leader>lm imap <lt>leader>
 autocmd FileType vim map <leader>lch iautocmd FileType html map <lt>leader>
 autocmd FileType vim map <leader>lch iautocmd FileType python map <lt>leader>
-""" bash
+autocmd FileType vim map <leader>lf ifunction <enter><enter>endfunction<esc>kk$i<space>
+autocmd FileType vim map <leader>ln inoremap
+autocmd FileType vim map <leader>lbf ifunction! <enter><enter>endfunction<esc>kk$i<space>
+autocmd FileType vim map <leader>ll i<lt>leader>
+"}}}
+"""{{{ autocmd snippets bash
 map <leader>bs ggi#!/bin/sh<enter><esc>:set filetype=sh<CR><CR>
-map <leader>p3 ggi#!/bin/python3<enter><esc>:set filetype=python<CR><CR>
-map <leader>p1 ggi#!/bin/python<enter><esc>:set filetype=python<CR><CR>
+map <leader>b3 ggi#!/bin/python3<enter><esc>:set filetype=python<CR><CR>
+map <leader>b1 ggi#!/bin/python<enter><esc>:set filetype=python<CR><CR>
 map <leader>bb ggi#!/bin/bash<enter><esc>:set filetype=bash<CR><CR>
 map <leader>bz ggi#!/bin/zsh<enter><esc>:set filetype=sh
-autocmd FileType bash,sh map <leader>lc icase $ in<Enter><enter>esac<Esc>ki
 " auto hotkey
 autocmd FileType autohotkey map <leader>la i::ActivateOrOpen("<++>","<++>")
 " c
-autocmd FileType c map <leader>lst i#include <stdio.h><Enter>int main() {<Enter><Enter>}<Esc>ki
-autocmd FileType c map <leader>lmm i#include <math.h><Enter><Esc>i
-autocmd FileType c map <leader>lmt i#include <time.h><Enter><Esc>i
 autocmd FileType c map <leader>lp iprintf();<Esc>hhi
-autocmd FileType c,cpp map <leader>lr0 ireturn 0;
-autocmd FileType c map <leader>lsy isystem("");<Esc>hhi
 autocmd FileType c map <leader>lar iint main (int argc, char *argv[])<Enter>{<Enter>  char *argument;<Enter>}
 " c++
 autocmd FileType cpp map <leader>lco icout <<
 autocmd FileType cpp map <leader>lci icin >>
 " python
-autocmd FileType python map <leader>lma idef main():<Enter><Enter>if __name__ == "__main__":<Enter>main()
 autocmd FileType python map <leader>lin iinput("")<Esc>hhi
-autocmd FileType python map <leader>lda idatetime.now().strftime('%Y-%m-%d %H:%M:%S')<Enter>
-autocmd FileType python map <leader>lcl ios.system('clear')<Enter>
 autocmd FileType python map <leader>lii iint(input(""))<Esc>hhi
 " auto it
 autocmd FileType autoit map <leader>lex iRun("")<Esc>hi
@@ -725,84 +717,15 @@ autocmd FileType ps1 map <leader>lsip iSet-ItemProperty -Path
 autocmd FileType ps1 map <leader>lds iDisable-ScheduledTask -TaskName
 autocmd FileType ps1 map <leader>lsp iStop-Process -Name
 autocmd FileType ps1 map <leader>lri iRemove-ItemProperty -Path
-" js
-autocmd FileType javascript map <leader>li idocument.getElementById('')<Esc>hi
-autocmd FileType javascript map <leader>lur iurlParams.get('');<Esc>hhi
-autocmd FileType javascript map <leader>lth ilet hour = time.getHours();
-autocmd FileType javascript map <leader>ltm ilet min = time.getMinutes();
-autocmd FileType javascript map <leader>lts ilet sec = time.getSeconds();
-map <leader>i :setlocal autoindent<CR>
-map <leader>I :setlocal noautoindent<CR>
-
-"""""""""""""""""""""""""""""""""
-" => Status Line
-"""""""""""""""""""""""""""""""""
-" The lightline.vim theme
-let g:lightline = {
-      \ 'colorscheme': 'darcula',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [  'readonly', 'filename', 'modified' ] ],
-      \   'right': [ [ 'fileformat', 'fileencoding', 'filetype', 'percent', 'lineinfo', 'line' ],
-      \              [ 'bufnum' ] ],
-      \ },
-      \ 'component_function': {
-      \   'fileformat': 'LightlineFileformat',
-      \   'filetype': 'LightlineFiletype',
-      \ },
-      \ }
-function! LightlineFileformat()
-  return winwidth(0) > 70 ? &fileformat : ''
-endfunction
-
-function! LightlineFiletype()
-  return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
-endfunction
-" Always show statusline
-set laststatus=2
-
-" Uncomment to prevent non-normal modes showing in powerline and below powerline.
-set noshowmode
-
-" mutt
+"}}}
 autocmd BufRead,BufNewFile /tmp/neomutt* :call ToggleHiddenAll()
-""""""""""""""""""""""""""""""
-" => Other Stuff
-""""""""""""""""""""""""""""""
-let g:python_highlight_all = 1
-
-set guioptions-=m  "remove menu bar
-set guioptions-=T  "remove toolbar
-set guioptions-=r  "remove right-hand scroll bar
-set guioptions-=L  "remove left-hand scroll bar
 " markdown previewer
 au BufWriteCmd,BufRead *.md :w | !cat % > /tmp/vim-mdpre.md
-" Enable and disable auto comment
-map <leader>c :setlocal formatoptions-=cro<CR>
-map <leader>C :setlocal formatoptions=cro<CR>
-nnoremap <leader>w :w<CR>
 " Replace all is aliased to S.
       nnoremap S :%s//g<Left><Left>
-"-------- Auto commands -------"
-"automatically source the Vimrc file on save.
-augroup autosourcing
-   autocmd!
-   autocmd BufWritePost init.vim source %
-augroup END
 " Fix indenting visual block
-vmap < <gv
-vmap > >gv
-nnoremap <A-g> :GFiles<CR>
-nnoremap <A-z> :Files<CR>
-let g:fzf_preview_window = 'right:60%'
-"" Default key bindings
-let g:fzf_action = {
-            \ 'ctrl-t': 'tab split',
-            \ 'ctrl-h': 'split',
-            \ 'ctrl-v': 'vsplit' }
 noremap <A-x> :r!date "+\%F"<CR>
-autocmd FileType html noremap <A-b> :!$BROWSER %
-autocmd FileType c,cpp setlocal tabstop=4 shiftwidth=4
+autocmd FileType html,xhtml,php noremap <A-b> :!$BROWSER %
 noremap DD1 "add
 noremap DD2 "sdd
 noremap DD3 "rdd
@@ -831,19 +754,8 @@ noremap Y7 "zy
 noremap Y8 "xy
 noremap Y9 "cy
 noremap <leader>o iAut dolorem dignissimos assumenda voluptatem tenetur recusandae. Ut et qui rerum eos optio rerum.<Enter>Aperiam architecto eos aut molestias. Non asperiores aliquam quo qui labore cum.<Enter>Mollitia beatae iste expedita explicabo aut. Perspiciatis facere aliquam iste sint. Sapiente aut itaque dolorum ut quis aut.<Enter>Iste adipisci in occaecati. Molestiae eligendi et ea nisi.<enter>Eum quibusdam nulla officiis. Corporis nostrum sint deserunt doloremque. Iusto asperiores omnis ducimus voluptatem consequuntur qui minus.<enter>Occaecati libero dicta ex voluptatem harum. Cumque aspernatur ut sapiente.<CR>
-" navbar
-autocmd FileType html noremap <leader>lnb i<nav class="navbar"><enter><div class="logo">MUO</div><enter><ul class="nav-links"><enter><input type="checkbox" id="checkbox_toggle" /><enter><label for="checkbox_toggle" class="hamburger">&#9776;</label><enter><div class="menu"><enter><li><a href="/"></a></li><enter><li class="services"><enter><a href="/"></a><enter><ul class="dropdown"><enter><li><a href="/"></a></li><enter></ul><enter></li><enter></div><enter></ul><enter></nav>
-" navbar css
-autocmd FileType html,c noremap <leader>lnc i* {<enter>margin: 0;<enter>padding: 0;<enter>box-sizing: border-box;<enter>}<enter>a {<enter>text-decoration: none;<enter>}<enter>li {<enter>list-style: none;<enter>}<enter>.navbar {<enter>display: flex;<enter>align-items: center;<enter>justify-content: space-between;<enter>padding: 20px;<enter>background-color: #676767;<enter>color: #fff;<enter>}<enter>.nav-links a {<enter>color: #fff;<enter>}<enter>.logo {<enter>font-size: 32px;<enter>}<enter>.menu {<enter>display: flex;<enter>gap: 1em;<enter>font-size: 18px;<enter>}<enter>.menu li:hover {<enter>background-color: #4c9e9e;<enter>border-radius: 5px;<enter>transition: 0.3s ease;<enter>}<enter>.menu li {<enter>padding: 5px 14px;<enter>}<enter>.services {<enter>position: relative;<enter>}<enter>.dropdown {<enter>background-color: #676767;<enter>padding: 1em 0;<enter>position: absolute;<enter>display: none;<enter>border-radius: 8px;<enter>top: 35px;<enter>}<enter>.dropdown li + li {<enter>margin-top: 10px;<enter>}<enter>.dropdown li {<enter>padding: 0.5em 1em;<enter>width: 8em;<enter>text-align: center;<enter>}<enter>.dropdown li:hover {<enter>background-color: #4c9e9e;<enter>}<enter>.services:hover .dropdown {<enter>display: block;<enter>}<enter>input[type=checkbox]{<enter>display: none;<enter>}<enter>.hamburger {<enter>display: none;<enter>font-size: 24px;<enter>user-select: none;<enter>}<enter>@media (max-width: 768px) {<enter>.menu {<enter>display:none;<enter>position: absolute;<enter>background-color:#676767;<enter>right: 0;<enter>left: 0;<enter>text-align: center;<enter>padding: 16px 0;<enter>}<enter>.menu li:hover {<enter>display: inline-block;<enter>background-color:#4c9e9e;<enter>transition: 0.3s ease;<enter>}<enter>.menu li + li {<enter>margin-top: 12px;<enter>}<enter>input[type=checkbox]:checked ~ .menu{<enter>display: block;<enter>}<enter>.hamburger {<enter>display: block;<enter>}<enter>.dropdown {<enter>left: 50%;<enter>top: 30px;<enter>transform: translateX(35%);<enter>}<enter>.dropdown li:hover {<enter>background-color: #4c9e9e;<enter>}<enter>}<enter>body {<enter>background-color:black;<Enter>}
 
 autocmd FileType css map <leader>lln ilist-style: none;
-autocmd FileType java setlocal shiftwidth=2 softtabstop=2
-autocmd FileType markdown setlocal shiftwidth=2 softtabstop=2
-autocmd FileType swift setlocal shiftwidth=4 softtabstop=4
-autocmd FileType javascript map <leader>lef iexport function () {<enter><enter>}<esc>kk$hhhhi<space>
-autocmd FileType javascript map <leader>lf ifunction (){<Enter><enter>}<esc>kk$hhhi<space>
-autocmd FileType javascript map <leader>lea iexport async function () {<enter><enter>}<esc>kk$hhhhi<space>
-autocmd FileType javascript map <leader>laf iasync function (){<Enter><enter>}<esc>kk$hhhi<space>
 autocmd FileType javascript map <leader>lcn iclassName=""<esc>i
 autocmd FileType javascript map <leader>lset ithis.setState({<Enter><enter>});<esc>ki
 autocmd FileType java map <leader>ls iSystem.out.println();<esc>hi
@@ -852,17 +764,35 @@ autocmd FileType javascript map <leader>lir iisRequired,
 " Call figlet
 noremap tx :r !figlet
 noremap <A-t> :r !date "+\%R:\%S"
-autocmd FileType json setlocal tabstop=2 softtabstop=2 shiftwidth=2
-autocmd FileType typescript setlocal tabstop=2 softtabstop=2 shiftwidth=2
-autocmd FileType html map <leader>lme i<meta name="robots" content="noindex,nofollow">
-autocmd FileType vim map <leader>lf ifunction <enter><enter>endfunction<esc>kk$i<space>
-autocmd FileType vim map <leader>ln inoremap
-autocmd FileType vim map <leader>lbf ifunction! <enter><enter>endfunction<esc>kk$i<space>
-autocmd FileType vim map <leader>ll i<lt>leader>
-autocmd BufRead,BufNewFile .bashrc set filetype=bash
-autocmd BufRead,BufNewFile .zshrc set filetype=sh
+" autocmd FileType html map <leader>lme i<meta name="robots" content="noindex,nofollow">
 autocmd FileType autohotkey setlocal commentstring=;\ %s
 autocmd FileType autoit setlocal commentstring=;\ %s
-autocmd BufRead,BufNewFile vifmrc set filetype=vifm
 autocmd FileType vifm setlocal commentstring=\"\ %s
-autocmd FileType html noremap <leader>S i<!DOCTYPE html><enter><html lang="en"><enter><head><enter><meta charset="UTF-8"><enter><title></title><enter><link rel="stylesheet" href=""><enter></head><enter><body><enter><enter></body><enter></html><cr>
+let g:python_highlight_all = 1
+nnoremap ; :
+nnoremap : ;
+highlight ExtraWhitespace ctermbg=red guibg=red
+au ColorScheme * highlight ExtraWhitespace guibg=red
+au BufEnter * match ExtraWhitespace /\s\+$/
+au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+au InsertLeave * match ExtraWhiteSpace /\s\+$/
+noremap <leader>y "+y
+noremap <leader>p "+p
+hi clear SpellBad
+hi SpellBad cterm=underline
+" hi SpellBad cterm=underline ctermfg=203 guifg=#ff5f5f
+" hi SpellLocal cterm=underline ctermfg=203 guifg=#ff5f5f
+" hi SpellRare cterm=underline ctermfg=203 guifg=#ff5f5f
+" hi SpellCap cterm=underline ctermfg=203 guifg=#ff5f5f
+" Make sure all types of requirements.txt files get syntax highlighting.
+autocmd BufNewFile,BufRead requirements*.txt set ft=python
+
+" Make sure .aliases, .bash_aliases and similar files get syntax highlighting.
+autocmd BufNewFile,BufRead .*aliases* set ft=sh
+
+" Make sure Kubernetes yaml files end up being set as helm files.
+au BufNewFile,BufRead *.{yaml,yml} if getline(1) =~ '^apiVersion:' || getline(2) =~ '^apiVersion:' | setlocal filetype=helm | endif
+
+" Ensure tabs don't get converted to spaces in Makefiles.
+autocmd FileType make setlocal noexpandtab
+nnoremap <leader>] :TagbarToggle<CR>

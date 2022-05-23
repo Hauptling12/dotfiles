@@ -1,4 +1,4 @@
--- imports
+--{{{imports
 -- Base
 import XMonad
 import System.Directory
@@ -29,6 +29,7 @@ import XMonad.Hooks.ServerMode
 -- Layouts
 import XMonad.Layout.GridVariants (Grid(Grid))
 import XMonad.Layout.SimplestFloat
+import XMonad.Layout.ThreeColumns
 --import XMonad.Layout.Spiral
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Tabbed
@@ -51,7 +52,8 @@ import XMonad.Util.Dmenu
 import XMonad.Util.EZConfig (additionalKeysP)
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
 import XMonad.Util.SpawnOnce
-
+--}}}
+--{{{colors
 colorBack = "#282c34"
 colorFore = "#bbc2cf"
 color02 = "#ff6c6b"
@@ -65,9 +67,11 @@ color17 = "#FF5F1F"
 color18 = "#778899"
 colorTrayer :: String
 colorTrayer = "--tint 0x282c34"
-
+--}}}
+--{{{vars
 myFont :: String
-myFont = "xft:SauceCodePro Nerd Font Mono:regular:size=9:antialias=true:hinting=true"
+myFont = "xft:'mononoki Bold Italic Nerd Font Complete Mono:regular:size=9:antialias=true:hinting=true"
+-- xft:Hack Nerd Font Mono:size=
 
 myModMask :: KeyMask
 myModMask = mod4Mask        -- Sets modkey to super/windows key
@@ -89,10 +93,10 @@ myNormColor   = colorBack
 
 myFocusColor :: String      -- Border color of focused windows
 myFocusColor  = color18
-
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
-
+--}}}
+--{{{ startup
 myStartupHook :: X ()
 myStartupHook = do
 --    spawn "killall trayer"  -- kill current trayer on each restart
@@ -101,7 +105,7 @@ myStartupHook = do
     spawnOnce "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 & eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg)"
     spawn ("xautolock -time 2 -locker slock")
     spawnOnce "di.sh"
-
+--}}}
 myColorizer :: Window -> Bool -> X (String, String)
 myColorizer = colorRangeFromClassName
                   (0x28,0x2c,0x34) -- lowest inactive bg
@@ -122,7 +126,7 @@ spawnSelected' lst = gridselect conf lst >>= flip whenJust spawn
                    , gs_font         = myFont
                    }
 
--- layouts
+--{{{layouts
 -- limitWindows sets maximum number of windows displayed
 tall     = renamed [Replace "tall"]
            $ smartBorders
@@ -160,7 +164,6 @@ myTabTheme = def { fontName            = myFont
                  , activeTextColor     = colorBack
                  , inactiveTextColor   = color16
                  }
-
 -- Theme for showWName which prints current workspace when you change workspace
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
@@ -179,8 +182,13 @@ myLayoutHook = avoidStruts $ windowArrange $ T.toggleLayouts floats
                                  ||| floats
                                  ||| noBorders tabs
                                  ||| grid
+                                 ||| ThreeCol 1 (3/100) (1/2)
+                                 ||| Mirror (Tall 1 (3/100) (3/5))
 
-myWorkspaces = [" 1ju ", " 2ju ", " 3s ", " 4doc ", " 5vm ", " 6so ", " 7mus ", " 8st ", " 9dev "]
+--}}}
+myExtraWorkspaces = [(xK_0, "10"),(xK_minus, "11"),(xK_equal, "12"),(xK_grave, "13"),(xK_bracketright, "14"),(xK_bracketleft, "15"),(xK_semicolon, "16"),(xK_apostrophe, "17"),(xK_comma, "18"),(xK_period, "19"),(xK_o, "20"),(xK_u, "21"),(xK_a, "22"),(xK_p, "23"),(xK_y, "24")]
+
+myWorkspaces = [" 1d ", " 2ju ", " 3com ", " 4doc ", " 5vm ", " 6www ", " 7mus ", " 8st ", " 9vim " ] ++ (map snd myExtraWorkspaces)
 myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1..] -- (,) == \x y -> (x,y)
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
@@ -191,7 +199,6 @@ myManageHook = composeAll
      , className =? "dialog"          --> doFloat
      , className =? "download"        --> doFloat
      , className =? "error"           --> doFloat
-     , className =? "Gimp"            --> doFloat
      , className =? "notification"    --> doFloat
      , className =? "pinentry-gtk-2"  --> doFloat
      , className =? "splash"          --> doFloat
@@ -203,18 +210,17 @@ myManageHook = composeAll
      , isFullscreen -->  doFullFloat
      ]
 
--- START_KEYS
+--{{{START_KEYS
 myKeys :: [(String, X ())]
 myKeys =
     -- KB_G Xmonad
         [ ("M-S-r", spawn "xmonad --recompile ")       -- Recompiles xmonad ands Restarts xmonad
         , ("M-C-r", spawn "xmonad --restart")       -- Recompiles xmonad ands Restarts xmonad
-
     -- KB_G Run Prompt
         , ("M-r", spawn "dmenu_run")
         , ("M-w", spawn "rofi.sh")
 -- KB_G dmenu scripts
-        , ("M-C-S-l", spawn "dm-logout.sh")
+        -- , ("M-C-S-l", spawn "dm-logout.sh")
 	, ("M-S-d g", spawn "gui-dm")
         , ("M-S-d m", spawn "dmenumount")
         --, ("M-S-d s", spawn "~/./scripts/bash/dmenu/scripts/webhttp")
@@ -229,25 +235,21 @@ myKeys =
 
 
     -- KB_G prgograms
-         , ("M-S-M1-l l", spawn "pausem h")
-         , ("M-S-M1-l m", spawn "pausem h")
-         , ("M-S-M1-l l", spawn "pausem h")
-         , ("M-S-M1-l h", spawn "pausem l")
          , ("M-x", spawn myTerminal)
          , ("M-b", spawn myBrowser)
          , ("M-s", spawn (myTerminal ++ " -e htop"))
---	 , ("M-i h", spawn (myTerminal ++ " -e htop"))
          , ("M-i b", spawn (myTerminal ++ " -e bash"))
 	 , ("M-S-c", spawn (myTerminal ++ " -e calc"))
          , ("M-i n", spawn (myTerminal ++ " -e /bin/newsboat -r"))
-	 , ("M-i c", spawn (myTerminal ++ " -e /bin/nmtui"))
-	 , ("M-i l", spawn (myTerminal ++ " -e lynx"))
+         , ("M-i c", spawn (myTerminal ++ " -e tty-clock"))
+	 , ("M-i t", spawn (myTerminal ++ " -e /bin/nmtui"))
+	 , ("M-i l", spawn (myTerminal ++ " -e w3m"))
          , ("M-c", spawn myEditor)
-         , ("M-S-v", spawn (myTerminal ++ " -e pacmixer"))
+         , ("M-S-v", spawn (myTerminal ++ " -e pulsemixer"))
          , ("M-S-x", spawn (myTerminal ++ " -e tmux"))
          , ("M-n", spawn (myTerminal ++ " -e vifm"))
          , ("M-S-h", spawn "xmonad_keys.sh") -- shows list of keybindings
-	 , ("M-p", spawn "qutebrowser")
+	 , ("M-i p", spawn "qutebrowser")
          , ("M-<Esc>", spawn "kill-ne-app")
          , ("M-M1-c", spawn "blueberry")
          , ("M-S-g", spawn "signal-desktop-no-yes")
@@ -268,17 +270,17 @@ myKeys =
         , ("M-S-t", sinkAll)                       -- Push ALL floating windows to tile
         , ("M-S-z", spawn "tog-touch")
     -- KB_G brightness control
-        , ("M-C-1", spawn "xbacklight  -set 0.11")
-        , ("M-C-2", spawn "xbacklight  -set 0.15")
-        , ("M-C-3", spawn "xbacklight  -set 0.17")
-        , ("M-C-4", spawn "xbacklight  -set 0.19")
-        , ("M-C-5", spawn "xbacklight  -set 0.2")
-        , ("M-C-6", spawn "xbacklight  -set 0.21")
-        , ("M-C-7", spawn "xbacklight  -set 0.27")
-        , ("M-C-8", spawn "xbacklight  -set 0.4")
-        , ("M-C-9", spawn "xbacklight  -set 0.45")
-     -- , ("M-C-1", spawn "xbacklight  -set 0.2")
-        , ("M-C-0", spawn "xbacklight  -set 0.0")
+        , ("M-C-1", spawn "light  -S 0.11")
+        , ("M-C-2", spawn "light  -S 0.15")
+        , ("M-C-3", spawn "light  -S 0.17")
+        , ("M-C-4", spawn "light  -S 0.19")
+        , ("M-C-5", spawn "light  -S 0.2")
+        , ("M-C-6", spawn "light  -S 0.21")
+        , ("M-C-7", spawn "light  -S 0.27")
+        , ("M-C-8", spawn "light  -S 0.4")
+        , ("M-C-9", spawn "light  -S 0.45")
+     -- , ("M-C-1", spawn "light  -S 0.2")
+        , ("M-C-0", spawn "light  -S 0.0")
     -- KB_G Windows navigation
         , ("M-m", windows W.focusMaster)  -- Move focus to the master wind
         , ("M-S-<Tab>", windows W.focusUp)      -- Move focus to the prev wind
@@ -317,23 +319,56 @@ myKeys =
         , ("M-C-.", onGroup W.focusUp')    -- Switch focus to next tab
         , ("M-C-,", onGroup W.focusDown')  -- Switch focus to prev tab
 -- KB_G monitors
-        , ("M-.", nextScreen)  -- Switch focus to next monitor
-        , ("M-,", prevScreen)  -- Switch focus to prev monitor
+        -- , ("M-.", nextScreen)  -- Switch focus to next monitor
+        -- , ("M-,", prevScreen)  -- Switch focus to prev monitor
 
     -- KB_G Multimedia Keys
-        , ("<XF86MonBrightnessUp>", spawn "xbacklight -inc 5")
-        , ("<XF86MonBrightnessDown>", spawn "xbacklight -dec 5")
+        , ("<XF86MonBrightnessUp>", spawn "light -A 3")
+        , ("<XF86MonBrightnessDown>", spawn "light -U 3")
         , ("<XF86AudioMute>", spawn "amixer set Master toggle")
+        , ("M-<XF86AudioLowerVolume>", spawn "amixer set Master 6%- unmute")
+        , ("M-<XF86AudioRaiseVolume>", spawn "amixer set Master 6%+ unmute")
         , ("<XF86AudioLowerVolume>", spawn "amixer set Master 3%- unmute")
         , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 3%+ unmute")
         , ("<XF86AudioPlay>", spawn "pausem p")
 	, ("<XF86AudioPrev>", spawn "pausem r")
 	, ("<XF86AudioNext>", spawn "pausem n")
+        , ("M-S-'", windows $ W.shift "17")
+        , ("M-'", windows $ W.greedyView "17")
+        , ("M-S-;", windows $ W.shift "16")
+        , ("M-;", windows $ W.greedyView "16")
+        , ("M-S-[", windows $ W.shift "15")
+        , ("M-[", windows $ W.greedyView "15")
+        , ("M-S-]", windows $ W.shift "14")
+        , ("M-]", windows $ W.greedyView "14")
+        , ("M-S--", windows $ W.shift "11")
+        , ("M--", windows $ W.greedyView "11")
+        , ("M-S-=", windows $ W.shift "12")
+        , ("M-=", windows $ W.greedyView "12")
+        , ("M-S-0", windows $ W.shift "10")
+        , ("M-0", windows $ W.greedyView "10")
+        , ("M-S-`", windows $ W.shift "13")
+        , ("M-`", windows $ W.greedyView "13")
+        , ("M-S-,", windows $ W.shift "18")
+        , ("M-,", windows $ W.greedyView "18")
+        , ("M-S-.", windows $ W.shift "19")
+        , ("M-.", windows $ W.greedyView "19")
+        , ("M-S-o", windows $ W.shift "20")
+        , ("M-o", windows $ W.greedyView "20")
+        , ("M-S-u", windows $ W.shift "21")
+        , ("M-u", windows $ W.greedyView "21")
+        , ("M-S-a", windows $ W.shift "22")
+        , ("M-a", windows $ W.greedyView "22")
+        , ("M-S-p", windows $ W.shift "23")
+        , ("M-p", windows $ W.greedyView "23")
+        , ("M-S-y", windows $ W.shift "24")
+        , ("M-y", windows $ W.greedyView "24")
         ]
+
        --      where nonNSP          = WSIs (return (\ws -> W.tag ws /= "NSP"))
            --     nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "NSP"))
--- END_KEYS
-
+--}}}END_KEYS
+--{{{main
 main :: IO ()
 main = do
 -- Launching xmobar
@@ -377,3 +412,4 @@ main = do
               , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]
               }
         } `additionalKeysP` myKeys
+--}}}

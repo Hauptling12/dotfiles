@@ -1,0 +1,37 @@
+snippet sec "put seconds in variable"
+let sec = time.getSeconds();
+endsnippet
+snippet min "put minutes in variable"
+let min = time.getMinutes();
+endsnippet
+snippet hour "put hour in variable"
+let hour = time.getHours();
+endsnippet
+snippet gei "document.getElementById('')"
+document.getElementById('')
+endsnippet
+snippet gein "document.getElementById('').innerhtml"
+document.getElementById('${1:id}').innerHTML = ${0}
+endsnippet
+snippet url-par "url paramanters"
+urlParams.get('${1:id}') = ${0}
+endsnippet
+snippet c-urlpar "set variable to url input"
+const ${1:var} = urlParams.get('${0}');
+endsnippet
+snippet fn "Empty Function"
+function ${1:functionName}() {
+	${0}
+}
+endsnippet
+snippet ef "Export Function"
+export function ${1:functionName}() {
+	${0}
+}
+endsnippet
+
+snippet eaf "Export Async Function"
+export async function ${1:functionName}() {
+	${0}
+}
+endsnippet
