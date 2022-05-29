@@ -1,2 +1,0 @@
-#!/bin/sh
-w3m $(cd /usr/share/doc/arch-wiki/html/en/ && fzf | awk '{print "/usr/share/doc/arch-wiki/html/en/" $0}')

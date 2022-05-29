@@ -2,6 +2,7 @@ alias doas="doas --"
 #{{{dirs
 alias notes="cd ~/my-work/notes/ob/obsidian/"
 alias dev="cd ~/my-work/dev/"
+alias wiki="cd $notes/wiki"
 notes=$HOME/my-work/notes/ob/obsidian/
 dev=$HOME/my-work/dev
 scripts=$HOME/.local/bin/script/
@@ -307,3 +308,5 @@ paste <(cat /sys/class/thermal/thermal_zone*/type) <(cat /sys/class/thermal/ther
 alias dd="echo"
 alias amount="aft-mtp-mount ~/mnt"
 alias ss="cd ~/.local/bin/script/ && ls"
+# Lists the ten most used commands.
+alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"

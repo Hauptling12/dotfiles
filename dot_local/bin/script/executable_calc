@@ -1,2 +1,0 @@
-#!/bin/sh
-python -ic "from __future__ import division; from math import *; from random import *"

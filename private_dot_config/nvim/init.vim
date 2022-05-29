@@ -7,11 +7,10 @@ if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autolo
 endif
 
 call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
-Plug 'itchyny/lightline.vim'
+"Plug 'itchyny/lightline.vim'
 Plug 'https://github.com/pangloss/vim-javascript'
 Plug 'dkarter/bullets.vim'
 Plug 'junegunn/fzf.vim'
-"Plug 'https://github.com/axieax/urlview.nvim'
 Plug 'junegunn/fzf'
 Plug 'fatih/vim-go' , { 'for': ['go', 'vim-plug'], 'tag': '*' }
 Plug '~/.config/nvim/deadkeys.vim'
@@ -21,15 +20,15 @@ Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lock
 Plug 'bfrg/vim-cpp-modern'
 Plug 'https://github.com/honza/vim-snippets'
 "Plug 'MattesGroeger/vim-bookmarks'
-Plug 'arzg/vim-swift'
+"Plug 'arzg/vim-swift'
 Plug 'neoclide/coc-sources'
 "Plug 'xolox/vim-notes'
 "Plug 'xolox/vim-misc'
 Plug 'tpope/vim-commentary'
+Plug 'https://github.com/tpope/vim-surround'
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'majutsushi/tagbar'
 Plug 'alvan/vim-closetag'
-"Plug 'godlygeek/tabular'
 Plug 'preservim/vim-markdown'
 Plug 'vimwiki/vimwiki'
 Plug 'vim-python/python-syntax'
@@ -111,6 +110,17 @@ autocmd VimResized * wincmd =
 "}}}
 "{{{Colors and Fonts
 syntax on
+hi Pmenu ctermbg=black ctermfg=white
+hi netrwDir ctermbg=none ctermfg=gray
+hi clear SpellBad
+hi SpellBad cterm=underline
+" hi SpellBad cterm=underline ctermfg=203 guifg=#ff5f5f
+" hi SpellLocal cterm=underline ctermfg=203 guifg=#ff5f5f
+" hi SpellRare cterm=underline ctermfg=203 guifg=#ff5f5f
+" hi SpellCap cterm=underline ctermfg=203 guifg=#ff5f5f
+highlight ExtraWhitespace ctermbg=red guibg=red
+au ColorScheme * highlight ExtraWhitespace guibg=red
+hi WinSeparator ctermbg=DarkBlue guibg=DarkBlue
 "}}}
 "{{{Files
 "set viminfo+=n$HOME/.config/nvim/viminfo
@@ -158,10 +168,10 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 "Make adjusing split sizes a bit more friendly
-noremap <silent> <C-Left> :vertical resize +3<CR>
-noremap <silent> <C-Right> :vertical resize -3<CR>
-noremap <silent> <C-Up> :resize +3<CR>
-noremap <silent> <C-Down> :resize -3<CR>
+noremap <silent> <S-Left> :vertical resize +3<CR>
+noremap <silent> <S-Right> :vertical resize -3<CR>
+noremap <silent> <S-Up> :resize +3<CR>
+noremap <silent> <S-Down> :resize -3<CR>
 " Change 2 split windows from vert to horiz or horiz to vert
 map <Leader>th <C-w>t<C-w>H
 map <Leader>tk <C-w>t<C-w>K
@@ -201,6 +211,70 @@ autocmd FileType markdown setlocal shiftwidth=2 softtabstop=2
 autocmd FileType swift setlocal shiftwidth=4 softtabstop=4
 autocmd FileType typescript setlocal tabstop=2 softtabstop=2 shiftwidth=2
 "}}}
+"{{{statusline
+" hi StatusLine ctermfg=236 ctermbg=236 guifg=#323232 guibg=#323232
+" hi StatusLineNC ctermfg=236 ctermbg=236 guifg=#323232 guibg=#323232
+"new in vim 7.4.1042
+let g:word_count=wordcount().words
+function WordCount()
+    if has_key(wordcount(),'visual_words')
+        let g:word_count=wordcount().visual_words."/".wordcount().words " count selected words
+    else
+        let g:word_count=wordcount().cursor_words."/".wordcount().words " or shows words 'so far'
+    endif
+    return g:word_count
+endfunction
+" Status Line Custom
+let g:currentmode={
+    \ 'n'  : 'Normal',
+    \ 'no' : 'Normal·Operator Pending',
+    \ 'v'  : 'Visual',
+    \ 'V'  : 'V·Line',
+    \ '^V' : 'V·Block',
+    \ 's'  : 'Select',
+    \ 'S'  : 'S·Line',
+    \ '^S' : 'S·Block',
+    \ 'i'  : 'Insert',
+    \ 'R'  : 'Replace',
+    \ 'Rv' : 'V·Replace',
+    \ 'c'  : 'Command',
+    \ 'cv' : 'Vim Ex',
+    \ 'ce' : 'Ex',
+    \ 'r'  : 'Prompt',
+    \ 'rm' : 'More',
+    \ 'r?' : 'Confirm',
+    \ '!'  : 'Shell',
+    \ 't'  : 'Terminal'
+    \}
+
+set statusline=
+set statusline+=%1*\ %n
+set statusline+=%2*\ │
+set statusline+=%5*\ %{toupper(g:currentmode[mode()])}\  " The current mode
+set statusline+=%2*\ │
+set statusline+=%2*\ %t
+set statusline+=%2*\ │
+set statusline+=%2*\ \ %m%r
+set statusline+=%=                                       " Right Side
+set statusline+=%2*\ %{&ff}
+set statusline+=%2*\ │
+set statusline+=%2*\ %{''.(&fenc!=''?&fenc:&enc).''}      "Encoding
+set statusline+=%2*\ │
+set statusline+=%2*\ %y\                                  "FileType
+set statusline+=%2*\ │
+set statusline+=%2*\ (%03p%%)\             "Rownumber/total (%)
+set statusline+=%2*\ │
+set statusline+=%2*\ \ %2l:%c\           " Line number / total lines, percentage of document
+set statusline+=%2*\ │
+set statusline+=%2*\ \ %l
+set statusline+=%2*\ │
+set statusline+=\ w:%{WordCount()},
+hi User5 ctermfg=235 ctermbg=104 guifg=#2b2b2b guibg=#9876aa
+au InsertEnter * hi User5 ctermbg=1 guibg=DarkRed
+au InsertLeave * hi User5 ctermbg=104 guibg=#9876aa
+ hi User2 ctermfg=104  guifg=#9876aa
+" hi User4 guifg=#112605  guibg=#aefe7B
+"}}}
 if exists('$SHELL')
         set shell=$SHELL
 else
@@ -212,8 +286,6 @@ vnoremap <C-c> "+y
 " Prevent x from overriding what's in the clipboard.
 noremap x "_x
 noremap X "_x
-" Check file in shellcheck:
-        map <leader>s :!clear && shellcheck -x %<CR>
 " Save file as sudo on files that require root permission
        " cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
        cmap w!! w !doas tee > /dev/null %
@@ -239,29 +311,29 @@ let g:bullets_enabled_file_types = [
     \]
 "}}}
 "{{{status line
-let g:lightline = {
-      \ 'colorscheme': 'darcula',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ],
-      \   'right': [ [ 'fileformat', 'fileencoding', 'filetype', 'percent', 'lineinfo', 'line' ],
-      \              [ 'bufnum' ] ],
-      \ },
-      \ 'component_function': {
-      \   'fileformat': 'LightlineFileformat',
-      \   'filetype': 'LightlineFiletype',
-\   'cocstatus': 'coc#status'
-      \ },
-      \ }
-function! LightlineFileformat()
-  return winwidth(0) > 70 ? &fileformat : ''
-endfunction
+" let g:lightline = {
+"       \ 'colorscheme': 'darcula',
+"       \ 'active': {
+"       \   'left': [ [ 'mode', 'paste' ],
+"       \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ],
+      " \   'right': [ [ 'fileformat', 'fileencoding', 'filetype', 'percent', 'lineinfo', 'line' ],
+      " \              [ 'bufnum' ] ],
+      " \ },
+      " \ 'component_function': {
+      " \   'fileformat': 'LightlineFileformat',
+      " \   'filetype': 'LightlineFiletype',
+" \   'cocstatus': 'coc#status'
+      " \ },
+      " \ }
+" function! LightlineFileformat()
+  " return winwidth(0) > 70 ? &fileformat : ''
+" endfunction
 
-function! LightlineFiletype()
-  return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
-endfunction
-" Always show statusline
-set laststatus=2
+" function! LightlineFiletype()
+  " return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+" endfunction
+" " Always show statusline
+" set laststatus=2
 "}}}
 " {{{Undotree
 "noremap L :UndotreeToggle<CR>
@@ -457,7 +529,7 @@ command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.org
 " Add (Neo)Vim's native statusline support.
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
 " provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings for CoCList
 " Show all diagnostics.
@@ -609,8 +681,19 @@ let g:fzf_action = {
 "}}}
 noremap <LEADER>sc ;setlocal spell!<CR>
 inoremap ;g <Esc>/<++><Enter>"_c4l
+"{{{languages
+"{{{bash
+" Check file in shellcheck:
+        map <leader>s :!clear && shellcheck -x %<CR>
+
+map <leader>bs ggi#!/bin/sh<Enter>
+map <leader>b3 ggi#!/bin/python3<enter>
+map <leader>b1 ggi#!/bin/python<enter>
+map <leader>bb ggi#!/bin/bash<enter>
+map <leader>bz ggi#!/bin/zsh<enter>
+"}}}
 "{{{html
-autocmd FileType html map <leader>ljq i<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script><Enter>
+autocmd FileType html,xhtml,php noremap <A-b> :!$BROWSER %
 autocmd FileType html,markdown map <leader>le i<em></em><CR>
 autocmd FileType markdown,html map <leader>l1 <h1></h2><Esc>FeT>i
 autocmd FileType markdown,html map <leader>l2 <h2></h2><Esc>FeT>i
@@ -620,19 +703,12 @@ autocmd FileType markdown,html map <leader>l5 <h5></h5><Esc>FeT>i
 autocmd FileType markdown,html map <leader>l6 <h6></h6><Esc>FeT>i
 autocmd FileType markdown,html map <leader>ldi <div></div><Esc>FeT>i
 autocmd FileType html map <leader>lll <li></li><Esc>FeT>i
-autocmd FileType html map <leader>lp <p></p><Esc>FeT>i
-autocmd FileType html map <leader>lb <b></b><Esc>FeT>i
-autocmd FileType html map <leader>lco <code></code><Esc>FeT>i
 autocmd FileType html map <leader>lq <q></q><Esc>FeT>i
-autocmd FileType html map <leader>lal <a href=""></a><Esc>FeT>i
-autocmd FileType html map <leader>lar <article><Enter></article><Esc>FeT>i
 autocmd FileType html inoremap ;tr <tr></tr><Esc>FeT>i
 autocmd FileType html inoremap ;tcg <colgroup></colgroup><Esc>FeT>i
 autocmd FileType html inoremap ;tcn <col></col><Esc>FeT>i
 autocmd FileType html inoremap ;ta <table><Enter></table>
 autocmd FileType html map <leader>lif <iframe></iframe><Space><Space><++><Esc>FeT>i
-autocmd FileType html map <leader>lim <img src="" alt=""><Enter><++><Esc>FeT>i
-autocmd FileType html map <leader>lin <i></i><Space><Space><++><Esc>FeT>i
 autocmd FileType html map <leader>lsb <strong></strong><Space><Space><++><Esc>FeT>i
 autocmd FileType html map <leader>lsub <sub></sub><Space><Space><++><Esc>FeT>i
 autocmd FileType html map <leader>lsup <sup></sup><Space><Space><++><Esc>FeT>i
@@ -641,7 +717,6 @@ autocmd FileType html map <leader>lsp <span></span><Esc>FeT>i
 autocmd FileType html map <leader>lsm <small></small><Esc>FeT>i
 autocmd FileType html map <leader>lscr <script></script><Esc>FeT>i
 autocmd FileType html map <leader>lsa <samp></samp><Esc>FeT>i
-autocmd FileType html map <leader>llc i<link rel="stylesheet" href=""><Esc>hhi
 autocmd FileType html noremap <leader>S i<!DOCTYPE html><enter><html lang="en"><enter><head><enter><meta charset="UTF-8"><enter><title></title><enter><link rel="stylesheet" href=""><enter></head><enter><body><enter><enter></body><enter></html><cr>
 " navbar
 "autocmd FileType html noremap <leader>lnb i<nav class="navbar"><enter><div class="logo">MUO</div><enter><ul class="nav-links"><enter><input type="checkbox" id="checkbox_toggle" /><enter><label for="checkbox_toggle" class="hamburger">&#9776;</label><enter><div class="menu"><enter><li><a href="/"></a></li><enter><li class="services"><enter><a href="/"></a><enter><ul class="dropdown"><enter><li><a href="/"></a></li><enter></ul><enter></li><enter></div><enter></ul><enter></nav>
@@ -649,6 +724,8 @@ autocmd FileType html noremap <leader>S i<!DOCTYPE html><enter><html lang="en"><
 "autocmd FileType html,c noremap <leader>lnc i* {<enter>margin: 0;<enter>padding: 0;<enter>box-sizing: border-box;<enter>}<enter>a {<enter>text-decoration: none;<enter>}<enter>li {<enter>list-style: none;<enter>}<enter>.navbar {<enter>display: flex;<enter>align-items: center;<enter>justify-content: space-between;<enter>padding: 20px;<enter>background-color: #676767;<enter>color: #fff;<enter>}<enter>.nav-links a {<enter>color: #fff;<enter>}<enter>.logo {<enter>font-size: 32px;<enter>}<enter>.menu {<enter>display: flex;<enter>gap: 1em;<enter>font-size: 18px;<enter>}<enter>.menu li:hover {<enter>background-color: #4c9e9e;<enter>border-radius: 5px;<enter>transition: 0.3s ease;<enter>}<enter>.menu li {<enter>padding: 5px 14px;<enter>}<enter>.services {<enter>position: relative;<enter>}<enter>.dropdown {<enter>background-color: #676767;<enter>padding: 1em 0;<enter>position: absolute;<enter>display: none;<enter>border-radius: 8px;<enter>top: 35px;<enter>}<enter>.dropdown li + li {<enter>margin-top: 10px;<enter>}<enter>.dropdown li {<enter>padding: 0.5em 1em;<enter>width: 8em;<enter>text-align: center;<enter>}<enter>.dropdown li:hover {<enter>background-color: #4c9e9e;<enter>}<enter>.services:hover .dropdown {<enter>display: block;<enter>}<enter>input[type=checkbox]{<enter>display: none;<enter>}<enter>.hamburger {<enter>display: none;<enter>font-size: 24px;<enter>user-select: none;<enter>}<enter>@media (max-width: 768px) {<enter>.menu {<enter>display:none;<enter>position: absolute;<enter>background-color:#676767;<enter>right: 0;<enter>left: 0;<enter>text-align: center;<enter>padding: 16px 0;<enter>}<enter>.menu li:hover {<enter>display: inline-block;<enter>background-color:#4c9e9e;<enter>transition: 0.3s ease;<enter>}<enter>.menu li + li {<enter>margin-top: 12px;<enter>}<enter>input[type=checkbox]:checked ~ .menu{<enter>display: block;<enter>}<enter>.hamburger {<enter>display: block;<enter>}<enter>.dropdown {<enter>left: 50%;<enter>top: 30px;<enter>transform: translateX(35%);<enter>}<enter>.dropdown li:hover {<enter>background-color: #4c9e9e;<enter>}<enter>}<enter>body {<enter>background-color:black;<Enter>}
 "}}}
 "{{{markdown
+" markdown previewer
+au BufWriteCmd,BufRead *.md :w | !cat % > /tmp/vim-mdpre.md
 autocmd FileType markdown inoremap ;l <li></li><Space><Space><Enter><++><Esc>FeT>i
 autocmd FileType markdown inoremap ;p <p></p><Space><Space><++><Esc>FeT>i
 autocmd FileType markdown inoremap ;o <ol></ol><Enter><Enter><++>
@@ -687,28 +764,30 @@ autocmd FileType vim map <leader>ln inoremap
 autocmd FileType vim map <leader>lbf ifunction! <enter><enter>endfunction<esc>kk$i<space>
 autocmd FileType vim map <leader>ll i<lt>leader>
 "}}}
-"""{{{ autocmd snippets bash
-map <leader>bs ggi#!/bin/sh<enter><esc>:set filetype=sh<CR><CR>
-map <leader>b3 ggi#!/bin/python3<enter><esc>:set filetype=python<CR><CR>
-map <leader>b1 ggi#!/bin/python<enter><esc>:set filetype=python<CR><CR>
-map <leader>bb ggi#!/bin/bash<enter><esc>:set filetype=bash<CR><CR>
-map <leader>bz ggi#!/bin/zsh<enter><esc>:set filetype=sh
-" auto hotkey
+"{{{auto hotkey
 autocmd FileType autohotkey map <leader>la i::ActivateOrOpen("<++>","<++>")
-" c
+"}}}
+"{{{c
 autocmd FileType c map <leader>lp iprintf();<Esc>hhi
 autocmd FileType c map <leader>lar iint main (int argc, char *argv[])<Enter>{<Enter>  char *argument;<Enter>}
-" c++
+"}}}
+"{{{c++
 autocmd FileType cpp map <leader>lco icout <<
 autocmd FileType cpp map <leader>lci icin >>
-" python
+"}}}
+"{{{python
 autocmd FileType python map <leader>lin iinput("")<Esc>hhi
+let g:python_highlight_all = 1
+autocmd BufNewFile,BufRead requirements*.txt set ft=python
 autocmd FileType python map <leader>lii iint(input(""))<Esc>hhi
-" auto it
+"}}}
+"{{{auto it
 autocmd FileType autoit map <leader>lex iRun("")<Esc>hi
-" haskell
+"}}}
+"{{{haskell
 autocmd FileType haskell map <leader>lsp i, ("", spawn "")
-" powershell
+"}}}
+"{{{powershell
 autocmd FileType ps1 map <leader>lki iGet-Process  \| Stop-Process<Esc>14hi
 autocmd FileType ps1 map <leader>lpo ipowercfg.exe -SETACTIVE
 autocmd FileType ps1 map <leader>lvo i$obj = new-object -com wscript.shell<Enter>$obj.SendKeys([char]173)
@@ -718,14 +797,17 @@ autocmd FileType ps1 map <leader>lds iDisable-ScheduledTask -TaskName
 autocmd FileType ps1 map <leader>lsp iStop-Process -Name
 autocmd FileType ps1 map <leader>lri iRemove-ItemProperty -Path
 "}}}
+"{{{javascript
+autocmd FileType javascript map <leader>lcn iclassName=""<esc>i
+autocmd FileType javascript map <leader>lir iisRequired,
+autocmd FileType javascript map <leader>lset ithis.setState({<Enter><enter>});<esc>ki
+"}}}
+"}}}
 autocmd BufRead,BufNewFile /tmp/neomutt* :call ToggleHiddenAll()
-" markdown previewer
-au BufWriteCmd,BufRead *.md :w | !cat % > /tmp/vim-mdpre.md
 " Replace all is aliased to S.
       nnoremap S :%s//g<Left><Left>
 " Fix indenting visual block
 noremap <A-x> :r!date "+\%F"<CR>
-autocmd FileType html,xhtml,php noremap <A-b> :!$BROWSER %
 noremap DD1 "add
 noremap DD2 "sdd
 noremap DD3 "rdd
@@ -756,11 +838,7 @@ noremap Y9 "cy
 noremap <leader>o iAut dolorem dignissimos assumenda voluptatem tenetur recusandae. Ut et qui rerum eos optio rerum.<Enter>Aperiam architecto eos aut molestias. Non asperiores aliquam quo qui labore cum.<Enter>Mollitia beatae iste expedita explicabo aut. Perspiciatis facere aliquam iste sint. Sapiente aut itaque dolorum ut quis aut.<Enter>Iste adipisci in occaecati. Molestiae eligendi et ea nisi.<enter>Eum quibusdam nulla officiis. Corporis nostrum sint deserunt doloremque. Iusto asperiores omnis ducimus voluptatem consequuntur qui minus.<enter>Occaecati libero dicta ex voluptatem harum. Cumque aspernatur ut sapiente.<CR>
 
 autocmd FileType css map <leader>lln ilist-style: none;
-autocmd FileType javascript map <leader>lcn iclassName=""<esc>i
-autocmd FileType javascript map <leader>lset ithis.setState({<Enter><enter>});<esc>ki
 autocmd FileType java map <leader>ls iSystem.out.println();<esc>hi
-autocmd FileType c map <leader>lin i#include <stdio.h><enter>#include <stdlib.h>
-autocmd FileType javascript map <leader>lir iisRequired,
 " Call figlet
 noremap tx :r !figlet
 noremap <A-t> :r !date "+\%R:\%S"
@@ -768,31 +846,30 @@ noremap <A-t> :r !date "+\%R:\%S"
 autocmd FileType autohotkey setlocal commentstring=;\ %s
 autocmd FileType autoit setlocal commentstring=;\ %s
 autocmd FileType vifm setlocal commentstring=\"\ %s
-let g:python_highlight_all = 1
 nnoremap ; :
 nnoremap : ;
-highlight ExtraWhitespace ctermbg=red guibg=red
-au ColorScheme * highlight ExtraWhitespace guibg=red
 au BufEnter * match ExtraWhitespace /\s\+$/
 au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 au InsertLeave * match ExtraWhiteSpace /\s\+$/
 noremap <leader>y "+y
 noremap <leader>p "+p
-hi clear SpellBad
-hi SpellBad cterm=underline
-" hi SpellBad cterm=underline ctermfg=203 guifg=#ff5f5f
-" hi SpellLocal cterm=underline ctermfg=203 guifg=#ff5f5f
-" hi SpellRare cterm=underline ctermfg=203 guifg=#ff5f5f
-" hi SpellCap cterm=underline ctermfg=203 guifg=#ff5f5f
-" Make sure all types of requirements.txt files get syntax highlighting.
-autocmd BufNewFile,BufRead requirements*.txt set ft=python
-
 " Make sure .aliases, .bash_aliases and similar files get syntax highlighting.
 autocmd BufNewFile,BufRead .*aliases* set ft=sh
 
 " Make sure Kubernetes yaml files end up being set as helm files.
 au BufNewFile,BufRead *.{yaml,yml} if getline(1) =~ '^apiVersion:' || getline(2) =~ '^apiVersion:' | setlocal filetype=helm | endif
-
 " Ensure tabs don't get converted to spaces in Makefiles.
 autocmd FileType make setlocal noexpandtab
 nnoremap <leader>] :TagbarToggle<CR>
+command -nargs=* Nohtml :%s#<\_.\{-1,}>##g " delete html tags, leave text
+command -nargs=* Noblankline :g/^\s*$/d " delete all blank lines
+autocmd FileType groff map <leader>g ;!groff -m ms % -T ps > /tmp/groff.ps!
+autocmd FileType groff map <leader>l2 i.NH 2<CR>
+autocmd FileType groff map <leader>l3 i.NH 3<CR>
+autocmd FileType groff map <leader>l4 i.NH 4<CR>
+autocmd FileType groff map <leader>l5 i.NH 5<CR>
+autocmd FileType groff map <leader>l6 i.NH 6<CR>
+autocmd FileType groff map <leader>l7 i.NH 7<CR>
+let g:vim_jsx_pretty_colorful_config = 1
+" Make space more useful
+nnoremap <space> za

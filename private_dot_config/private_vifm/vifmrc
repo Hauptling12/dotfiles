@@ -57,6 +57,7 @@ set norunexec
 
 colorscheme hauptling
 
+highlight Directory ctermbg=none ctermfg=DarkCyan
 " Format for displaying time in file list. For example:
 " TIME_STAMP_FORMAT=%m/%d-%H:%M
 " See man date or man strftime for details.
@@ -107,25 +108,25 @@ set statusline="  Hint: %z%= %A %10u:%-7g %15s %20d  "
 
 " :mark mark /full/directory/path [filename]
 
-nnoremap gh :cd<cr>
-nnoremap gdo :cd ~/my-work/DOWNLOADS/ <cr>
-nnoremap gdg :cd ~/my-work/DOWNLOADS/git<cr>
-nnoremap glb :cd ~/.local/bin/<cr>
-nnoremap gls :cd ~/.local/share<cr>
-nnoremap gde :cd ~/my-work/dev/<cr>
-nnoremap gco :cd ~/.config/<cr>
-nnoremap gsc :cd ~/documents/school/<cr>
-nnoremap gmn :cd /mnt/network/mnt<cr>
-nnoremap gws :cd ~/my-work/work-software/<cr>
-nnoremap gmy :cd ~/my-work/<cr>
-nnoremap gmu :cd ~/my-work/entertment/music<cr>
-nnoremap gen :cd /mnt/network/mnt/disk2/entertainment/<cr>
-nnoremap gdr :cd ~/my-work/dev/lang/<cr>
-nnoremap gng :cd ~/documents/normal/desktop/git-repos/<cr>
-nnoremap gnd :cd ~/documents/normal/desktop/<cr>
-nnoremap gno :cd ~/my-work/notes/ob/obsidian/<cr>
-nnoremap gE :cd /etc/<cr>
-nnoremap gU :cd /usr/<cr>
+" nnoremap gh :cd<cr>
+" nnoremap gdo :cd ~/my-work/DOWNLOADS/ <cr>
+" nnoremap gdg :cd ~/my-work/DOWNLOADS/git<cr>
+" nnoremap glb :cd ~/.local/bin/<cr>
+" nnoremap gls :cd ~/.local/share<cr>
+" nnoremap gde :cd ~/my-work/dev/<cr>
+" nnoremap gco :cd ~/.config/<cr>
+" nnoremap gsc :cd ~/documents/school/<cr>
+" nnoremap gmn :cd /mnt/network/mnt<cr>
+" nnoremap gws :cd ~/my-work/work-software/<cr>
+" nnoremap gmy :cd ~/my-work/<cr>
+" nnoremap gmu :cd ~/my-work/entertment/music<cr>
+" nnoremap gen :cd /mnt/network/mnt/disk2/entertainment/<cr>
+" nnoremap gdr :cd ~/my-work/dev/lang/<cr>
+" nnoremap gng :cd ~/documents/normal/desktop/git-repos/<cr>
+" nnoremap gnd :cd ~/documents/normal/desktop/<cr>
+" nnoremap gno :cd ~/my-work/notes/ob/obsidian/<cr>
+" nnoremap gE :cd /etc/<cr>
+" nnoremap gU :cd /usr/<cr>
 " Open console in current directory
 nnoremap t :!st &<cr>
 nnoremap r :run %f<cr>
@@ -179,10 +180,10 @@ filextype *.gif,*.mp4,*.mkv,*.webm,*.mov,*.avi,*.ogg
 \ setsid mpv %f
 " audio
 filextype *.wav,*.mp3,*.m4a,*.flac,*.flac
-\ st -e mpv "%f"
+\ mpv "%f"
 " spreadsheet
 filextype *.csv,*.xlsx
-\ st -e sc-im %f
+\ sc-im %f
 " office
 filextype *.odt,*.odp,*.ott,*.ods,*.pptx,*.doc,*.docx,*.ots,*.otp,*.sti,*.sdd,*.sdp,*.odb,*.sdw,*.xls,*.odf
 \ setsid libreoffice %f
@@ -190,7 +191,8 @@ filextype *.psd,*.xcf
 \ setsid gimp %f
 " preveiw
 fileviewer *.html
-\ st -e w3m %f
+\ w3m %f
+\ nvim %f
 fileviewer *.pdf
  \st -e pdftotext -nopgbrk %c -
  "       \ vifmimg pdfpreview %px %py %pw %ph %c
@@ -277,7 +279,7 @@ filetype *.sha256
 " GETTING ICONS TO DISPLAY IN VIFM
 " You need the next 14 lines!
 
-" file types
+"{{{file icons
 " set classify=' :dir:/, :exe:, :reg:, :link:'
 " various file names
 " set classify+=' ::../::, ::*.sh::, ::*.[hc]pp::, ::*.[hc]::, ::/^copying|license$/::, ::.git/,,*.git/::, ::*.epub,,*.fb2,,*.djvu::, ::*.pdf::, ::*.htm,,*.html,,**.[sx]html,,*.xml::'
@@ -358,7 +360,7 @@ set classify+=' ::*.log::'
 set classify+=' ::*.doc,,*.docx,,*.adoc::'
 set classify+=' ::*.xls,,*.xls,,*.xlsmx::'
 set classify+=' ::*.pptx,,*.ppt::'
-
+"}}}
 
 
 " Syntax highlighting in preview
@@ -477,3 +479,8 @@ nnoremap <c-u> <c-w>x
 " let $VIFM_SERVER_NAME = v:servername
 only
 set dotfiles
+nmap ; :
+nnoremap J 5j
+nnoremap K 5k
+command! dragon dragon-drop -a -x %f
+nmap <C-d> :dragon<CR>

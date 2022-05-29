@@ -198,6 +198,9 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 #bindkey -s '^a' '^ubc -lq\n'
 bindkey "^a" beginning-of-line
 bindkey "^e" end-of-line
+bindkey "^F" forward-word
+bindkey "^B" backward-word
+bindkey '^W' backward-kill-word
 #bindkey "^D" delete-char-or-list
 #bindkey -s '^f' '^ucd "$(dirname "$(fzf)")"\n'
 

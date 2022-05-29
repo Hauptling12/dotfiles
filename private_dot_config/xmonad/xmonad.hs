@@ -70,7 +70,7 @@ colorTrayer = "--tint 0x282c34"
 --}}}
 --{{{vars
 myFont :: String
-myFont = "xft:'mononoki Bold Italic Nerd Font Complete Mono:regular:size=9:antialias=true:hinting=true"
+myFont = "xft:SauceCodePro Nerd Font Mono:regular:size=9:antialias=true:hinting=true"
 -- xft:Hack Nerd Font Mono:size=
 
 myModMask :: KeyMask
@@ -186,7 +186,7 @@ myLayoutHook = avoidStruts $ windowArrange $ T.toggleLayouts floats
                                  ||| Mirror (Tall 1 (3/100) (3/5))
 
 --}}}
-myExtraWorkspaces = [(xK_0, "10"),(xK_minus, "11"),(xK_equal, "12"),(xK_grave, "13"),(xK_bracketright, "14"),(xK_bracketleft, "15"),(xK_semicolon, "16"),(xK_apostrophe, "17"),(xK_comma, "18"),(xK_period, "19"),(xK_o, "20"),(xK_u, "21"),(xK_a, "22"),(xK_p, "23"),(xK_y, "24")]
+myExtraWorkspaces = [(xK_0, "10"),(xK_minus, "11"),(xK_equal, "12"),(xK_grave, "13"),(xK_bracketright, "14"),(xK_bracketleft, "15"),(xK_semicolon, "16"),(xK_apostrophe, "17"),(xK_comma, "18"),(xK_period, "19")]
 
 myWorkspaces = [" 1d ", " 2ju ", " 3com ", " 4doc ", " 5vm ", " 6www ", " 7mus ", " 8st ", " 9vim " ] ++ (map snd myExtraWorkspaces)
 myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1..] -- (,) == \x y -> (x,y)
@@ -204,6 +204,7 @@ myManageHook = composeAll
      , className =? "splash"          --> doFloat
      , className =? "toolbar"         --> doFloat
      , className =? "Gimp"            --> doShift ( myWorkspaces !! 2 )
+     , className =? "qBittorrent"     --> doShift ( myWorkspaces !! 18)
     -- , className =?  --> doShift  ( myWorkspaces !! 4 )
      , className =? "pm" --> doShift  ( myWorkspaces !! 2 )
      , className =? "Signal" --> doShift  ( myWorkspaces !! 5 )
@@ -221,6 +222,7 @@ myKeys =
         , ("M-w", spawn "rofi.sh")
 -- KB_G dmenu scripts
         -- , ("M-C-S-l", spawn "dm-logout.sh")
+        , ("M-S-w v", spawn (myTerminal ++ " -e wiki vid"))
 	, ("M-S-d g", spawn "gui-dm")
         , ("M-S-d m", spawn "dmenumount")
         --, ("M-S-d s", spawn "~/./scripts/bash/dmenu/scripts/webhttp")
@@ -232,7 +234,7 @@ myKeys =
         , ("M-S-d a", spawn "arch-wiki.sh")
         , ("M-S-d s", spawn "maimpick")
         , ("M-S-d u", spawn "dmenuunmount")
-
+        , ("M-S-n", spawn (myTerminal ++ " -e vifm ~/my-work/DOWNLOADS"))
 
     -- KB_G prgograms
          , ("M-x", spawn myTerminal)
@@ -264,6 +266,7 @@ myKeys =
     -- KB_G Workspaces
      --   , ("M-C-<Left>", shiftTo Next nonNSP >> moveTo Next nonNSP)       -- Shifts focused window to next ws
      --   , ("M-C-<Right>", shiftTo Prev nonNSP >> moveTo Prev nonNSP)  -- Shifts focused window to prev ws
+         , ("M-m k", spawn "keepassxc")
 
     -- KB_G Floating windows
         , ("M-t", withFocused $ windows . W.sink)  -- Push floating window back to tile
@@ -283,12 +286,14 @@ myKeys =
         , ("M-C-0", spawn "light  -S 0.0")
     -- KB_G Windows navigation
         , ("M-m", windows W.focusMaster)  -- Move focus to the master wind
-        , ("M-S-<Tab>", windows W.focusUp)      -- Move focus to the prev wind
+        , ("M-<Tab>", windows W.focusUp)      -- Move focus to the prev wind
+        -- , ("M-S-<Tab>", onGroup W.focusDown)
+        , ("M-S-<Tab>", windows W.focusDown)      -- Move focus to the prev window
         , ("M-M1-m", windows W.swapMaster) -- Swap the focused window and the master wind
         , ("M-S-j", windows W.swapDown)   -- Swap focused window with next wind
         , ("M-S-k", windows W.swapUp)     -- Swap focused window with prev wind
         , ("M-<Backspace>", promote)      -- Moves focused wind to master, others maintain order
-        , ("M-S-<Tab>", rotSlavesDown)    -- Rotate all winds except master and keep focus in place
+        -- , ("M-S-<Tab>", rotSlavesDown)    -- Rotate all winds except master and keep focus in place
         , ("M-C-<Tab>", rotAllDown)       -- Rotate all the winds in the current stack
 
     -- KB_G Layouts
@@ -321,7 +326,6 @@ myKeys =
 -- KB_G monitors
         -- , ("M-.", nextScreen)  -- Switch focus to next monitor
         -- , ("M-,", prevScreen)  -- Switch focus to prev monitor
-
     -- KB_G Multimedia Keys
         , ("<XF86MonBrightnessUp>", spawn "light -A 3")
         , ("<XF86MonBrightnessDown>", spawn "light -U 3")
@@ -330,6 +334,9 @@ myKeys =
         , ("M-<XF86AudioRaiseVolume>", spawn "amixer set Master 6%+ unmute")
         , ("<XF86AudioLowerVolume>", spawn "amixer set Master 3%- unmute")
         , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 3%+ unmute")
+        , ("M-<XF86AudioPlay>", spawn "pausemu p")
+	, ("M-<XF86AudioPrev>", spawn "pausemu r")
+	, ("M-<XF86AudioNext>", spawn "pausemu n")
         , ("<XF86AudioPlay>", spawn "pausem p")
 	, ("<XF86AudioPrev>", spawn "pausem r")
 	, ("<XF86AudioNext>", spawn "pausem n")
@@ -353,16 +360,6 @@ myKeys =
         , ("M-,", windows $ W.greedyView "18")
         , ("M-S-.", windows $ W.shift "19")
         , ("M-.", windows $ W.greedyView "19")
-        , ("M-S-o", windows $ W.shift "20")
-        , ("M-o", windows $ W.greedyView "20")
-        , ("M-S-u", windows $ W.shift "21")
-        , ("M-u", windows $ W.greedyView "21")
-        , ("M-S-a", windows $ W.shift "22")
-        , ("M-a", windows $ W.greedyView "22")
-        , ("M-S-p", windows $ W.shift "23")
-        , ("M-p", windows $ W.greedyView "23")
-        , ("M-S-y", windows $ W.shift "24")
-        , ("M-y", windows $ W.greedyView "24")
         ]
 
        --      where nonNSP          = WSIs (return (\ws -> W.tag ws /= "NSP"))
