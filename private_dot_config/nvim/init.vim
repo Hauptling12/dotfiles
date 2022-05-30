@@ -198,10 +198,10 @@ map <leader>I :setlocal noautoindent<CR>
 " Enable and disable auto comment
 map <leader>c :setlocal formatoptions-=cro<CR>
 map <leader>C :setlocal formatoptions=cro<CR>
-nnoremap <Left> :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up> :echoe "Use k"<CR>
-nnoremap <Down> :echoe "Use j"<CR>
+nnoremap <up> :echoerr "Don't use arrow keys, use H, J, K, L instead!"<CR>
+nnoremap <down> :echoerr "Don't use arrow keys, use H, J, K, L instead!"<CR>
+nnoremap <right> :echoerr "Don't use arrow keys, use H, J, K, L instead!"<CR>
+nnoremap <left> :echoerr "Don't use arrow keys, use H, J, K, L instead!"<CR>
 "}}}
 "{{{tabs
 autocmd FileType json setlocal tabstop=2 softtabstop=2 shiftwidth=2
@@ -254,7 +254,9 @@ set statusline+=%5*\ %{toupper(g:currentmode[mode()])}\  " The current mode
 set statusline+=%2*\ │
 set statusline+=%2*\ %t
 set statusline+=%2*\ │
-set statusline+=%2*\ \ %m%r
+set statusline+=%{&modified?'+\ ':''}
+set statusline+=%2*\ \ %r
+set statusline+=%#warningmsg# "display a warning if file encoding isnt utf-8
 set statusline+=%=                                       " Right Side
 set statusline+=%2*\ %{&ff}
 set statusline+=%2*\ │
@@ -278,11 +280,10 @@ au InsertLeave * hi User5 ctermbg=104 guibg=#9876aa
 if exists('$SHELL')
         set shell=$SHELL
 else
-        set shell=/bin/sh
+        set shell=/bin/zsh
 endif
 " set clipboard+=unnamedplus
 " makes clipboard save to system
-vnoremap <C-c> "+y
 " Prevent x from overriding what's in the clipboard.
 noremap x "_x
 noremap X "_x
@@ -863,7 +864,7 @@ autocmd FileType make setlocal noexpandtab
 nnoremap <leader>] :TagbarToggle<CR>
 command -nargs=* Nohtml :%s#<\_.\{-1,}>##g " delete html tags, leave text
 command -nargs=* Noblankline :g/^\s*$/d " delete all blank lines
-autocmd FileType groff map <leader>g ;!groff -m ms % -T ps > /tmp/groff.ps!
+au BufWriteCmd,BufRead *.ms :w | !groff -m ms % -T ps > /tmp/groff.ps
 autocmd FileType groff map <leader>l2 i.NH 2<CR>
 autocmd FileType groff map <leader>l3 i.NH 3<CR>
 autocmd FileType groff map <leader>l4 i.NH 4<CR>
@@ -873,3 +874,126 @@ autocmd FileType groff map <leader>l7 i.NH 7<CR>
 let g:vim_jsx_pretty_colorful_config = 1
 " Make space more useful
 nnoremap <space> za
+autocmd BufNewFile,BufRead *.rss,*.atom         setfiletype xml
+autocmd FileType css setlocal ts=2 sts=2 sw=2 noexpandtab
+autocmd FileType html setlocal ts=2 sts=2 sw=2 noexpandtab
+nnoremap ]b :bnext<cr>
+nnoremap [b :bprev<cr>
+" Use a block cursor in normal mode, i-beam cursor in insertmode
+if empty($TMUX)
+  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+else
+  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+endif
+" Enable 256 colors in vim
+set t_Co=256
+nnoremap <silent> <Leader>`        :Marks<CR>
+" stop vim from silently messing with files that it shouldn't
+set nofixendofline
+hi StatusLine ctermfg=black ctermbg=NONE
+hi StatusLineNC ctermfg=black ctermbg=NONE
+" better use of arrow keys, number increment/decrement
+nnoremap <up> <C-a>
+nnoremap <down> <C-x>
+nmap :: A;<esc>
+" Minimum lines to keep above and below cursor when scrolling
+set scrolloff=3
+" Ask for confirmation when handling unsaved or read-only files
+set confirm
+" Show hostname, full path of file and last-mod time on the window title. The
+" meaning of the format str for strftime can be found in
+" http://man7.org/linux/man-pages/man3/strftime.3.html. The function to get
+" lastmod time is drawn from https://stackoverflow.com/q/8426736/6064933
+set title
+set titlestring=
+set titlestring+=%(%{hostname()}\ \ %)
+set titlestring+=%(%{expand('%:p')}\ \ %)
+set titlestring+=%{strftime('%Y-%m-%d\ %H:%M',getftime(expand('%')))}
+" Do not load tohtml.vim
+let g:loaded_2html_plugin = 1
+xnoremap ; :
+" Turn the word under cursor to upper case
+inoremap <c-u> <Esc>viwUea
+" hi TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
+" hi TabLine ctermfg=Blue ctermbg=Yellow
+" hi TabLineSel ctermfg=Red ctermbg=Yellow
+" hi Title ctermfg=LightBlue ctermbg=Magenta
+set tabline=%!MyTabLine()  " custom tab pages line
+function! MyTabLine()
+  let s = ''
+  " loop through each tab page
+  for i in range(tabpagenr('$'))
+    if i + 1 == tabpagenr()
+      let s .= '%#TabLineSel#'
+    else
+      let s .= '%#TabLine#'
+    endif
+    if i + 1 == tabpagenr()
+      let s .= '%#TabLineSel#' " WildMenu
+    else
+      let s .= '%#Title#'
+    endif
+    " set the tab page number (for mouse clicks)
+    let s .= '%' . (i + 1) . 'T '
+    " set page number string
+    let s .= i + 1 . ''
+    " get buffer names and statuses
+    let n = ''  " temp str for buf names
+    let m = 0   " &modified counter
+    let buflist = tabpagebuflist(i + 1)
+    " loop through each buffer in a tab
+    for b in buflist
+      if getbufvar(b, "&buftype") == 'help'
+        " let n .= '[H]' . fnamemodify(bufname(b), ':t:s/.txt$//')
+      elseif getbufvar(b, "&buftype") == 'quickfix'
+        " let n .= '[Q]'
+      elseif getbufvar(b, "&modifiable")
+        let n .= fnamemodify(bufname(b), ':t') . ', ' " pathshorten(bufname(b))
+      endif
+      if getbufvar(b, "&modified")
+        let m += 1
+      endif
+    endfor
+    " let n .= fnamemodify(bufname(buflist[tabpagewinnr(i + 1) - 1]), ':t')
+    let n = substitute(n, ', $', '', '')
+    " add modified label
+    if m > 0
+      let s .= '+'
+      " let s .= '[' . m . '+]'
+    endif
+    if i + 1 == tabpagenr()
+      let s .= ' %#TabLineSel#'
+    else
+      let s .= ' %#TabLine#'
+    endif
+    " add buffer names
+    if n == ''
+      let s.= '[No Name]'
+    else
+      let s .= n
+    endif
+    " switch to no underlining and add final space
+    let s .= ' '
+  endfor
+  let s .= '%#TabLineFill#%T'
+  " right-aligned close button
+  " if tabpagenr('$') > 1
+  "   let s .= '%=%#TabLineFill#%999Xclose'
+  " endif
+  return s
+endfunction
+hi TabLineFill cterm=reverse ctermfg=0 gui=reverse
+"Quickly re-select either the last pasted or changed text
+noremap gV `[v`]
+" Format a paragraph or visual selection to 80 character lines
+nnoremap <Leader>g gqap
+xnoremap <Leader>g gqa
+nnoremap Y y$
+nnoremap <leader><leader> <c-^>
+"" Visual yank to/from system register
+vmap <C-Y> "+y
+nmap <C-P> "+p
+nnoremap <Leader>c :let @/=''<CR>:echo<CR>,c
+nnoremap q; q:
