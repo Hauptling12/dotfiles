@@ -1,4 +1,5 @@
 alias doas="doas --"
+alias startx="startx $XDG_CONFIG_HOME/X11/xinitrc"
 #{{{dirs
 alias notes="cd ~/my-work/notes/ob/obsidian/"
 alias dev="cd ~/my-work/dev/"
@@ -118,7 +119,8 @@ alias bt-scrup="doas -- btrfs scrub start /"
 # alias tl="transmission-remote --list"
 # alias ta="transmission-remote --add"
 # alias td="transmission-daemon"
-alias cat="bat"
+alias cat="bat -p"
+alias catn="bat --paging=never"
 alias sss="/bin/ss"
 alias box="boxes -d scroll"
 alias markdown-toc="~/./node_modules/markdown-toc/cli.js"
@@ -128,7 +130,7 @@ alias bul="buku -s look-at"
 alias bu='buku --suggest'
 alias ccat="/bin/cat"
 alias fzf="fzf-tmux"
-alias catn='cat -n'
+#alias catn='cat -n'
 alias newsboat="newsboat -r"
 alias rdrview="rdrview -B $CLI_BROWSER "
 alias tsukae='tsukae zsh -s=/home/chief/documents/cashe/.zsh_history'
@@ -139,7 +141,7 @@ alias libreoffice='setsid -f libreoffice '
 alias mpvn="mpv"
 alias C='wc -l'
 alias L="less"
-alias wwget="wget --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hsts" --user-agent="Mozilla""
+alias wwget="/bin/wget --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hsts" --user-agent="Mozilla""
 alias wget='wget --page-requisites --adjust-extension --convert-links --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hsts" --user-agent="Mozilla"'
 alias free='free -hm'
 alias df='df -Th'
@@ -310,3 +312,7 @@ alias amount="aft-mtp-mount ~/mnt"
 alias ss="cd ~/.local/bin/script/ && ls"
 # Lists the ten most used commands.
 alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
+alias mpa="mpv --no-video"
+alias ta="tmux attach-session"
+alias net-reset="sudo systemctl restart NetworkManager.service"
+cs(){ du -a .local/bin/script .config | awk '{print $2}' | fzf | xargs -r -I {} $EDITOR $HOME/{}}

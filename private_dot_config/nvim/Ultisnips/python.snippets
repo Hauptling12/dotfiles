@@ -4,8 +4,11 @@ endsnippet
 snippet date-t "date and time"
 datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 endsnippet
-snippet def-ma "def main()"
+snippet main "Main function boilerplate" b
 def main():
-  if __name__ == "__main__":
-    main()
+	$0
+
+
+if __name__ == "__main__":
+	main()
 endsnippet

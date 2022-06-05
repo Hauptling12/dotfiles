@@ -1,0 +1,5 @@
+nnoremap "ZZ" ":wq<CR>"
+nnoremap "ZQ" ":q!<CR>"
+nnoremap ";" ":"
+nnoremap ":" ";"
+nnoremap "ii" ">"

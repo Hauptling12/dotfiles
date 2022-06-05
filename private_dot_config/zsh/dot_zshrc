@@ -171,7 +171,8 @@ tovi() {
 #[ -f "$HOME/.config/shell/function.zsh" ] && source "$HOME/.config/shell/function.zsh"
 
 
-export MANPAGER='/bin/bash -c "nvim -MRn -c \"set buftype=nofile showtabline=0 ft=man ts=8 nomod nolist norelativenumber nonu noma\" -c \"normal L\" -c \"nmap q :qa<CR>\"</dev/tty <(col -b)"'
+# export MANPAGER='/bin/bash -c "nvim -MRn -c \"set buftype=nofile showtabline=0 ft=man ts=8 nomod nolist norelativenumber nonu noma\" -c \"normal L\" -c \"nmap q :qa<CR>\"</dev/tty <(col -b)"'
+export MANPAGE='bat'
 
 ### BASH INSULTER (works in zsh though) ###
 if [ -f /etc/bash.command-not-found ]; then

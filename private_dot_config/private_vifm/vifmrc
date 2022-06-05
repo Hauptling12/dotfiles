@@ -7,10 +7,13 @@
 
 " ------------------------------------------------------------------------------
 
+set vicmd=$EDITOR
+set scrolloff=4
 
-set vicmd=nvim
-" set vicmd=elvis\ -G\ termcap
-" set vicmd=vile
+nnoremap <up> :echo "USE ARROW KEYS, USE K INSTEAD!"<CR>
+nnoremap <down> :echo "USE ARROW KEYS, USE J INSTEAD!"<CR>
+nnoremap <right> :echo "USE ARROW KEYS, USE L INSTEAD!"<CR>
+nnoremap <left> :echo "USE ARROW KEYS, USE H INSTEAD!"<CR>
 
 " This makes vifm perform file operations on its own instead of relying on
 " standard utilities like `cp`.  While using `cp` and alike is a more universal
@@ -92,8 +95,6 @@ set incsearch
 
 " Try to leave some space from cursor to upper/lower border in lists
 
-set scrolloff=4
-
 " Don't do too many requests to slow file systems
 
 if !has('win')
@@ -102,11 +103,41 @@ endif
 
 " Set custom status line look
 
-set statusline="  Hint: %z%= %A %10u:%-7g %15s %20d  "
+set statusline="%t | %A | %s | %E | %d | %a | %T | %u"
+set tablabel="%N:%t"
+nnoremap <leader>
 
 " ------------------------------------------------------------------------------
 
 " :mark mark /full/directory/path [filename]
+
+nnoremap o :cd ~/<CR>
+nnoremap ocv :cd ~/.config/vifm<CR>
+nnoremap ow :cd /var/www/html/<CR>
+nnoremap ols :cd ~/.local/bin/script/<CR>
+nnoremap olb :cd ~/.local/bin<CR>
+nnoremap old :cd ~/.local/share/<CR>
+nnoremap oc :cd ~/.config/<CR>
+nnoremap oce :cd ~/.config/nvim/<CR>
+nnoremap ocn :cd ~/.config/newsboat<CR>
+nnoremap ocr :cd ~/.config/zathura<CR>
+nnoremap ocs :cd ~/.config/zsh<CR>
+nnoremap ocw :cd ~/.config/xmonad<CR>
+nnoremap ocp :cd ~/.config/mpv<CR>
+nnoremap ol :cd ~/my-work/dev/lang<CR>
+nnoremap on :cd ~/my-work/notes/ob/obsidian/<CR>
+nnoremap olt :cd ~/.local/share/tor-browser_en-US/<CR>
+nnoremap om :cd ~/my-work/entertment/music/<CR>
+nnoremap oe :cd ~/my-work/entertment/<CR>
+nnoremap od :cd ~/my-work/dev<CR>
+nnoremap og :cd ~/my-work/DOWNLOADS/git/<CR>
+nnoremap oD :cd ~/my-work/DOWNLOADS/<CR>
+nnoremap oi :cd /mnt/network/<CR>
+nnoremap oh :cd ~/documents/school/<CR>
+nnoremap ort :cd /tmp<CR>
+nnoremap oE :cd /etc<cr>
+nnoremap oU. :cd /usr<cr>
+nnoremap oUs :cd /usr/share<cr>
 
 " nnoremap gh :cd<cr>
 " nnoremap gdo :cd ~/my-work/DOWNLOADS/ <cr>
@@ -176,12 +207,16 @@ filextype *.png,*.jpg,*.webp,*.svg,*.jpeg,*.ico,*.bmp,*.pnm,*.tiff
 filextype *.eps,*.ps.gz,*.pdf,*.epub,*.ps,*.djvu,*cbz,*.cbr
 \ setsid zathura %f
 " video
-filextype *.gif,*.mp4,*.mkv,*.webm,*.mov,*.avi,*.ogg
+filextype *.gif,*.mp4,*.mkv,*.webm,*.mov,*.avi,*.ogg,*.wmv,*.dat,*.3gp,*.ogv,*.mpg,*.mpeg,*.vob,*.m2v,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,*.as[fx]
 \ setsid mpv %f
 " audio
-filextype *.wav,*.mp3,*.m4a,*.flac,*.flac
+filextype *.wav,*.mp3,*.m4a,*.flac,*.wma,*.ape,*.ac3,*.spx,*.opus
 \ mpv "%f"
 " spreadsheet
+fileviewer *.csv sed "s/,,,,/,,-,,/g;s/,,/ /g" %c | column -t | sed "s/ - /  /g" | cut -c -%pw
+fileviewer *.odt odt2txt %c -
+fileview */ tree %c -L 1 --dirsfirst
+fileview ../ tree %c -L 1 --dirsfirst
 filextype *.csv,*.xlsx
 \ sc-im %f
 " office
@@ -190,9 +225,10 @@ filextype *.odt,*.odp,*.ott,*.ods,*.pptx,*.doc,*.docx,*.ots,*.otp,*.sti,*.sdd,*.
 filextype *.psd,*.xcf
 \ setsid gimp %f
 " preveiw
-fileviewer *.html
-\ w3m %f
+fileviewer *.html,*.htm
 \ nvim %f
+filextype *.html,*.htm links, w3m %f
+
 fileviewer *.pdf
  \st -e pdftotext -nopgbrk %c -
  "       \ vifmimg pdfpreview %px %py %pw %ph %c
@@ -479,8 +515,23 @@ nnoremap <c-u> <c-w>x
 " let $VIFM_SERVER_NAME = v:servername
 only
 set dotfiles
-nmap ; :
+set number
 nnoremap J 5j
 nnoremap K 5k
 command! dragon dragon-drop -a -x %f
 nmap <C-d> :dragon<CR>
+nnoremap <m-u> :windo cd ..<cr>
+" Mappings for faster renaming
+nnoremap r cw<c-a>
+nnoremap <space> :select<cr>
+" tabs
+nnoremap ,tt :tabnew<CR>
+nnoremap ,tq :tabclose<CR>
+noremap ti gT
+noremap tn gt
+noremap tmn :-tabmove<CR>
+noremap tmi :+tabmove<CR>
+nnoremap map <C-h> <C-w>h
+nnoremap map <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l

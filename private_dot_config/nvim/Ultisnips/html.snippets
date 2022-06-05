@@ -155,3 +155,33 @@ endsnippet
 snippet jquery "import jquery js module"
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 endsnippet
+snippet "(k1|kbd)" "HTML kbd tag" rw
+<kbd>${1:KEY}</kbd>$0
+endsnippet
+
+snippet k2 "Two key strokes shortcut"
+<kbd>${1:KEY}</kbd> + <kbd>${2:KEY}</kbd>
+endsnippet
+
+snippet k3 "Three key strokes shortcut"
+<kbd>${1:KEY}</kbd> + <kbd>${2:KEY}</kbd> + <kbd>${3:KEY}</kbd>
+endsnippet
+snippet init "html template"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+${0}
+</body>
+<html>
+endsnippet
+snippet lista "emmet list * 50"
+ul>li*${0}>a
+endsnippet
+snippet listan "emmet list * 50 numberd"
+ul>li*${1}>a[id="${0}$"]
+endsnippet

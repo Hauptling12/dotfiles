@@ -1,4 +1,7 @@
 {
+    "coc.preferences.colorSupport": true,
+    "powershell.integratedConsole.showOnStartup": false,
+    "coc.source.word.filetypes": ["gitcommit","groff","markdwon"],
   	"snippets.ultisnips.directories": [
 		"$HOME/.config/nvim/Ultisnips/",
 		"$HOME/.config/nvim/plugged/vim-snippets/UltiSnips/"

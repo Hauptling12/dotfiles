@@ -5,7 +5,17 @@ download-retries 4
 reload-threads 4                    # parallel
 
 external-url-viewer "urlscan -dc -r 'linkhandler {}'"
+always-display-description yes
+inoreader-flag-star "b"
+confirm-mark-all-feeds-read yes
 
+# proxy
+proxy-type socks5
+proxy localhost:9050
+use-proxy yes
+user-agent "Lynx/2.8.5rel.1 libwww-FM/2.14"
+
+reload-time 75
 bind-key w toggle-source-view
 bind-key x save
 unbind-key s
