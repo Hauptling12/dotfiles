@@ -16,6 +16,8 @@ Plug 'https://github.com/tpope/vim-fugitive'
 Plug 'bfrg/vim-cpp-modern'
 Plug 'https://github.com/honza/vim-snippets'
 "Plug 'arzg/vim-swift'
+" Plug 'https://github.com/lambdalisue/fern.vim'
+Plug 'https://github.com/AndrewRadev/tagalong.vim'
 Plug 'neoclide/coc-sources'
 Plug 'tpope/vim-commentary'
 Plug 'https://github.com/tpope/vim-surround'
@@ -192,8 +194,8 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 "Make adjusing split sizes a bit more friendly
-map <Enter> o<ESC>
-map <S-Enter> O<ESC>
+" map <Enter> o<ESC>
+" map <S-Enter> O<ESC>
 noremap <silent> <S-Left> :vertical resize +3<CR>
 noremap <silent> <S-Right> :vertical resize -3<CR>
 noremap <silent> <S-Up> :resize +3<CR>
@@ -208,6 +210,8 @@ noremap tU :tab split<CR>
 "Move around tabs with tn and ti
 noremap tn :-tabnext<CR>
 noremap ti :+tabnext<CR>
+map <leader>tj :tabm -1<CR>
+map <leader>tK :tabm +1<CR>
 "Move tabs with tmn and tmi
 noremap tmn :-tabmove<CR>
 noremap tmi :+tabmove<CR>
@@ -260,6 +264,8 @@ nnoremap <expr> <leader>v printf('`[%s`]', getregtype()[0])
 xnoremap / :<C-U>call feedkeys('/\%>'.(line("'<")-1).'l\%<'.(line("'>")+1)."l")<CR>
 " Use Esc to quit builtin terminal
 tnoremap <ESC>   <C-\><C-n>
+map <leader>v viw
+imap <c-d> <esc>ddi
 "}}}
 "{{{tabs
 autocmd FileType typescript,json setlocal tabstop=2 softtabstop=2 shiftwidth=2
@@ -439,6 +445,29 @@ nmap <C-P> "+p
 "{{{ plugin conf
 " rust syntax
 "let g:rust_clip_command = 'xclip -selection clipboard'
+"{{{fern
+let g:fern#renderer = "nerdfont"
+let g:fern#drawer_width = 30
+let g:fern#default_hidden = 1
+let g:fern#disable_drawer_auto_quit = 1
+function! s:init_fern() abort
+  nmap <buffer> H <Plug>(fern-action-open:split)
+  nmap <buffer> V <Plug>(fern-action-open:vsplit)
+  nmap <buffer> R <Plug>(fern-action-rename)
+	nmap <buffer> M <Plug>(fern-action-move)
+	nmap <buffer> C <Plug>(fern-action-copy)
+	nmap <buffer> N <Plug>(fern-action-new-path)
+	nmap <buffer> T <Plug>(fern-action-new-file)
+	nmap <buffer> D <Plug>(fern-action-new-dir)
+	nmap <buffer> S <Plug>(fern-action-hidden-toggle)
+	nmap <buffer> dd <Plug>(fern-action-trash)
+  nmap <buffer> <leader> <Plug>(fern-action-mark)
+endfunction
+augroup fern-custom
+  autocmd! *
+  autocmd FileType fern call s:init_fern()
+augroup END
+"}}}
 " {{{Undotree
 "noremap L :UndotreeToggle<CR>
 let g:undotree_SetFocusWhenToggle = 1
@@ -725,11 +754,15 @@ endfunction
 
 function! NetrwMappings()
 		" Hack fix to make ctrl-l work properly
+                nnoremap <silent><buffer> y. :<C-U>call setreg(v:register, join(<SID>absolutes(line('.'), line('.') - 1 + v:count1), "\n")."\n")<CR>
 		noremap <buffer> <A-l> <C-w>l
 		noremap <buffer> <C-l> <C-w>l
                 noremap <buffer> V :call OpenToRight()<cr>
 		noremap <buffer> H :call OpenBelow()<cr>
 		noremap <buffer> T :call OpenTab()<cr>
+                nmap <buffer> h -^
+                nmap <buffer> l <CR>
+                nmap <buffer> . gh
 endfunction
 
 augroup netrw_mappings
@@ -760,6 +793,7 @@ function! NetrwOnBufferOpen()
 	call ToggleNetrw()
 endfun
 
+let g:netrw_keepdir = 0
 	autocmd VimEnter * :call NetrwOnBufferOpen() | wincmd p
 " Close Netrw if it's the only buffer open
 autocmd WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw" || &buftype == 'quickfix' |q|endif
@@ -771,11 +805,14 @@ function! NetrwOnBufferOpen()
 	call ToggleNetrw()
 endfun
 let g:NetrwIsOpen=0
+let g:netrw_sort_sequence = '[\/]$,*'
 nnoremap <C-t> :call ToggleNetrw()<CR>
+imap <C-t> :call ToggleNetrw()<CR>
 "}}}
 "{{{fzf
 nnoremap <A-g> :GFiles<CR>
 nnoremap <leader>L :Lines
+let g:fzf_history_dir = '~/.local/share/fzf-history'
 nnoremap <A-z> :Files<CR>
 let g:fzf_preview_window = 'right:60%'
 "" Default key bindings
@@ -785,6 +822,9 @@ let g:fzf_action = {
             \ 'ctrl-v': 'vsplit' }
 "}}}
 "Do not load zipPlugin.vim gzip.vim and tarPlugin.vim (all these plugins are related to checking files inside compressed files)
+"{{{tag anlong
+let g:tagalong_filetypes = ['html', 'htmldjango', 'javascriptreact', 'jsx', 'php', 'typescriptreact', 'xml']
+"}}}
 let g:loaded_zipPlugin = 1
 let loaded_gzip = 1
 let g:loaded_tarPlugin = 1
@@ -1181,8 +1221,6 @@ map <leader>cs [sz=
 " metres to feet
 " kilometres to metric
 " get python shell cli propmt
-map <leader>tj :tabm -1<CR>
-map <leader>tK :tabm +1<CR>
 " command! -nargs=+ Py :!python <args>
 nnoremap <Leader>te :tabe term://$SHELL<CR>i
 tnoremap <Esc> <C-\><C-n>
@@ -1201,3 +1239,73 @@ endfunction
 nnoremap <Leader>fcu :call Dos2Unix()<CR>
 nnoremap <Leader>fcd :call Unix2Dos()<CR>
 nnoremap rr Vr
+function! Redir(cmd, rng, start, end)
+	for win in range(1, winnr('$'))
+		if getwinvar(win, 'scratch')
+			execute win . 'windo close'
+		endif
+	endfor
+	if a:cmd =~ '^!'
+		let cmd = a:cmd =~' %'
+			\ ? matchstr(substitute(a:cmd, ' %', ' ' . shellescape(escape(expand('%:p'), '\')), ''), '^!\zs.*')
+			\ : matchstr(a:cmd, '^!\zs.*')
+		if a:rng == 0
+			let output = systemlist(cmd)
+		else
+			let joined_lines = join(getline(a:start, a:end), '\n')
+			let cleaned_lines = substitute(shellescape(joined_lines), "'\\\\''", "\\\\'", 'g')
+			let output = systemlist(cmd . " <<< $" . cleaned_lines)
+		endif
+	else
+		redir => output
+		execute a:cmd
+		redir END
+		let output = split(output, "\n")
+	endif
+	vnew
+	let w:scratch = 1
+	setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile
+	call setline(1, output)
+endfunction
+
+" This command definition includes -bar, so that it is possible to "chain" Vim commands.
+" Side effect: double quotes can't be used in external commands
+command! -nargs=1 -complete=command -bar -range Redir silent call Redir(<q-args>, <range>, <line1>, <line2>)
+
+" This command definition doesn't include -bar, so that it is possible to use double quotes in external commands.
+" Side effect: Vim commands can't be "chained".
+command! -nargs=1 -complete=command -range Redir silent call Redir(<q-args>, <range>, <line1>, <line2>)
+nnoremap <leader>u :%!sort <bar> uniq<CR>
+"use Escape to exit :term input mode
+tnoremap <Esc> <C-\><C-n>
+command! -bang -nargs=* History
+\ call fzf#vim#history({'down':'12%:hidden', 'options': '--no-sort'})
+nnoremap <leader>R :History<CR>
+nnoremap <leader>d "_d
+" Select all
+nmap <C-a> gg<S-v>G
+" Go to tab
+nnoremap <silent> <M-1> 1gt
+nnoremap <silent> <M-2> 2gt
+nnoremap <silent> <M-3> 3gt
+nnoremap <silent> <M-4> 4gt
+nnoremap <silent> <M-5> 5gt
+nnoremap <silent> <M-6> 6gt
+nnoremap <silent> <M-7> 7gt
+nnoremap <silent> <M-8> 8gt
+nnoremap <silent> <M-9> 9gt
+nnoremap <silent> <M-0> :<C-u>tablast<CR>
+tnoremap <C-h> <C-\\><C-N><C-w>h
+tnoremap <C-j> <C-\\><C-N><C-w>j
+tnoremap <C-k> <C-\\><C-N><C-w>k
+tnoremap <C-l> <C-\\><C-N><C-w>l
+inoremap <C-h> <C-\><C-N><C-w>h
+inoremap <C-j> <C-\><C-N><C-w>j
+inoremap <C-k> <C-\><C-N><C-w>k
+inoremap <C-l> <C-\><C-N><C-w>l
+tnoremap <Esc> <C-\><C-n>
+imap <S-Backspace> <Nop>
+map <S-Backspace> <Nop>
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_auto_insert_bullets = 0

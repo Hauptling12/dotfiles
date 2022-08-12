@@ -5,3 +5,13 @@ ${1:txt}
 wilf:
 ${1:txt}
 endsnippet
+snippet doc "document the current file"
+File Documentation
+Filename: `!v expand("%:t")`
+Author:${1: `!v expand("$USER")`}
+last updated: `!v strftime("%d/%m/%y %H:%M:%S")`
+Description:
+$2
+TODO:
+$3
+endsnippet

@@ -1,5 +1,5 @@
 alias doas="doas --"
-alias startx="startx $XDG_CONFIG_HOME/X11/xinitrc"
+alias startx="startx $XDG_CONFIG_HOME/x11/xinitrc"
 #{{{dirs
 alias notes="cd ~/my-work/notes/ob/obsidian/"
 alias dev="cd ~/my-work/dev/"
@@ -316,3 +316,7 @@ alias mpa="mpv --no-video"
 alias ta="tmux attach-session"
 alias net-reset="sudo systemctl restart NetworkManager.service"
 cs(){ du -a .local/bin/script .config | awk '{print $2}' | fzf | xargs -r -I {} $EDITOR $HOME/{}}
+alias ma="mpv --no-audio"
+alias tty-clock="tty-clock -C1 -c -s"
+alias npi="npm install"
+alias npr="npm run"

@@ -13,15 +13,6 @@ if [ -e "$FIFO_UEBERZUG" ]; then
                            [path]="${PWD}/$6") \
             > "$FIFO_UEBERZUG"
 
-    elif [[ "$1" == "videopreview" ]]; then
-        echo -e "Loading preview..\nFile: $6"
-        [[ ! -d "/tmp${PWD}/$6/" ]] && mkdir -p "/tmp${PWD}/$6/"
-        [[ ! -f "/tmp${PWD}/$6.png" ]] && ffmpegthumbnailer -i "${PWD}/$6" -o "/tmp${PWD}/$6.png" -s 0 -q 10
-        declare -p -A cmd=([action]=add [identifier]="$ID_PREVIEW"
-                           [x]="$2" [y]="$3" [width]="$4" [height]="$5" \
-                           [path]="/tmp${PWD}/$6.png") \
-            > "$FIFO_UEBERZUG"
-
     elif [[ "$1" == "gifpreview" ]]; then
         echo -e "Loading preview..\nFile: $6"
         [[ ! -d "/tmp${PWD}/$6/" ]] && mkdir -p "/tmp${PWD}/$6/" && convert -coalesce "${PWD}/$6" "/tmp${PWD}/$6/$6.png"
@@ -33,16 +24,22 @@ if [ -e "$FIFO_UEBERZUG" ]; then
             # Sleep between frames to make the animation smooth.
             sleep .07
         done
-
-    elif [[ "$1" == "pdfpreview" ]]; then
+        elif [[ "$1" == "epub" ]]; then
         echo -e "Loading preview..\nFile: $6"
         [[ ! -d "/tmp${PWD}/$6/" ]] && mkdir -p "/tmp${PWD}/$6/"
-        [[ ! -f "/tmp${PWD}/$6.png" ]] && pdftoppm -png -singlefile "$6" "/tmp${PWD}/$6"
+        [[ ! -f "/tmp${PWD}/$6.png" ]] && epub-thumbnailer "${PWD}/$6" "/tmp${PWD}/$6.png" 1024 2>/dev/null
         declare -p -A cmd=([action]=add [identifier]="$ID_PREVIEW"
-                           [x]="$2" [y]="$3" [width]="$4" [height]="$5" \
-                           [path]="/tmp${PWD}/$6.png") \
-            > "$FIFO_UEBERZUG"
-
+                       [x]="$2" [y]="$3" [width]="$4" [height]="$5" \
+                        [path]="/tmp${PWD}/$6.png") \
+         > "$FIFO_UEBERZUG"
+        elif [[ "$1" == "videopreview" ]]; then
+        echo -e "Loading preview..\nFile: $6"
+        [[ ! -d "/tmp${PWD}/$6/" ]] && mkdir -p "/tmp${PWD}/$6/"
+        [[ ! -f "/tmp${PWD}/$6.png" ]] && ffmpegthumbnailer -i "${PWD}/$6" -o "/tmp${PWD}/$6.png" -s 0 -q 10
+        declare -p -A cmd=([action]=add [identifier]="$ID_PREVIEW"
+                       [x]="$2" [y]="$3" [width]="$4" [height]="$5" \
+                        [path]="/tmp${PWD}/$6.png") \
+         > "$FIFO_UEBERZUG"
     elif [[ "$1" == "clear" ]]; then
         declare -p -A cmd=([action]=remove [identifier]="$ID_PREVIEW") \
             > "$FIFO_UEBERZUG"

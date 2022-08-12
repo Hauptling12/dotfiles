@@ -167,6 +167,18 @@ class fzf_gotomountpoint(Command):
                 self.fm.cd(fzf_file)
             else:
                 self.fm.select_file(fzf_file)
+# @ranger.api.register_linemode     # It may be used as a decorator too!
+# class MyLinemode(ranger.core.linemode.LinemodeBase):
+#     name = "awesome_linemode"
+
+#     uses_metadata = True
+#     required_metadata = ["comment"]
+
+#     def filetitle(self, file, metadata):
+#         return file.relative_path + " (" + metadata.comment + ")"
+
+#     def infostring(self, file, metadata):
+#         return file.user
 @ranger.api.register_linemode     # It may be used as a decorator too!
 class MyLinemode(ranger.core.linemode.LinemodeBase):
     name = "awesome_linemode"

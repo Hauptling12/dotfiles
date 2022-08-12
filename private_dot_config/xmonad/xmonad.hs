@@ -51,6 +51,7 @@ import qualified XMonad.Layout.MultiToggle as MT (Toggle(..))
 import XMonad.Util.Dmenu
 import XMonad.Util.EZConfig (additionalKeysP)
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
+import XMonad.Util.NamedScratchpad
 import XMonad.Util.SpawnOnce
 --}}}
 --{{{colors
@@ -125,6 +126,37 @@ spawnSelected' lst = gridselect conf lst >>= flip whenJust spawn
                    , gs_originFractY = 0.5
                    , gs_font         = myFont
                    }
+myScratchPads :: [NamedScratchpad]
+myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
+                , NS "mocp" spawnMocp findMocp manageMocp
+                , NS "calculator" spawnCalc findCalc manageCalc
+                ]
+  where
+    spawnTerm  = myTerminal ++ " -t scratchpad"
+    findTerm   = title =? "scratchpad"
+    manageTerm = customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.9
+                 w = 0.9
+                 t = 0.95 -h
+                 l = 0.95 -w
+    spawnMocp  = myTerminal ++ " -t music"
+    findMocp   = title =? "music-sc"
+    manageMocp = customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.9
+                 w = 0.9
+                 t = 0.95 -h
+                 l = 0.95 -w
+    spawnCalc  = myTerminal ++ " -t calc"
+    findCalc   = title =? "calc"
+    manageCalc = customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.5
+                 w = 0.4
+                 t = 0.75 -h
+                 l = 0.70 -w
+
 
 --{{{layouts
 -- limitWindows sets maximum number of windows displayed
@@ -230,7 +262,7 @@ myKeys =
         , ("M-S-d e", spawn "dmenuunicode")
         , ("M-S-d w", spawn "networkmanager_dmenu")
         , ("M-S-d c", spawn (myTerminal ++ " -e conf"))
-        , ("M-S-d r", spawn "dmenurecord")
+        , ("M-S-d r", spawn (myTerminal ++ " -e dmenurecord"))
         , ("M-S-d l", spawn (myTerminal ++ " -e fzf-buku"))
         , ("M-S-d b", spawn "dmweb")
         , ("M-S-d a", spawn "arch-wiki.sh")
@@ -244,9 +276,12 @@ myKeys =
          , ("M-s", spawn (myTerminal ++ " -e htop"))
          -- , ("M-i b", spawn (myTerminal ++ " -e bash"))
          , ("M-a", spawn (myTerminal ++ " -e calcurse"))
+         , ("M-S-a", spawn "tmux new-window -t 0:0 'calcurse'")
 	 , ("M-S-c", spawn (myTerminal ++ " -e calc"))
          , ("M-i n", spawn (myTerminal ++ " -e /bin/newsboat -r"))
+         , ("M-i S-n", spawn "tmux new-window -t 0:0 'newsboat -r'")
          , ("M-i c", spawn (myTerminal ++ " -e tty-clock"))
+         , ("M-i c", spawn "tmux new-window -t 0:0 'tty-clock'")
 	 , ("M-i t", spawn (myTerminal ++ " -e /bin/nmtui"))
 	 , ("M-i l", spawn (myTerminal ++ " -e w3m"))
          , ("M-c", spawn myEditor)
@@ -256,11 +291,13 @@ myKeys =
          , ("M-S-h", spawn "xmonad_keys.sh") -- shows list of keybindings
 	 , ("M-i p", spawn "qutebrowser")
          , ("M-M1-t", spawn "qbittorrent")
-         , ("M-S-a", spawn "srcrpy")
+         -- , ("M-S-a", spawn "srcrpy")
          , ("M-i b", spawn (myTerminal ++ " -e bluetoothctl"))
          , ("M-<Esc>", spawn "kill-ne-app")
          , ("M-M1-c", spawn "blueberry")
          , ("M-S-y", spawn "freetube")
+         , ("M-y", spawn "xmouseless")
+         , ("M-e", spawn "kill -s USR1 $(pidof deadd-notification-center)")
          , ("M-S-g", spawn "signal-desktop-no-yes")
         -- , ("M-C-M1-p", spawn "~/./scripts/bash/xmona/window-scre.sh")
          , ("M-S-b", spawn "librewolf --private-window")
@@ -273,7 +310,7 @@ myKeys =
     -- KB_G Workspaces
      --   , ("M-C-<Left>", shiftTo Next nonNSP >> moveTo Next nonNSP)       -- Shifts focused window to next ws
      --   , ("M-C-<Right>", shiftTo Prev nonNSP >> moveTo Prev nonNSP)  -- Shifts focused window to prev ws
-         , ("M-m k", spawn "keepassxc")
+         , ("M-m1 k", spawn "keepassxc")
 
     -- KB_G Floating windows
         , ("M-t", withFocused $ windows . W.sink)  -- Push floating window back to tile
@@ -318,6 +355,14 @@ myKeys =
         , ("M-l", sendMessage Expand)                   -- Expand horiz window width
         , ("M-j", sendMessage MirrorShrink)          -- Shrink vert window width
         , ("M-k", sendMessage MirrorExpand)          -- Expand vert window width
+
+    -- KB_GROUP Scratchpads
+    -- Toggle show/hide these programs.  They run on a hidden workspace.
+    -- When you toggle them to show, it brings them to your current workspace.
+    -- Toggle them to hide and it sends them back to hidden workspace (NSP).
+        , ("M-S-s t", namedScratchpadAction myScratchPads "terminal")
+        , ("M-S-s m", namedScratchpadAction myScratchPads "mocp")
+        , ("M-S-s c", namedScratchpadAction myScratchPads "calculator")
 
     -- KB_G Sublayouts
     -- This is used to push windows to tabbed sublayouts or pull them out of it

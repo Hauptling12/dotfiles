@@ -1,5 +1,5 @@
 #show-read-feeds no
-auto-reload yes
+#auto-reload yes
 
 download-retries 4
 reload-threads 4                    # parallel
@@ -8,11 +8,12 @@ external-url-viewer "urlscan -dc -r 'linkhandler {}'"
 always-display-description yes
 inoreader-flag-star "b"
 confirm-mark-all-feeds-read yes
-
+display-article-progress yes
+bind-key B open-all-unread-in-browser-and-mark-read
 # proxy
-proxy-type socks5
-proxy localhost:9050
-use-proxy yes
+#proxy-type socks5
+#proxy localhost:9050
+#use-proxy yes
 user-agent "Lynx/2.8.5rel.1 libwww-FM/2.14"
 
 reload-time 75
@@ -49,7 +50,7 @@ browser linkhandler
 macro , open-in-browser
 macro t set browser "qndl" ; open-in-browser ; set browser linkhandler
 macro a set browser "tsp yt-dlp --embed-metadata -xic -f bestaudio/best" ; open-in-browser ; set browser linkhandler
-macro v set browser "setsid -f mpv" ; open-in-browser ; set browser linkhandler
+macro v set browser "yt-env" ; open-in-browser ; set browser linkhandler
 macro w set browser "lynx" ; open-in-browser ; set browser linkhandler
 macro d set browser "dmenuhandler" ; open-in-browser ; set browser linkhandler
 macro c set browser "echo %u | xclip -r -sel c" ; open-in-browser ; set browser linkhandler
