@@ -8,6 +8,7 @@ import qualified XMonad.StackSet as W
 import XMonad.Actions.CopyWindow (kill1)
 import XMonad.Actions.CycleWS (Direction1D(..), moveTo, shiftTo, WSType(..), nextScreen, prevScreen)
 import XMonad.Actions.GridSelect
+import XMonad.Actions.MouseResize
 import XMonad.Actions.Promote
 import XMonad.Actions.RotSlaves (rotSlavesDown, rotAllDown)
 import XMonad.Actions.WindowGo (runOrRaise)
@@ -102,10 +103,10 @@ myStartupHook :: X ()
 myStartupHook = do
 --    spawn "killall trayer"  -- kill current trayer on each restart
 --    spawn ("sleep 2 && trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 " ++ colorTrayer ++ " --height 22")
-    spawnOnce "xbacklight -set 0.10"
-    spawnOnce "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 & eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg)"
-    spawn ("xautolock -time 2 -locker slock")
-    spawnOnce "di.sh"
+    spawn ("xautolock -time 60 -locker slock")
+    spawn "killall trayer"
+    spawn ("sleep 2 && trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 " ++ colorTrayer ++ " --height 22")
+    spawnOnce "feh --bg-scale $HOME/halo.jpeg"
 --}}}
 myColorizer :: Window -> Bool -> X (String, String)
 myColorizer = colorRangeFromClassName
@@ -206,7 +207,7 @@ myShowWNameTheme = def
     }
 
 -- The layout hook
-myLayoutHook = avoidStruts $ windowArrange $ T.toggleLayouts floats
+myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats
                $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
              where
                myDefaultLayout =     withBorder myBorderWidth tall
@@ -218,7 +219,7 @@ myLayoutHook = avoidStruts $ windowArrange $ T.toggleLayouts floats
                                  ||| Mirror (Tall 1 (3/100) (3/5))
 
 --}}}
-myExtraWorkspaces = [(xK_0, "10"),(xK_minus, "11"),(xK_equal, "12"),(xK_grave, "13"),(xK_bracketright, "14"),(xK_bracketleft, "15"),(xK_semicolon, "16"),(xK_apostrophe, "17"),(xK_comma, "18"),(xK_period, "19")]
+myExtraWorkspaces = [(xK_0, "10"),(xK_minus, "11"),(xK_equal, "12"),(xK_grave, "13"),(xK_bracketright, "14"),(xK_bracketleft, "15"),(xK_semicolon, "16"),(xK_apostrophe, "17")]
 
 myWorkspaces = [" 1d ", " 2ju ", " 3com ", " 4doc ", " 5vm ", " 6www ", " 7mus ", " 8st ", " 9vim " ] ++ (map snd myExtraWorkspaces)
 myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1..] -- (,) == \x y -> (x,y)
@@ -226,17 +227,12 @@ myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1..] -- (,) == \x y 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = composeAll
      -- using 'doShift ( myWorkspaces !! 7)' sends program to workspace 8
-     [ className =? "confirm"         --> doFloat
-     , className =? "file_progress"   --> doFloat
-     , className =? "dialog"          --> doFloat
-     , className =? "download"        --> doFloat
-     , className =? "error"           --> doFloat
+     [ className =? "error"           --> doFloat
      , className =? "notification"    --> doFloat
      , className =? "pinentry-gtk-2"  --> doFloat
      , className =? "splash"          --> doFloat
      , className =? "toolbar"         --> doFloat
      , className =? "Gimp"            --> doShift ( myWorkspaces !! 2 )
-     , className =? "qBittorrent"     --> doShift ( myWorkspaces !! 18)
     -- , className =?  --> doShift  ( myWorkspaces !! 4 )
      , className =? "pm" --> doShift  ( myWorkspaces !! 2 )
      , className =? "Signal" --> doShift  ( myWorkspaces !! 5 )
@@ -255,7 +251,7 @@ myKeys =
 -- KB_G dmenu scripts
         -- , ("M-C-S-l", spawn "dm-logout.sh")
         , ("M-S-w v", spawn (myTerminal ++ " -e wiki vid"))
-        , ("M-S-w v", spawn (myTerminal ++ " -e wiki html"))
+        , ("M-S-w b", spawn (myTerminal ++ " -e wiki html"))
 	, ("M-S-d g", spawn "gui-dm")
         , ("M-S-d m", spawn "dmenumount")
         --, ("M-S-d s", spawn "~/./scripts/bash/dmenu/scripts/webhttp")
@@ -278,26 +274,24 @@ myKeys =
          , ("M-a", spawn (myTerminal ++ " -e calcurse"))
          , ("M-S-a", spawn "tmux new-window -t 0:0 'calcurse'")
 	 , ("M-S-c", spawn (myTerminal ++ " -e calc"))
-         , ("M-i n", spawn (myTerminal ++ " -e /bin/newsboat -r"))
+         , ("M-i n", spawn (myTerminal ++ " -e newsboat -r"))
          , ("M-i S-n", spawn "tmux new-window -t 0:0 'newsboat -r'")
          , ("M-i c", spawn (myTerminal ++ " -e tty-clock"))
-         , ("M-i c", spawn "tmux new-window -t 0:0 'tty-clock'")
+         , ("M-i S-c", spawn "tmux new-window -t 0:0 'tty-clock'")
 	 , ("M-i t", spawn (myTerminal ++ " -e /bin/nmtui"))
 	 , ("M-i l", spawn (myTerminal ++ " -e w3m"))
          , ("M-c", spawn myEditor)
          , ("M-S-v", spawn (myTerminal ++ " -e pulsemixer"))
          , ("M-S-x", spawn (myTerminal ++ " -e tmux"))
          , ("M-n", spawn (myTerminal ++ " -e ranger"))
-         , ("M-S-h", spawn "xmonad_keys.sh") -- shows list of keybindings
-	 , ("M-i p", spawn "qutebrowser")
+         , ("M-e h", spawn "xmonad_keys.sh") -- shows list of keybindings
          , ("M-M1-t", spawn "qbittorrent")
          -- , ("M-S-a", spawn "srcrpy")
          , ("M-i b", spawn (myTerminal ++ " -e bluetoothctl"))
-         , ("M-<Esc>", spawn "kill-ne-app")
-         , ("M-M1-c", spawn "blueberry")
-         , ("M-S-y", spawn "freetube")
+         -- , ("M-<Esc>", spawn "kill-ne-app")
+         -- , ("M-S-y", spawn "freetube")
          , ("M-y", spawn "xmouseless")
-         , ("M-e", spawn "kill -s USR1 $(pidof deadd-notification-center)")
+         -- , ("M-e", spawn "kill -s USR1 $(pidof deadd-notification-center)")
          , ("M-S-g", spawn "signal-desktop-no-yes")
         -- , ("M-C-M1-p", spawn "~/./scripts/bash/xmona/window-scre.sh")
          , ("M-S-b", spawn "librewolf --private-window")
@@ -310,24 +304,12 @@ myKeys =
     -- KB_G Workspaces
      --   , ("M-C-<Left>", shiftTo Next nonNSP >> moveTo Next nonNSP)       -- Shifts focused window to next ws
      --   , ("M-C-<Right>", shiftTo Prev nonNSP >> moveTo Prev nonNSP)  -- Shifts focused window to prev ws
-         , ("M-m1 k", spawn "keepassxc")
+         , ("M-e k", spawn "keepassxc")
 
     -- KB_G Floating windows
         , ("M-t", withFocused $ windows . W.sink)  -- Push floating window back to tile
         , ("M-S-t", sinkAll)                       -- Push ALL floating windows to tile
-        , ("M-S-z", spawn "tog-touch")
     -- KB_G brightness control
-        , ("M-C-1", spawn "light  -S 0.11")
-        , ("M-C-2", spawn "light  -S 0.15")
-        , ("M-C-3", spawn "light  -S 0.17")
-        , ("M-C-4", spawn "light  -S 0.19")
-        , ("M-C-5", spawn "light  -S 0.2")
-        , ("M-C-6", spawn "light  -S 0.21")
-        , ("M-C-7", spawn "light  -S 0.27")
-        , ("M-C-8", spawn "light  -S 0.4")
-        , ("M-C-9", spawn "light  -S 0.45")
-     -- , ("M-C-1", spawn "light  -S 0.2")
-        , ("M-C-0", spawn "light  -S 0.0")
     -- KB_G Windows navigation
         , ("M-m", windows W.focusMaster)  -- Move focus to the master wind
         , ("M-<Tab>", windows W.focusUp)      -- Move focus to the prev wind
@@ -376,22 +358,20 @@ myKeys =
         , ("M-C-.", onGroup W.focusUp')    -- Switch focus to next tab
         , ("M-C-,", onGroup W.focusDown')  -- Switch focus to prev tab
 -- KB_G monitors
-        -- , ("M-.", nextScreen)  -- Switch focus to next monitor
-        -- , ("M-,", prevScreen)  -- Switch focus to prev monitor
+        , ("M-.", nextScreen)  -- Switch focus to next monitor
+        , ("M-,", prevScreen)  -- Switch focus to prev monitor
     -- KB_G Multimedia Keys
-        , ("<XF86MonBrightnessUp>", spawn "light -A 3")
-        , ("<XF86MonBrightnessDown>", spawn "light -U 3")
-        , ("<XF86AudioMute>", spawn "amixer set Master toggle")
-        , ("M-<XF86AudioLowerVolume>", spawn "amixer set Master 6%- unmute")
-        , ("M-<XF86AudioRaiseVolume>", spawn "amixer set Master 6%+ unmute")
-        , ("<XF86AudioLowerVolume>", spawn "amixer set Master 3%- unmute")
-        , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 3%+ unmute")
-        , ("M-<XF86AudioPlay>", spawn "pausemu p")
-	, ("M-<XF86AudioPrev>", spawn "pausemu r")
-	, ("M-<XF86AudioNext>", spawn "pausemu n")
-        , ("<XF86AudioPlay>", spawn "pausem p")
-	, ("<XF86AudioPrev>", spawn "pausem r")
-	, ("<XF86AudioNext>", spawn "pausem n")
+        , ("<F1>", spawn "amixer set Master toggle")
+        , ("M-<F2>", spawn "amixer set Master 6%- unmute")
+        , ("M-<F3>", spawn "amixer set Master 6%+ unmute")
+        , ("<F2>", spawn "amixer set Master 3%- unmute")
+        , ("<F3>", spawn "amixer set Master 3%+ unmute")
+        , ("M-<F9>", spawn "pausemu p")
+	, ("M-<F10>", spawn "pausemu r")
+	, ("M-<F11>", spawn "pausemu n")
+        , ("<F9>", spawn "pausem p")
+	, ("<F10>", spawn "pausem r")
+	, ("<F11>", spawn "pausem n")
         , ("M-S-'", windows $ W.shift "17")
         , ("M-'", windows $ W.greedyView "17")
         , ("M-S-;", windows $ W.shift "16")
@@ -408,11 +388,10 @@ myKeys =
         , ("M-0", windows $ W.greedyView "10")
         , ("M-S-`", windows $ W.shift "13")
         , ("M-`", windows $ W.greedyView "13")
-        , ("M-S-,", windows $ W.shift "18")
-        , ("M-,", windows $ W.greedyView "18")
-        , ("M-S-.", windows $ W.shift "19")
-        , ("M-.", windows $ W.greedyView "19")
         ]
+          -- The following lines are needed for named scratchpads.
+    where nonNSP          = WSIs (return (\ws -> W.tag ws /= "NSP"))
+          nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "NSP"))
 
        --      where nonNSP          = WSIs (return (\ws -> W.tag ws /= "NSP"))
            --     nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "NSP"))
@@ -422,6 +401,7 @@ main :: IO ()
 main = do
 -- Launching xmobar
     xmproc0 <- spawnPipe ("xmobar -x 0 $HOME/.config/xmobar/xmobarrc")
+    xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.config/xmobar/xmobarrc")
     xmonad $ ewmh def
         { manageHook         = myManageHook <+> manageDocks
         , handleEventHook    = docksEventHook
@@ -439,6 +419,7 @@ main = do
         , logHook = dynamicLogWithPP  $ xmobarPP
               -- XMOBAR SETTINGS
               { ppOutput = \x -> hPutStrLn xmproc0 x   -- xmobar on monitor 1
+                              >>  hPutStrLn xmproc1 x
                 -- Current workspace
              ,  ppCurrent = xmobarColor color12 "" . wrap
                             ("<box type=Bottom width=2 mb=2 color=" ++ color12 ++ ">") "</box>"
@@ -462,3 +443,4 @@ main = do
               }
         } `additionalKeysP` myKeys
 --}}}
+-- | Finally, a copy of the default bindings in simple textual tabular format.

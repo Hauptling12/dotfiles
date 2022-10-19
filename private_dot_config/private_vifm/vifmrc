@@ -233,6 +233,7 @@ fileviewer *.epub
     \ vifmimg clear
 fileview */ tree -L 2 --noreport -a -p --filelimit 50 --si %c
 filetype *.[1-8] man ./%c
+filetype *.zip unzip %c
 fileviewer *.[1-8] man ./%c | col -b
 filetype *.o nm %f | less
 filetype *.torrent transmission-remote --add %f
@@ -405,7 +406,7 @@ nnoremap <up> :echo "USE ARROW KEYS, USE K INSTEAD!"<CR>
 nnoremap <down> :echo "USE ARROW KEYS, USE J INSTEAD!"<CR>
 nnoremap <right> :echo "USE ARROW KEYS, USE L INSTEAD!"<CR>
 nnoremap <left> :echo "USE ARROW KEYS, USE H INSTEAD!"<CR>
-" Specific files
+"{{{Specific files
 set classify+=' ::.Xdefaults,,.Xresources,,.bashprofile,,.bash_profile,,.bashrc,,.dmrc,,.d_store,,.fasd,,.gitconfig,,.gitignore,,.jack-settings,,.mime.types,,.nvidia-settings-rc,,.pam_environment,,.profile,,.recently-used,,.selected_editor,,.xinitpurc,,.zprofile,,.yarnc,,.snclirc,,.tmux.conf,,.urlview,,.config,,.ini,,.user-dirs.dirs,,.mimeapps.list,,.offlineimaprc,,.msmtprc,,.Xauthority,,config::'
 set classify+=' ::dropbox::'
 set classify+=' ::favicon.*,,README,,readme::'

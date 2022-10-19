@@ -1,0 +1,17 @@
+[global]
+    sort = yes
+
+    # Show how many messages are currently hidden (because of geometry)
+    indicate_hidden = yes
+
+    # alignment of message text.
+    # Possible values are "left", "center" and "right"
+    alignment = right
+        # show age of message if message is older than show_age_threshold seconds.
+    # set to -1 to disable
+    show_age_threshold = 40
+
+    # split notifications into multiple lines if they don't fit into geometry
+    word_wrap = yes
+        # Which monitor should the notifications be displayed on.
+    monitor = 0

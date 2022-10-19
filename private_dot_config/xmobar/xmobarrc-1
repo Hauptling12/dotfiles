@@ -17,8 +17,6 @@ Config {
    , commands =
         [ Run Weather "RJTT" [ "--template", "<skyCondition>hPa"
                             ] 36000
-        , Run MultiCpu       [ "--template" , "Cpu: <total0>%<total1>%<total2>%<total3>%|<total1>%"
-                             ] 10
         , Run CoreTemp       [ "--template" , "Temp: <core0>°C|<core1>°C|<core2>°C|<core3>°C"
                               , "--Low"      , "10"         -- units: %
                              , "--High"     , "70"         -- units: %

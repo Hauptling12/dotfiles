@@ -1,0 +1,5 @@
+xmodmap $HOME/.local/share/Xmodmap
+xmodmap $HOME/.local/share/Xmodmap
+dunst
+eval "$(dbus-launch --sh-syntax --exit-with-session )"
+exec xmonad

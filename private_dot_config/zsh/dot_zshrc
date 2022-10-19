@@ -1,13 +1,12 @@
 export HISTORY_IGNORE="(clear)"
 HISTSIZE=1000000000000000000
 SAVEHIST=1000000000000000000 # infinite history
-HISTFILE=~/documents/cashe/.zsh_history
+HISTFILE=~/.cache/.zsh_history
 export HISTTIMEFORMAT='%F %T'
 
 # Enable comments when working in an interactive shell.
 setopt interactive_comments
 
-source $HOME/.local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 stty stop undef		# Disable ctrl-s to freeze terminal.
 
  #Basic auto/tab complete:
@@ -65,7 +64,7 @@ bindkey -v
 #    starship_precmd_user_func="set_win_title"
 
 
-export PATH=/home/chief/.local/share/npm/bin:/home/chief/.local/bin/script:/home/chief/.local/share/go/bin:/home/chief/.local/share/gem/ruby/3.0.0/bin:/home/chief/.local/share/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:~/.local/bin
+export PATH=$HOME/.local/bin/persanil:$HOME/.local/share/npm/bin:$HOME/.local/bin/script:$HOME/.local/share/go/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$HOME/.local/share/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.local/bin:$HOME/.nix-profile/bin
 
 # Change cursor shape for different vi modes.
 function zle-keymap-select {
@@ -182,7 +181,7 @@ fi
 #alias -s {avi,flv,mkv,mp4,mpeg,mpg,ogv,wmv,flac,mp3,ogg,wav,m4a}=$MPLAYER
 #alias -s {gif,GIF,jpeg,JPEG,jpg,JPG,png,PNG}="background $IMAGEVIEWER"
 # Load zsh-syntax-highlighting; should be last.
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
+source $HOME/.local/share/zsh-syntax-highlighting//zsh-syntax-highlighting.zsh 2>/dev/null
 #clear
 #unix
 
@@ -213,3 +212,4 @@ bindkey '^W' backward-kill-word
 #bindkey -M vicmd '^[[P' vi-delete-char
 #bindkey -M vicmd '^e' edit-command-line
 #bindkey -M visual '^[[P' vi-delete
+bm() {cd "$(ccat $HOME/.config/bmdirs | fzf | sed "s|~|$HOME|")" ;}
