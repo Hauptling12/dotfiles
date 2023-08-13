@@ -39,9 +39,14 @@
   "efm": {
     "command": "efm-langserver",
     "args": [],
-    // custom config path
-    // "args": ["-c", "/path/to/your/config.yaml"],
     "filetypes": ["vim", "eruby", "markdown"]
+  },
+    "arduino":{
+    "command":"$HOME/ardunio/soft/resources/app/node_modules/arduino-ide-extension/build/arduino-language-server",
+    "rootPatterns":["*.ino"],
+    "filetypes":["arduino"],
+    "args":["-cli", "/$HOME/.local/bin/arduino-cli", "-clangd", "/usr/local/bin/clangd", "-cli-config", "/$HOME/.arduino15/arduino-cli.yaml"]
   }
-}
+},
+"Lua.telemetry.enable": false
 }

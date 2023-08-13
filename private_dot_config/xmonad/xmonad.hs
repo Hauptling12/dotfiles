@@ -106,7 +106,7 @@ myStartupHook = do
     spawn ("xautolock -time 60 -locker slock")
     spawn "killall trayer"
     spawn ("sleep 2 && trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 " ++ colorTrayer ++ " --height 22")
-    spawnOnce "feh --bg-scale $HOME/halo.jpeg"
+    spawnOnce "feh --bg-scale $HOME/halo.jpeg --no-fehbg"
 --}}}
 myColorizer :: Window -> Bool -> X (String, String)
 myColorizer = colorRangeFromClassName

@@ -1,3 +1,4 @@
+alias bat="batcat"
 alias doas="doas --"
 alias startx="startx $XDG_CONFIG_HOME/x11/xinitrc"
 #{{{dirs
@@ -21,7 +22,7 @@ alias gen="cd /mnt/network/mnt/disk2/entertainment/"
 #{{{yt-dlp
 alias yta-aac="yt-dlp --extract-audio --audio-format aac "
 alias yt-dlp="yt-dlp --restrict-filenames --retries infinite "
-alias yt="yt-dlp --restrict-filenames --retries infinite"
+alias yt="yt-dlp --restrict-filenames --embed-metadata --retries infinite -w --write-playlist-metafiles -S res:720,ext:webm:m4a,vcodec:h264,+acodec:m4a"
 alias yta-best="yt-dlp --extract-audio --audio-format best "
 alias yta-flac="yt-dlp --extract-audio --audio-format flac "
 alias yta-m4a="yt-dlp --extract-audio --audio-format m4a "
@@ -119,8 +120,8 @@ alias bt-scrup="doas -- btrfs scrub start /"
 # alias tl="transmission-remote --list"
 # alias ta="transmission-remote --add"
 # alias td="transmission-daemon"
-alias cat="bat -p"
-alias catn="bat --paging=never"
+alias cat="batcat -p"
+alias catn="batcat --paging=never"
 alias sss="/bin/ss"
 alias box="boxes -d scroll"
 alias markdown-toc="~/./node_modules/markdown-toc/cli.js"
@@ -324,14 +325,3 @@ alias jtbl="jtbl -m"
 alias trana="transmission-remote --add"
 alias tranl="transmission-remote --list"
 alias tranld="transmission-remote --list | grep -v '100%   '"
-alias pr='sudo apt remove'
-alias web='cd /var/www/html'
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-alias topcpu="/bin/ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10"
-alias checkcommand="type -t"
-
-# Show current network connections to the server
-alias ipview="netstat -anpl | grep :80 | awk {'print \$5'} | cut -d\":\" -f1 | sort | uniq -c | sort -n | sed -e 's/^ *//' -e 's/ *\$//'"
-
-# Show open ports
-alias openports='netstat -nape --inet'

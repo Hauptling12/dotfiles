@@ -1,12 +1,13 @@
 export HISTORY_IGNORE="(clear)"
 HISTSIZE=1000000000000000000
 SAVEHIST=1000000000000000000 # infinite history
-HISTFILE=~/.cache/.zsh_history
+HISTFILE=~/documents/cashe/.zsh_history
 export HISTTIMEFORMAT='%F %T'
 
 # Enable comments when working in an interactive shell.
 setopt interactive_comments
 
+source $HOME/.local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 stty stop undef		# Disable ctrl-s to freeze terminal.
 
  #Basic auto/tab complete:
@@ -64,7 +65,7 @@ bindkey -v
 #    starship_precmd_user_func="set_win_title"
 
 
-export PATH=$HOME/.local/bin/persanil:$HOME/.local/share/npm/bin:$HOME/.local/bin/script:$HOME/.local/share/go/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$HOME/.local/share/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.local/bin:$HOME/.nix-profile/bin
+export PATH=$HOME/local/bin/persanil:$HOME/.local/share/npm/bin:$HOME/.local/bin/script:$HOME/.local/share/go/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$HOME/.local/share/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:~/.local/bin:~/.nix-profile/bin/
 
 # Change cursor shape for different vi modes.
 function zle-keymap-select {
@@ -92,6 +93,11 @@ function zle-keymap-select {
 #  fi
 #  cd $d
 #}
+unzd() {
+    if [[ $# != 1 ]]; then echo I need a single argument, the name of the archive to extract; return 1; fi
+    target="${1%.zip}"
+    unzip "$1" -d "${target##*/}"
+}
 
 ex ()
 {
@@ -103,7 +109,7 @@ ex ()
             *.bz2)       bunzip2 "$1"     ;;
             *.cbr|*.rar)       unrar x -ad "$1" ;;
             *.gz)        gunzip "$1"      ;;
-            *.jar|*.cbz|*.epub|*.zip)       unzip "$1"       ;;
+            *.jar|*.cbz|*.epub|*.zip)       unzd "$1"       ;;
             *.z)         uncompress "$1"  ;;
             *.AppImage|*.apk|*.jpl|*.7z|*.arj|*.cab|*.cb7|*.chm|*.deb|*.dmg|*.iso|*.lzh|*.msi|*.pkg|*.rpm|*.udf|*.wim|*.xar)
                          7z x "$1"        ;;
@@ -117,6 +123,37 @@ ex ()
   else
     echo "'$1' is not a valid file"
   fi
+}
+# GitHub Titus Additions
+# Copy file with a progress bar
+cpp()
+{
+	set -e
+	strace -q -ewrite cp -- "${1}" "${2}" 2>&1 \
+	| awk '{ count += $NF
+	if (count % 10 == 0) {
+		percent = count / total_size * 100
+		printf "%3d%% [", percent
+		for (i=0;i<=percent;i++)
+			printf "="
+			printf ">"
+			for (i=percent;i<100;i++)
+				printf " "
+				printf "]\r"
+			}
+		}
+	END { print "" }' total_size="$(stat -c '%s' "${1}")" count=0
+}
+
+
+gcom() {
+	git add .
+	git commit -m "$1"
+	}
+lazyg() {
+	git add .
+	git commit -m "$1"
+	git push
 }
 
 # functions
@@ -181,7 +218,7 @@ fi
 #alias -s {avi,flv,mkv,mp4,mpeg,mpg,ogv,wmv,flac,mp3,ogg,wav,m4a}=$MPLAYER
 #alias -s {gif,GIF,jpeg,JPEG,jpg,JPG,png,PNG}="background $IMAGEVIEWER"
 # Load zsh-syntax-highlighting; should be last.
-source $HOME/.local/share/zsh-syntax-highlighting//zsh-syntax-highlighting.zsh 2>/dev/null
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 #clear
 #unix
 
@@ -213,3 +250,4 @@ bindkey '^W' backward-kill-word
 #bindkey -M vicmd '^e' edit-command-line
 #bindkey -M visual '^[[P' vi-delete
 bm() {cd "$(ccat $HOME/.config/bmdirs | fzf | sed "s|~|$HOME|")" ;}
+# export cdpath=(/mnt/network/)

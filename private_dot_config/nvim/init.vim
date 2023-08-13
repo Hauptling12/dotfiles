@@ -14,6 +14,7 @@ Plug 'fatih/vim-go' , { 'for': ['go', 'vim-plug'], 'tag': '*' }
 Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
 Plug 'https://github.com/tpope/vim-fugitive'
 Plug 'bfrg/vim-cpp-modern'
+Plug 'stevearc/vim-arduino'
 Plug 'https://github.com/honza/vim-snippets'
 "Plug 'arzg/vim-swift'
 " Plug 'https://github.com/lambdalisue/fern.vim'
@@ -445,6 +446,17 @@ nmap <C-P> "+p
 "{{{ plugin conf
 " rust syntax
 "let g:rust_clip_command = 'xclip -selection clipboard'
+"{{
+nnoremap <buffer> <leader>aa <cmd>ArduinoAttach<CR>
+nnoremap <buffer> <leader>av <cmd>ArduinoVerify<CR>
+nnoremap <buffer> <leader>au <cmd>ArduinoUpload<CR>
+nnoremap <buffer> <leader>aus <cmd>ArduinoUploadAndSerial<CR>
+nnoremap <buffer> <leader>as <cmd>ArduinoSerial<CR>
+nnoremap <buffer> <leader>ab <cmd>ArduinoChooseBoard<CR>
+nnoremap <buffer> <leader>ap <cmd>ArduinoChooseProgrammer<CR>
+let g:arduino_cmd = '$HOME/ardunio/soft/arduino-ide'
+
+"}}
 "{{{fern
 let g:fern#renderer = "nerdfont"
 let g:fern#drawer_width = 30
@@ -479,7 +491,7 @@ let g:undotree_SplitWidth = 24
 " {{{vimwiki
 "''''
 let g:vimwiki_global_ext = 0
-let g:vimwiki_list = [{'path': '~/my-work/notes/ob/obsidian/', 'path_html': '~/my-work/notes/ob/obsidian/',
+let g:vimwiki_list = [{'path': '~/my-work/notes/oi/', 'path_html': '~/my-work/notes/oi/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
 let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
 "}}}
@@ -829,6 +841,9 @@ let g:loaded_zipPlugin = 1
 let loaded_gzip = 1
 let g:loaded_tarPlugin = 1
 let g:loaded_tutor_mode_plugin = 1  " do not load the tutor plugin
+"{{{ vim markdown
+let g:vim_markdown_edit_url_in = "vsplit"
+"}}}
 "}}}
 "{{{languages
 "{{{bash
@@ -955,7 +970,7 @@ au FileType *.psd1  set ft=ps1
 au FileType *.psm1  set ft=ps1
 au FileType *.pssc  set ft=ps1
 ""Arduino files
-au BufRead,BufNewFile *.pde,*.ino set filetype=c++
+"au BufRead,BufNewFile *.pde,*.ino set filetype=c++
 au FileType yaml,php,sql        setl ts=2 sw=2 sts=2
 au BufNewFile,BufRead *.md set filetype=markdown
 au FileType haskell     setl ts=8 sw=4 sts=4
@@ -1309,21 +1324,5 @@ map <S-Backspace> <Nop>
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_auto_insert_bullets = 0
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
-  endfunction
-
-  " Insert <tab> when previous text is space, refresh completion if not.
-  inoremap <silent><expr> <TAB>
-        \ coc#pum#visible() ? coc#pum#next(1):
-        \ <SID>check_back_space() ? "\<Tab>" :
-        \ coc#refresh()
-  inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-inoremap <expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<CR>"
 set mouse=
-set spc=
-nnoremap <C-y> "+y
-vnoremap <C-y> "+y
-nnoremap <C-p> "+gP
-vnoremap <C-p> "+gP
+imap C-<backspace> <Nop>

@@ -22,7 +22,8 @@ feh --scale-down \
     --auto-rotate \
     --conversion-timeout -1 \
     --geometry 1280x960 \
-    --title "[%u/%l] %n (%wx%h)"
+    --title "[%u/%l] %n (%wx%h)" \
+    --auto-zoom
 
 # ======================
 # Some examples of usage
@@ -38,9 +39,6 @@ feh --scale-down \
 # A few default themes
 # ====================
 
-# Webcam mode, simply specify the url(s).
-# e.g. feh -Twebcam http://cam1 http://cam2
-webcam --multiwindow --reload 20
 
 # Create an index of the current directory. This version uses . as the
 # current dir, so you don't even need any commandline arguments.

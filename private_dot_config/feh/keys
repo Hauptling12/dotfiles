@@ -1,10 +1,10 @@
 zoom_default C-0
 
 # scroll
-scroll_up k
-scroll_down j
-scroll_left h
-scroll_right l
+scroll_up S-k
+scroll_down S-j
+scroll_left S-h
+scroll_right S-l
 
 zoom_in C-k
 zoom_out C-j
@@ -12,8 +12,8 @@ next_img C-l
 prev_img C-h
 
 # Same for image navigation ...
-next_img Right space
-prev_img Left BackSpace
+next_img Right space h
+prev_img Left BackSpace l
 # scroll half-page
 scroll_up_page K
 scroll_down_page J
