@@ -1,6 +1,7 @@
-# installation
-## base install
-### desktop
+# use install instructions in README not this
+## installation
+### base install
+#### desktop
 install nixos pkg manager
 ````sh
 curl -L https://nixos.org/nix/install | sh
@@ -45,7 +46,7 @@ sudo dnf install tlp tlp-rdw
 git clone https://github.com/AdnanHodzic/auto-cpufreq.git
 cd auto-cpufreq && sudo ./auto-cpufreq-installer
 ```
-### gaming install
+#### gaming install
 install nixos pkg manager
 ````sh
 curl -L https://nixos.org/nix/install | sh
@@ -53,7 +54,7 @@ curl -L https://nixos.org/nix/install | sh
 arch
 ```sh
 git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
-yay -S librewolf-bin zsh zsh-autosuggestions dash zsh-syntax-highlighting bat vifm neofetch unzip unrar gzip tldr tree socat mpv qbittorent ffmpegthumbnailer pulsemixer pipewire pipewire-alsa pipewire-audio pipewire-pulse pipewire-jack wireplumber chafa yt-dlp pv cmake dunst feh gcc scrcpy make zenity pandoc doas ncdu cpufetch gpufetch-git mesa trash-cli ttf-joypixels ttf-bitstream-vera flatpak lxappearance trayer fzf htop tmux ufw sshfs nmap neovim git base-devel p7zip parallel urlscan mediainfo lxsession light
+yay -S librewolf-bin zsh zsh-autosuggestions dash zsh-syntax-highlighting bat vifm neofetch unzip unrar gzip tldr tree socat mpv qbittorent ffmpegthumbnailer pulsemixer pipewire pipewire-alsa pipewire-audio pipewire-pulse pipewire-jack wireplumber chafa yt-dlp pv cmake dunst feh gcc scrcpy make zenity pandoc doas ncdu cpufetch gpufetch-git mesa trash-cli ttf-joypixels ttf-bitstream-vera flatpak lxappearance trayer fzf htop tmux ufw sshfs nmap neovim git base-devel p7zip parallel mediainfo lxsession light lutris winetricks gamemode lib32-vkd3d lib32-vulkan-icd-loader vulkan-tools wine vkd3d vulkan-tools
 ```
 debian
 ```sh
@@ -81,13 +82,13 @@ sudo dnf install tlp tlp-rdw
 git clone https://github.com/AdnanHodzic/auto-cpufreq.git
 cd auto-cpufreq && sudo ./auto-cpufreq-installer
 ```
-## graphics
-### wayland
+### graphics
+#### wayland
 arch
 ````sh
 yay -S hyprland-git eww-wayland xdg-desktop-portal-hyprland-git wezterm wev
 ````
-### xorg
+#### xorg
 arch
 ````sh
 yay -S xmonad xmonad-contrib xmobar xorg-server xinit xautolock xclip arandr redshift
@@ -115,7 +116,7 @@ cat config.def.h | sed -e "s/nobody/$USERNAME/g" -e "s/nogroup/$USERNAME/g" > co
 sudo make install
 ````
 
-## config
+### config
 ```sh
 # disabling tty beeping
 echo "blacklist pcspkr" | sudo tee -a /etc/modprobe.d/blacklist.conf
