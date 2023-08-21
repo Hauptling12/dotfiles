@@ -5,7 +5,7 @@
 - **Terminal** • [st](https://st.suckless.org/)
 
 # Screenshot
-![screenshot.png]()
+![screenshot.png](./screenshot.png)
 
 # install
 ### **arch**
