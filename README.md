@@ -7,12 +7,12 @@
 # Screenshot
 ![screenshot.png](./screenshot.png)
 
-# install
-### **arch**
+# Install
+### **Arch**
 ````sh
-yay -S vifm socat dunst feh zenity entr ttf-joypixels ttf-bitstream-vera chezmoi fzf urlscan lxsession light
+yay -S vifm socat dunst feh zenity entr ttf-joypixels ttf-bitstream-vera chezmoi fzf urlscan lxsession light lxappearance maim xorg-xauth xmonad xmonad-contrib xmobar xautolock xorg-server 
 ````
-### **copy dotfiles**
+### **Copy dotfiles**
 ````sh
 chezmoi init https://github.com/hauptling12/dotfiles
 chezmoi cd
@@ -22,3 +22,9 @@ chezmoi diff
 ## then to copy dotfiles run
 chezmoi apply -v
 ````
+# keybindings
+`mod x` - Opens Terminal
+`mod r` - Opens dmenu
+`mod shift q` Closes window
+`SUPER + SHIFT + R` - Recompile xmonad
+`SUPER + SHIFT + R` - Restart xmonad

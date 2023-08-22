@@ -182,10 +182,10 @@ set directory=$HOME/.config/nvim/tmp/backup,.
 " }}}
 "{{{Moving around
 set matchpairs+=<:> " Use % to jump between pairs
-nnoremap <C-Up> :m .-2<CR>==
-nnoremap <C-Down> :m .+1<CR>==
-vnoremap <C-Up> :m '<-2<CR>gv=gv
-vnoremap <C-Down> :m '>+1<CR>gv=gv
+nnoremap <S-k> :m .-2<CR>==
+nnoremap <S-j> :m .+1<CR>==
+vnoremap <S-k> :m '<-2<CR>gv=gv
+vnoremap <S-j> :m '>+1<CR>gv=gv
 map <C-h> <C-w>h
 nnoremap gl $
 nnoremap gh 0
@@ -251,7 +251,6 @@ nnoremap z4 :set foldlevel=4<cr>
 nnoremap z5 :set foldlevel=5<cr>
 nnoremap <Tab> %
 vnoremap <Tab> %
-vnoremap <Space> za
 nnoremap gm :call cursor(0, len(getline('.'))/2)! <CR>
 nnoremap ]b :bnext<cr>
 nnoremap [b :bprev<cr>
@@ -595,7 +594,7 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+"nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)

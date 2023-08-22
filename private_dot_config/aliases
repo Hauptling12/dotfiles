@@ -1,28 +1,17 @@
 alias bat="batcat"
+alias mpvi="mpv --input-ipc-server=/tmp/mpvsocket"
 alias doas="doas --"
 alias startx="startx $XDG_CONFIG_HOME/x11/xinitrc"
 #{{{dirs
-alias notes="cd ~/my-work/notes/ob/obsidian/"
 alias dev="cd ~/my-work/dev/"
-alias wiki="cd $notes/wiki"
-notes=$HOME/my-work/notes/ob/obsidian/
-dev=$HOME/my-work/dev
-scripts=$HOME/.local/bin/script/
-gitrep=$HOME/documents/normal/desktop/git-repos/new-repo/
-gen=/mnt/network/mnt/disk2/entertainment/
+alias gitrep="cd ~/money/dev/git"
 ss="$HOME/.local/bin/script/"
 worksoft=$HOME/my-work/work-software/
-gsc=$HOME/documents/school/
-gscr=$gsc/english
-alias geny="cd /mnt/network/mnt/disk2/entertainment/youtube/"
-alias lang="cd ~/my-work/dev/lang"
-alias linux="cd ~/my-work/os/linux/"
-alias gen="cd /mnt/network/mnt/disk2/entertainment/"
 #}}}
 #{{{yt-dlp
 alias yta-aac="yt-dlp --extract-audio --audio-format aac "
 alias yt-dlp="yt-dlp --restrict-filenames --retries infinite "
-alias yt="yt-dlp --restrict-filenames --embed-metadata --retries infinite -w --write-playlist-metafiles -S res:720,ext:webm:m4a,vcodec:h264,+acodec:m4a"
+alias yt="yt-dlp --restrict-filenames --embed-metadata --retries infinite -w --write-playlist-metafiles -S res:720,ext:webm:m4a,vcodec:h265,+acodec:m4a"
 alias yta-best="yt-dlp --extract-audio --audio-format best "
 alias yta-flac="yt-dlp --extract-audio --audio-format flac "
 alias yta-m4a="yt-dlp --extract-audio --audio-format m4a "
@@ -33,11 +22,10 @@ alias yta-wav="yt-dlp --extract-audio --audio-format wav "
 alias ytv-best="yt-dlp -f bestvideo+bestaudio "
 #}}}
 #{{{programing
-alias py='python'
+alias py='python3'
 alias ca="cargo"
 alias smake="sudo make install"
 alias py2='python2'
-alias py3='python3'
 alias czapp="chezmoi apply -v"
 alias svn='svn --config-dir "$XDG_CONFIG_HOME"/subversion'
 alias cza="chezmoi add"
@@ -69,7 +57,6 @@ else
 alias ls='ls-ll.sh'
 alias sl='ls-ll.sh'
 alias ll='ls-ll.sh'
-alias lsR='ls -R'
 alias ls.='ls ../'
 alias ls..='ls ../../'
 alias ls...='ls ../../../'
@@ -77,24 +64,19 @@ alias ls....='ls ../../../../'
 alias ls5='ls ../../../../../'
 alias ls6='ls ../../../../../../'
 alias ls7='ls ../../../../../../../'
-alias lt='tree'
 alias lt1='tree -L 1'
 alias lt2='tree -L 2'
 fi
 #}}}
 alias ln="ln -i"
 alias cx='chmod +x'
-alias el="/bin/ls"
-bpw () {(cd $OLDPWD && pwd) ;}
+bw () {(cd $OLDPWD && pwd) ;}
 bpwc () {(cd $OLDPWD && pwd |  xclip -selection clipboard) ;}
 alias pwdc="pwd | xclip -selection clipboard"
 alias mkdir="mkdir -pv"
 alias trashl='trash-list'
 alias trashr="trash-restore"
 alias trashe="trash-empty"
-alias rrm="/bin/rm -rfvi"
-alias srrm="doas /bin/rm -rfvi"
-alias trashr='restore'
 alias rm="trash -iv"
 alias trash="trash -iv"
 alias ..="cd .."
@@ -116,10 +98,6 @@ alias bt-list='doas -- btrfs subv list /'
 alias bt-scrup="doas -- btrfs scrub start /"
 #}}}
 #{{{programs
-# alias t="transmission-remote"
-# alias tl="transmission-remote --list"
-# alias ta="transmission-remote --add"
-# alias td="transmission-daemon"
 alias cat="batcat -p"
 alias catn="batcat --paging=never"
 alias sss="/bin/ss"
@@ -129,21 +107,17 @@ alias markdown-toc="~/./node_modules/markdown-toc/cli.js"
 alias buq="buku -s quick-link"
 alias bul="buku -s look-at"
 alias bu='buku --suggest'
-alias ccat="/bin/cat"
 alias fzf="fzf-tmux"
 #alias catn='cat -n'
 alias newsboat="newsboat -r"
-alias rdrview="rdrview -B $CLI_BROWSER "
-alias tsukae='tsukae zsh -s=/home/chief/documents/cashe/.zsh_history'
 alias mpvl="mpv -loop"
-#alias abook="abook --config "$XDG_CONFIG_HOME"/abook/abookrc --datafile "$XDG_CONFIG_HOME"/abook/addressbook"
 alias feh='setsid -f feh '
 alias libreoffice='setsid -f libreoffice '
 alias mpvn="mpv"
 alias C='wc -l'
 alias L="less"
-alias wwget="/bin/wget --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hsts" --user-agent="Mozilla""
-alias wget='wget --page-requisites --adjust-extension --convert-links --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hsts" --user-agent="Mozilla"'
+alias wget="/bin/wget --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hsts" --user-agent="Mozilla""
+alias wgetr='wget --page-requisites --adjust-extension --convert-links --restrict-file-names=unix --hsts-file="$XDG_CACHE_HOME/wget-hsts" --user-agent="Mozilla"'
 alias free='free -hm'
 alias df='df -Th'
 #}}}
@@ -156,7 +130,6 @@ alias sv="sudo $EDITOR"
 alias vwiki="$EDITOR -c VimwikiIndex"
 #}}}
 #{{{shell
-alias powershell='pwsh'
 alias scz="source ~/.config/zsh/.zshrc"
 alias scb="source ~/.bashrc"
 #}}}
@@ -166,8 +139,6 @@ alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias Grep='grep'
-#alias GREP='grep'
-#alias gr='grep'
 #}}}
 # xorg
 alias keys="xmodmap ~/.local/share/Xmodmap"
@@ -178,8 +149,6 @@ alias xine="xinput enable"
 alias xind="xinput disable"
 #{{{system
 alias sysd="doas systemctl"
-alias mute='amixer set Master mute'
-alias umute='amixer set Master unmute'
 alias sudo='doas'
 # get error messages from journalctl
 alias jctl="journalctl -p 3 -xb"
@@ -205,7 +174,7 @@ alias gstat="git status"
 #{{{These common commands are just too long! Abbreviate them.
 alias f="feh"
 alias b="$BROWSER"
-alias r=rfkill
+alias r="rfkill"
 alias o="libreoffice"
 alias m="mpv"
 alias ka="killall"
@@ -229,7 +198,6 @@ alias pup="sudo apt update && sudo apt upgrage"
 alias pq="apt list --installed | wc -l "
 alias pun="sudo apt remove"
 fi
-alias cle="clear"
 alias wh="whereis"
 #}}}
 # package mangers
@@ -308,6 +276,7 @@ paste <(cat /sys/class/thermal/thermal_zone*/type) <(cat /sys/class/thermal/ther
 }
 #bu () { cp $1 ~/documents/config-cp/auto/$(date +%Y-y_%m-m_%d-d_%H-h_%M-min_%S-se)-$(basename $1) ; }
 #}}}
+# safty
 alias dd="echo"
 alias amount="aft-mtp-mount ~/mnt"
 alias ss="cd ~/.local/bin/script/ && ls"
@@ -319,9 +288,6 @@ alias net-reset="sudo systemctl restart NetworkManager.service"
 cs(){ du -a .local/bin/script .config | awk '{print $2}' | fzf | xargs -r -I {} $EDITOR $HOME/{}}
 alias ma="mpv --no-audio"
 alias tty-clock="tty-clock -C1 -c -s"
-alias npi="npm install"
-alias npr="npm run"
+alias npmi="npm install"
+alias npmr="npm run"
 alias jtbl="jtbl -m"
-alias trana="transmission-remote --add"
-alias tranl="transmission-remote --list"
-alias tranld="transmission-remote --list | grep -v '100%   '"

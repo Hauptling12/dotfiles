@@ -8,7 +8,7 @@ import qualified XMonad.StackSet as W
 import XMonad.Actions.CopyWindow (kill1)
 import XMonad.Actions.CycleWS (Direction1D(..), moveTo, shiftTo, WSType(..), nextScreen, prevScreen)
 import XMonad.Actions.GridSelect
-import XMonad.Actions.MouseResize
+--import XMonad.Actions.MouseResize
 import XMonad.Actions.Promote
 import XMonad.Actions.RotSlaves (rotSlavesDown, rotAllDown)
 import XMonad.Actions.WindowGo (runOrRaise)
@@ -129,13 +129,40 @@ spawnSelected' lst = gridselect conf lst >>= flip whenJust spawn
                    }
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
-                , NS "mocp" spawnMocp findMocp manageMocp
+                , NS "mpv" spawnMocp findMocp manageMocp
                 , NS "calculator" spawnCalc findCalc manageCalc
+                , NS "pulsemixer" spawnPulse findPulse managePulse
+                , NS "wiki" spawnWiki findWiki manageWiki
+                , NS "file" spawnFile findFile manageFile
                 ]
   where
     spawnTerm  = myTerminal ++ " -t scratchpad"
     findTerm   = title =? "scratchpad"
     manageTerm = customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.9
+                 w = 0.9
+                 t = 0.95 -h
+                 l = 0.95 -w
+    spawnPulse= myTerminal ++ " -t scratchpad"
+    findPulse= title =? "scratchpad"
+    managePulse= customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.9
+                 w = 0.9
+                 t = 0.95 -h
+                 l = 0.95 -w
+    spawnFile= myTerminal ++ " -t scratchpad"
+    findFile= title =? "scratchpad"
+    manageFile= customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.9
+                 w = 0.9
+                 t = 0.95 -h
+                 l = 0.95 -w
+    spawnWiki= myTerminal ++ " -t scratchpad"
+    findWiki= title =? "scratchpad"
+    manageWiki= customFloating $ W.RationalRect l t w h
                where
                  h = 0.9
                  w = 0.9
@@ -219,7 +246,7 @@ myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts float
                                  ||| Mirror (Tall 1 (3/100) (3/5))
 
 --}}}
-myExtraWorkspaces = [(xK_0, "10"),(xK_minus, "11"),(xK_equal, "12"),(xK_grave, "13"),(xK_bracketright, "14"),(xK_bracketleft, "15"),(xK_semicolon, "16"),(xK_apostrophe, "17")]
+myExtraWorkspaces = [(xK_0, "10"),(xK_minus, "11"),(xK_equal, "12"),(xK_grave, "13"),(xK_bracketright, "14"),(xK_bracketleft, "15"),(xK_backslash, "16"),(xK_semicolon, "17"),(xK_apostrophe, "18")]
 
 myWorkspaces = [" 1d ", " 2ju ", " 3com ", " 4doc ", " 5vm ", " 6www ", " 7mus ", " 8st ", " 9vim " ] ++ (map snd myExtraWorkspaces)
 myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1..] -- (,) == \x y -> (x,y)
@@ -249,62 +276,45 @@ myKeys =
         , ("M-r", spawn "dmenu_run")
         , ("M-w", spawn (myTerminal ++ " -e win-switch"))
 -- KB_G dmenu scripts
-        -- , ("M-C-S-l", spawn "dm-logout.sh")
-        , ("M-S-w v", spawn (myTerminal ++ " -e wiki vid"))
-        , ("M-S-w b", spawn (myTerminal ++ " -e wiki html"))
-	, ("M-S-d g", spawn "gui-dm")
         , ("M-S-d m", spawn "dmenumount")
         --, ("M-S-d s", spawn "~/./scripts/bash/dmenu/scripts/webhttp")
         , ("M-S-d e", spawn "dmenuunicode")
         , ("M-S-d w", spawn "networkmanager_dmenu")
-        , ("M-S-d c", spawn (myTerminal ++ " -e conf"))
         , ("M-S-d r", spawn (myTerminal ++ " -e dmenurecord"))
         , ("M-S-d l", spawn (myTerminal ++ " -e fzf-buku"))
         , ("M-S-d b", spawn "dmweb")
         , ("M-S-d a", spawn "arch-wiki.sh")
         , ("M-S-d s", spawn "maimpick")
         , ("M-S-d u", spawn "dmenuunmount")
-        , ("M-S-n", spawn (myTerminal ++ " -e ranger ~/my-work/DOWNLOADS"))
+        , ("M-S-d S-m", spawn "dmenu-mpv")
 
     -- KB_G prgograms
          , ("M-x", spawn myTerminal)
          , ("M-b", spawn myBrowser)
          , ("M-s", spawn (myTerminal ++ " -e htop"))
-         -- , ("M-i b", spawn (myTerminal ++ " -e bash"))
          , ("M-a", spawn (myTerminal ++ " -e calcurse"))
          , ("M-S-a", spawn "tmux new-window -t 0:0 'calcurse'")
 	 , ("M-S-c", spawn (myTerminal ++ " -e calc"))
          , ("M-i n", spawn (myTerminal ++ " -e newsboat -r"))
          , ("M-i S-n", spawn "tmux new-window -t 0:0 'newsboat -r'")
-         , ("M-i c", spawn (myTerminal ++ " -e tty-clock"))
-         , ("M-i S-c", spawn "tmux new-window -t 0:0 'tty-clock'")
 	 , ("M-i t", spawn (myTerminal ++ " -e /bin/nmtui"))
-	 , ("M-i l", spawn (myTerminal ++ " -e w3m"))
          , ("M-c", spawn myEditor)
          , ("M-S-v", spawn (myTerminal ++ " -e pulsemixer"))
          , ("M-S-x", spawn (myTerminal ++ " -e tmux"))
-         , ("M-n", spawn (myTerminal ++ " -e ranger"))
+         , ("M-n", spawn (myTerminal ++ " -e vifm"))
          , ("M-e h", spawn "xmonad_keys.sh") -- shows list of keybindings
          , ("M-M1-t", spawn "qbittorrent")
-         -- , ("M-S-a", spawn "srcrpy")
          , ("M-i b", spawn (myTerminal ++ " -e bluetoothctl"))
-         -- , ("M-<Esc>", spawn "kill-ne-app")
-         -- , ("M-S-y", spawn "freetube")
          , ("M-y", spawn "xmouseless")
-         -- , ("M-e", spawn "kill -s USR1 $(pidof deadd-notification-center)")
          , ("M-S-g", spawn "signal-desktop-no-yes")
-        -- , ("M-C-M1-p", spawn "~/./scripts/bash/xmona/window-scre.sh")
          , ("M-S-b", spawn "librewolf --private-window")
          , ("M-v", spawn "virt-manager")
          , ("M-S-l", spawn "slock")
+         , ("M-e k", spawn "keepassxc")
     -- KB_G Kill windows
          , ("M-S-q", kill1)     -- Kill the currently focused client
-        -- , ("M-S-a", killAll)   -- Kill all windows on current workspace
 
     -- KB_G Workspaces
-     --   , ("M-C-<Left>", shiftTo Next nonNSP >> moveTo Next nonNSP)       -- Shifts focused window to next ws
-     --   , ("M-C-<Right>", shiftTo Prev nonNSP >> moveTo Prev nonNSP)  -- Shifts focused window to prev ws
-         , ("M-e k", spawn "keepassxc")
 
     -- KB_G Floating windows
         , ("M-t", withFocused $ windows . W.sink)  -- Push floating window back to tile
@@ -313,13 +323,11 @@ myKeys =
     -- KB_G Windows navigation
         , ("M-m", windows W.focusMaster)  -- Move focus to the master wind
         , ("M-<Tab>", windows W.focusUp)      -- Move focus to the prev wind
-        -- , ("M-S-<Tab>", onGroup W.focusDown)
         , ("M-S-<Tab>", windows W.focusDown)      -- Move focus to the prev window
         , ("M-M1-m", windows W.swapMaster) -- Swap the focused window and the master wind
         , ("M-S-j", windows W.swapDown)   -- Swap focused window with next wind
         , ("M-S-k", windows W.swapUp)     -- Swap focused window with prev wind
         , ("M-<Backspace>", promote)      -- Moves focused wind to master, others maintain order
-        -- , ("M-S-<Tab>", rotSlavesDown)    -- Rotate all winds except master and keep focus in place
         , ("M-C-<Tab>", rotAllDown)       -- Rotate all the winds in the current stack
 
     -- KB_G Layouts
@@ -345,6 +353,9 @@ myKeys =
         , ("M-S-s t", namedScratchpadAction myScratchPads "terminal")
         , ("M-S-s m", namedScratchpadAction myScratchPads "mocp")
         , ("M-S-s c", namedScratchpadAction myScratchPads "calculator")
+        , ("M-S-s v", namedScratchpadAction myScratchPads "pulsemixer")
+        , ("M-S-s w", namedScratchpadAction myScratchPads "wiki")
+        , ("M-S-s e", namedScratchpadAction myScratchPads "file")
 
     -- KB_G Sublayouts
     -- This is used to push windows to tabbed sublayouts or pull them out of it
@@ -366,16 +377,12 @@ myKeys =
         , ("M-<F3>", spawn "amixer set Master 6%+ unmute")
         , ("<F2>", spawn "amixer set Master 3%- unmute")
         , ("<F3>", spawn "amixer set Master 3%+ unmute")
-        , ("M-<F9>", spawn "pausemu p")
-	, ("M-<F10>", spawn "pausemu r")
-	, ("M-<F11>", spawn "pausemu n")
-        , ("<F9>", spawn "pausem p")
-	, ("<F10>", spawn "pausem r")
-	, ("<F11>", spawn "pausem n")
-        , ("M-S-'", windows $ W.shift "17")
-        , ("M-'", windows $ W.greedyView "17")
-        , ("M-S-;", windows $ W.shift "16")
-        , ("M-;", windows $ W.greedyView "16")
+        , ("M-S-'", windows $ W.shift "18")
+        , ("M-'", windows $ W.greedyView "18")
+        , ("M-S-;", windows $ W.shift "17")
+        , ("M-;", windows $ W.greedyView "17")
+        , ("M-S-\\", windows $ W.shift "16")
+        , ("M-\\", windows $ W.greedyView "16")
         , ("M-S-[", windows $ W.shift "15")
         , ("M-[", windows $ W.greedyView "15")
         , ("M-S-]", windows $ W.shift "14")
@@ -392,9 +399,6 @@ myKeys =
           -- The following lines are needed for named scratchpads.
     where nonNSP          = WSIs (return (\ws -> W.tag ws /= "NSP"))
           nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "NSP"))
-
-       --      where nonNSP          = WSIs (return (\ws -> W.tag ws /= "NSP"))
-           --     nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "NSP"))
 --}}}END_KEYS
 --{{{main
 main :: IO ()
@@ -431,7 +435,7 @@ main = do
                 -- Hidden workspaces (no windows)
               , ppHiddenNoWindows = xmobarColor color16 ""
                 -- Title of active window
-              , ppTitle = xmobarColor color16 "" . shorten 60
+              , ppTitle = xmobarColor color16 "" . shorten 50
                 -- Separator character
               , ppSep =  "<fc=" ++ color09 ++ "> <fn=1>|</fn> </fc>"
                 -- Urgent workspace
@@ -443,4 +447,3 @@ main = do
               }
         } `additionalKeysP` myKeys
 --}}}
--- | Finally, a copy of the default bindings in simple textual tabular format.

@@ -1,0 +1,3 @@
+[submodule "dot_local/bin/script"]
+	path = dot_local/bin/script
+	url = https://github.com/Hauptling12/scripts
